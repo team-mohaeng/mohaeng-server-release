@@ -7,12 +7,6 @@ class CharacterCard {
     this.imageURL = imageURL;
   }
 
-  getId(): number {
-    return this.id;
-  }
-
-  getImageURL(): string {
-    return this.imageURL;
-  }
-  
+  getId(): number {return this.id;}
+  getImageURL(): string {return this.imageURL;}
 }
