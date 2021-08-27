@@ -13,19 +13,8 @@ class Badge {
     this.imageURL = imageURL;
   }
 
-  getId(): number {
-    return this.id;
-  }
-
-  getName(): string {
-    return this.name;
-  }
-
-  getHowObtain(): string {
-    return this.howObtain;
-  }
-
-  getImageURL(): string {
-    return this.imageURL;
-  }
+  getId(): number {return this.id;}
+  getName(): string {return this.name;}
+  getHowObtain(): string {return this.howObtain;}
+  getImageURL(): string {return this.imageURL;}
 }
