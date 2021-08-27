@@ -2,13 +2,9 @@ class Character {
   private type: number;
   private cards: [CharacterCard];
 
-  constructor(type: number) {
+  constructor(type: number, cards: [CharacterCard]) {
     this.type = type;
-  }
-
-  addCharacterCard(id: number, imageURL: string): void {
-    const card = new CharacterCard(id, imageURL);
-    this.cards.push(card);
+    this.cards = cards;
   }
 
   getType(): number {return this.type;}
