@@ -7,12 +7,6 @@ class Skin {
     this.imageURL = imageURL;
   }
 
-  getId(): number {
-    return this.id;
-  }
-
-  getImageURL(): string {
-    return this.imageURL;
-  }
-
+  getId(): number {return this.id;}
+  getImageURL(): string {return this.imageURL;}
 }
