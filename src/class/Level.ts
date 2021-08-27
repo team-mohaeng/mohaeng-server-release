@@ -8,19 +8,8 @@ class Level {
     this.fullHappy = fullHappy;
   }
 
-  setCharacterType(type: number) {
-    this.characterType = type;
-  }
-
-  getCharacterType(): number {
-    return this.characterType;
-  }
-
-  getLevel(): number {
-    return this.level;
-  }
-
-  getFullHappy(): number {
-    return this.fullHappy;
-  }
+  setCharacterType(type: number) {this.characterType = type;}
+  getCharacterType(): number {return this.characterType;}
+  getLevel(): number {return this.level;}
+  getFullHappy(): number {return this.fullHappy;}
 }
