@@ -11,12 +11,6 @@ class Character {
     this.cards.push(card);
   }
 
-  getType(): number {
-    return this.type;
-  }
-
-  getCards(): [CharacterCard] {
-    return this.cards;
-  }
-
+  getType(): number {return this.type;}
+  getCards(): [CharacterCard] {return this.cards;}
 }
