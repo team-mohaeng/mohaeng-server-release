@@ -13,19 +13,19 @@ class Badge {
     this.imageURL = imageURL;
   }
 
-  public getId() {
+  getId(): number {
     return this.id;
   }
 
-  public getName() {
+  getName(): string {
     return this.name;
   }
 
-  public getHowObtain() {
+  getHowObtain(): string {
     return this.howObtain;
   }
 
-  public getImageURL() {
+  getImageURL(): string {
     return this.imageURL;
   }
 }
