@@ -1,110 +1,175 @@
-const Sequelize = require('sequelize');
+import { DataTypes, Model, } from 'sequelize';
+import sequelize from './index';
 
-module.exports = class User extends Sequelize.Model {
-  static init(sequelize) {
-    return super.init({
-      token: {
-        type: Sequelize.STRING(100),
-        allowNull: false,
-        unique: true,
-      },
-      email: {
-        type: Sequelize.STRING(30),
-        allowNull: false,
-        unique:true,
-      },
-      password: {
-        type: Sequelize.STRING(20),
-        allowNull: false,
-      },
-      nickname: {
-        type: Sequelize.STRING(10),
-        allowNull: false,
-        unique: true,
-      },
-      gender: {
-        type: Sequelize.INTEGER.UNSIGNED,
-        allowNull: false,
-      },
-      birth_year: {
-        type: Sequelize.INTEGER.UNSIGNED,
-        allowNull: false,
-      },
-      affinity: {
-        type: Sequelize.INTEGER.UNSIGNED,
-        default: 20
-      },
-      level: {
-        type: Sequelize.STRING(10),
-        default: 1,
-      },
-      current_course_id: {
-        type: Sequelize.INTEGER.UNSIGNED,
-      },
-      current_challenge_id: {
-        type: Sequelize.INTEGER.UNSIGNED,
-      },
-      current_progress_percent: {
-        type: Sequelize.INTEGER.UNSIGNED,
-      },
-      is_completed: {
-        type: Sequelize.BOOLEAN,
-        default: false,
-      },
-      is_written: {
-        type: Sequelize.BOOLEAN,
-        default: false,
-      },
-      post_count: {
-        type: Sequelize.INTEGER.UNSIGNED,
-        default: 0,
-      },
-      complete_course_count: {
-        type: Sequelize.INTEGER.UNSIGNED,
-        default: 0,
-      },
-      complete_challenge_count: {
-        type: Sequelize.INTEGER.UNSIGNED,
-        default: 0,
-      },
-      badge_count: {
-        type: Sequelize.INTEGER.UNSIGNED,
-        default: 0,
-      },
-      character_type: {
-        type: Sequelize.INTEGER.UNSIGNED,
-      },
-      character_card: {
-        type: Sequelize.INTEGER.UNSIGNED,
-      },
-      character_skin: {
-        type: Sequelize.INTEGER.UNSIGNED,
-      },
-      challenge_penalty: {
-        type: Sequelize.BOOLEAN,
-        default: false,
-      },
-      feed_penalty: {
-        type: Sequelize.BOOLEAN,
-        default: false,
-      },
-      is_feed_new: {
-        type: Sequelize.BOOLEAN,
-        default: false,
-      },
-      is_style_new: {
-        type: Sequelize.BOOLEAN,
-        default: false,
-      },
-    }, {
+interface UserAttributes {
+  id?: number; //not null, auto increment
+  token: string;
+  email : string;
+  password: string;
+  nickname: string;
+  gender: number;
+  birth_year: number;
+  affinity?: number;
+  level?: number;
+  current_course_id?: number;
+  current_challenge_id?: number;
+  current_progress_percent?: number;
+  is_completed?: boolean;
+  is_written?: boolean;
+  feed_count?: number;
+  complete_course_count?: number;
+  complete_challenge_count?: number;
+  badge_count?: number;
+  character_type?: number;
+  character_card?: number;
+  character_skin?: number;
+  challenge_penalty?: boolean;
+  feed_penalty?: boolean;
+  is_feed_new?: boolean;
+  is_style_new?: boolean;
+};
+
+export class User extends Model<UserAttributes>{
+  public readonly id!: number;
+  public email!: string;
+  public password!: string;
+  public nickname!: string;
+  public gender!: number;
+  public birth_year!: number;
+  public affinity: number;
+  public level: number;
+  public current_course_id: number | null;
+  public current_challenge_id: number | null;
+  public current_progress_percent: number | null;
+  public is_completed: boolean;
+  public is_written: boolean;
+  public feed_count: number;
+  public complete_course_count: number;
+  public complete_challenge_count: number;
+  public badge_count: number;
+  public character_type: number;
+  public character_card: number;
+  public character_skin: number;
+  public challenge_penalty: boolean;
+  public feed_penalty: boolean;
+  public is_feed_new: boolean;
+  public is_style_new: boolean;
+
+  public static associations: {
+  };
+}
+
+User.init(
+  {
+    token: {
+      type: DataTypes.STRING(100),
+      allowNull: false,
+      unique: true,
+    },
+    email: {
+      type: DataTypes.STRING(30),
+      allowNull: false,
+      unique:true,
+      validate: {
+        isEmail: true,
+      }
+    },
+    password: {
+      type: DataTypes.STRING(20),
+      allowNull: false,
+    },
+    nickname: {
+      type: DataTypes.STRING(10),
+      allowNull: false,
+      unique: true,
+    },
+    gender: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      allowNull: false,
+    },
+    birth_year: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      allowNull: false,
+    },
+    affinity: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      defaultValue: 20,
+    },
+    level: {
+      type: DataTypes.STRING(10),
+      defaultValue: 1,
+    },
+    current_course_id: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      allowNull: true,
+    },
+    current_challenge_id: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      allowNull: true,
+    },
+    current_progress_percent: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      allowNull: true,
+    },
+    is_completed: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+    is_written: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+    feed_count: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      defaultValue: 0,
+    },
+    complete_course_count: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      defaultValue: 0,
+    },
+    complete_challenge_count: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      defaultValue: 0,
+    },
+    badge_count: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      defaultValue: 0,
+    },
+    character_type: {
+      type: DataTypes.INTEGER.UNSIGNED,
+    },
+    character_card: {
+      type: DataTypes.INTEGER.UNSIGNED,
+    },
+    character_skin: {
+      type: DataTypes.INTEGER.UNSIGNED,
+    },
+    challenge_penalty: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+    feed_penalty: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+    is_feed_new: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+    is_style_new: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+  },
+  {
+      modelName: 'User',
+      tableName: 'User',
       sequelize,
       timestamps: false,
       underscored: false,
-      modelName: 'User',
-      tableName: 'users',
+      freezeTableName: true,
       paranoid: false,
       charset: 'utf8',
       collate: 'utf8_general_ci',
-    });
   }
-};
+);
