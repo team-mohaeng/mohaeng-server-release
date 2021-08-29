@@ -1,11 +1,11 @@
 import express from "express";
 import path from "path";
-const { sequelize } = require('./models');
+import sequelize from './models';
 
 const app = express();
 const apidocPath = path.join(__dirname, "../apidoc");
 
-sequelize.sync({ force: false })
+sequelize.authenticate()
     .then(() => {
         console.log('DB Connected.');
     }).catch((err) => {
@@ -30,7 +30,6 @@ app.use(function (err, req, res, next) {
     error: err
   });
   res.render("error");
-  
 });
 
 app
