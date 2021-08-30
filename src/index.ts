@@ -15,6 +15,7 @@ sequelize.authenticate()
 app.use(express.json());
 app.use("/apidoc", express.static(apidocPath));
 
+app.use("/api/profile", require("./api/profile"))
 
 // error handler
 app.use(function (err, req, res, next) {
