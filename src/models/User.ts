@@ -27,6 +27,10 @@ interface UserAttributes {
   feed_penalty?: boolean;
   is_feed_new?: boolean;
   is_style_new?: boolean;
+  is_badge_new?: boolean;
+  recent_challenge_date?: Date;
+  challenge_success_count?: number;
+  feed_success_count?: number;
 };
 
 export class User extends Model<UserAttributes>{
@@ -54,6 +58,10 @@ export class User extends Model<UserAttributes>{
   public feed_penalty: boolean;
   public is_feed_new: boolean;
   public is_style_new: boolean;
+  public is_badge_new: boolean;
+  public recent_challenge_date: Date;
+  public challenge_success_count: number;
+  public feed_success_count: number;
 
   public static associations: {
   };
@@ -159,6 +167,21 @@ User.init(
     is_style_new: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
+    },
+    is_badge_new: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+    recent_challenge_date: {
+      type: DataTypes.DATE,
+    },
+    challenge_success_count: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      defaultValue: 0,
+    },
+    feed_success_count: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      defaultValue: 0,
     },
   },
   {
