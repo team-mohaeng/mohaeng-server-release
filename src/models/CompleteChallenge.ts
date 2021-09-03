@@ -6,12 +6,15 @@ interface CompleteChallengeAttributes {
   user_id: number;
   course_id: number;
   challenge_id: number;
+  date: Date;
 };
 
 export class CompleteChallenge extends Model<CompleteChallengeAttributes>{
   public readonly user_id!: number;
   public readonly course_id!: number;
   public readonly challenge_id!: number;
+  public readonly date!: Date;
+
 
   public static associations: {
     user_id: Association<User, CompleteChallenge>;
@@ -35,6 +38,9 @@ CompleteChallenge.init(
       allowNull: false,
       primaryKey: true,
     },
+    date: {
+      type: DataTypes.DATE,
+    }
   },
   {
       modelName: 'CompleteChallenge',
