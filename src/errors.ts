@@ -1,5 +1,5 @@
 import { IFail } from "./interfaces/IFail";
-import { SERVER_ERROR_MESSAGE } from "./constant";
+import { SERVER_ERROR_MESSAGE, TOKEN_ERROR_MESSAGE } from "./constant";
 
 export const serverError: IFail = {
   status: 500,
@@ -35,3 +35,18 @@ export const notExistToken: IFail = {
   status: 400,
   message: "토큰 생성에 실패하였습니다."
 }
+
+export const notGetToken: IFail = {
+  status: 403,
+  message: "토큰이 없습니다. 토큰을 함께 보내주세요."
+}
+
+export const expiredToken: IFail = {
+  status: 403,
+  message: TOKEN_ERROR_MESSAGE
+}
+
+export const notMatchSignIn: IFail = {
+  status: 401,
+  message: "이메일 계정 또는 비밀번호를 확인해주세요",
+};
