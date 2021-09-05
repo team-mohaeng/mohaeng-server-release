@@ -3,7 +3,9 @@ import bcrypt from "bcryptjs";
 import { User } from "../models/User";
 import { SignUpRequestDTO } from "../dto/Auth/SignUp/request/SignUpRequestDTO";
 import { SignUpResponseDTO } from "../dto/Auth/SignUp/response/SignUpResponseDTO";
-import { serverError, notExistToken, alreadyExistEmail, alreadyExistNickname } from "../errors";
+import { serverError, notExistToken, alreadyExistEmail, alreadyExistNickname, notMatchSignIn } from "../errors";
+import { SignInRequestDTO } from '../dto/Auth/SignIn/request/SignInRequestDTO';
+import { SignInResponseDTO } from '../dto/Auth/SignIn/response/SignInResponseDTO';
 
 export default {
   signUp: async (dto: SignUpRequestDTO) => {
@@ -61,6 +63,31 @@ export default {
       return responseDTO;
 
     } catch (err) {
+      console.error(err);
+      return serverError;
+    }
+  },
+
+  signIn: async (dto: SignInRequestDTO) => {
+    try{
+      const { email, password } = dto;
+      const user = await User.findOne({ attributes: ['token', 'password'], where: { email: email} });
+      if (!user) {
+        return notMatchSignIn;
+      }
+
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (!isMatch) {
+        return notMatchSignIn;
+      }
+
+      const responseDTO: SignInResponseDTO = {
+        status: 200,
+        token: user.token,
+      }
+
+      return responseDTO;
+    } catch(err) {
       console.error(err);
       return serverError;
     }
