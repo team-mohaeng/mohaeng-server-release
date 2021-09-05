@@ -33,5 +33,12 @@ export default {
    */
   awsBucket: process.env.AWS_BUCKET,
   awsS3AccessKey: process.env.AWS_ACCESS_KEY,
-  awsS3SecretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+  awsS3SecretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+
+
+  /**
+   * Your secret sauce
+   */
+  firebaseID: process.env.FIREBASE_ID,
+  firebaseDB: process.env.FIREBASE_DB
 };

@@ -1,10 +1,14 @@
 import express from "express";
 import path from "path";
 import sequelize from './models';
+import * as admin from 'firebase-admin';
+import config from "./config"
 
 const app = express();
 const apidocPath = path.join(__dirname, "../apidoc");
+var serviceAccount = require("../mohaeng.json");
 
+//시퀄라이즈
 sequelize.authenticate()
     .then(() => {
         console.log('DB Connected.');
@@ -12,11 +16,20 @@ sequelize.authenticate()
         console.error(err);
     });
 
+//파이어베이스 auth
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  projectId: config.firebaseID,
+  databaseURL: config.firebaseDB
+});
+  
+
 app.use(express.json());
 app.use("/apidoc", express.static(apidocPath));
 
 app.use("/api/profile", require("./api/profile"));
 app.use("/api/courses", require("./api/course"));
+app.use("/api/auth", require("./api/auth"));
 
 // error handler
 app.use(function (err, req, res, next) {

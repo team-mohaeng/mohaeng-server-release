@@ -25,6 +25,7 @@ yarn-error.log*
 yarn.lock
 
 .env
+mohaeng.json
 
 # Logs
 logs

@@ -1,4 +1,4 @@
-import express, { Request, Response } from "express";
+import express from "express";
 import { ChangeNicknameRequestDTO } from "../dto/MyPage/nickname/request/ChangeNicknameRequestDto";
 import profileService from "../service/profileService";
 

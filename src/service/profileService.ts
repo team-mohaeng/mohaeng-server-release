@@ -3,13 +3,13 @@ import { ChangeNicknameRequestDTO } from "../dto/MyPage/nickname/request/ChangeN
 import { ChangeNicknameResponseDTO } from "../dto/MyPage/nickname/response/ChangeNicknameResponseDto";
 import { SERVER_ERROR_MESSAGE } from "../constant";
 import { IFail } from "../interfaces/IFail";
-import { notExistUser, characterLengthCheck, sameNickname, nicknameDuplication } from "../errors";
 
 export default {
-  changeNickname: async ( id: number, dto: ChangeNicknameRequestDTO) => {
+  changeNickname: async (id: number, dto: ChangeNicknameRequestDTO) => {
     try{
       const { nickname } = dto;
       const user = await User.findOne({ attributes: ['nickname'], where: {id: id} });
+      
       if (!user) {
         return notExistUser;
       }
