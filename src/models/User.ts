@@ -35,6 +35,7 @@ interface UserAttributes {
 
 export class User extends Model<UserAttributes>{
   public readonly id!: number;
+  public token!: string;
   public email!: string;
   public password!: string;
   public nickname!: string;
@@ -83,7 +84,7 @@ User.init(
       }
     },
     password: {
-      type: DataTypes.STRING(20),
+      type: DataTypes.STRING(100),
       allowNull: false,
     },
     nickname: {
