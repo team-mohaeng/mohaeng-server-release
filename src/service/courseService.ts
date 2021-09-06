@@ -35,22 +35,14 @@ export default {
         
         // 완료한 코스일 경우
         for (let j = 0; j < completeCourses.length; ++j) {
-          if (completeCourses[j].course_id == (i+1)) {
-            const date = completeCourses[j].end_date;
-            const year = getYear(date);
-            const month = getMonth(date);
-            const day = getDay(date);
-
+          if (completeCourses[j].course_id == (i + 1)) {
             afterCourses.push({
               id: courses[i+1].getId(),
               situation: 2,
               property: courses[i+1].getProperty(),
               title: courses[i+1].getTitle(),
               description: courses[i+1].getDescription(),
-              totalDays: courses[i+1].getTotalDays(),
-              year: year,
-              month: month,
-              date: day
+              totalDays: courses[i+1].getTotalDays()
             });
             flag = true;
             break;
@@ -65,10 +57,7 @@ export default {
             property: courses[i].getProperty(),
             title: courses[i].getTitle(),
             description: courses[i].getDescription(),
-            totalDays: courses[i].getTotalDays(),
-            year: "",
-            month: "",
-            date: "",
+            totalDays: courses[i].getTotalDays()
           });
         }
       }
