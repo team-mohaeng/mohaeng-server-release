@@ -1,6 +1,5 @@
 import jwt from "jsonwebtoken";
 import config from "../config";
-
 import { TOKEN_ERROR_MESSAGE } from "../constant";
 
 export default (req, res, next) => {
