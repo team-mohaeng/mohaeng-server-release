@@ -3,6 +3,7 @@ import { check, validationResult } from "express-validator";
 import { SignUpRequestDTO } from "../dto/Auth/SignUp/request/SignUpRequestDTO";
 import { SignInRequestDTO } from "../dto/Auth/SignIn/request/SignInRequestDTO";
 import authService from "../service/authService";
+import verifyFCM from "../middleware/verifyFCM";
 
 const router = express.Router();
 
