@@ -18,7 +18,6 @@ export default (req, res, next) => {
   // Verify token
   try {
     const decoded = jwt.verify(token, config.jwtSecret);
-
     req.body.user = decoded.user;
     next();
   } catch (err) {
