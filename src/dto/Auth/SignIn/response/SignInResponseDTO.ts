@@ -1,4 +1,6 @@
 export interface SignInResponseDTO {
 	status: number;
-  token: string;
+  data: {
+    jwt: string;
+  } 
 }
