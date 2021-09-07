@@ -1,5 +1,7 @@
 import * as admin from 'firebase-admin';
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import config from "../config";
 import { User } from "../models/User";
 import { SignUpRequestDTO } from "../dto/Auth/SignUp/request/SignUpRequestDTO";
 import { SignUpResponseDTO } from "../dto/Auth/SignUp/response/SignUpResponseDTO";
@@ -45,7 +47,7 @@ export default {
       if (token == null) {
         return notExistToken;
       }
-
+      /*
       //User 생성
       await User.create({
         token: token,
@@ -55,7 +57,7 @@ export default {
         gender: gender,
         birth_year: birth_year
       });
-
+      */
       const responseDTO: SignUpResponseDTO = {
         status: 200,
         token: token
@@ -71,7 +73,7 @@ export default {
   signIn: async (dto: SignInRequestDTO) => {
     try{
       const { email, password } = dto;
-      const user = await User.findOne({ attributes: ['token', 'password'], where: { email: email} });
+      const user = await User.findOne({ attributes: ['password'], where: { email: email} });
       if (!user) {
         return notMatchSignIn;
       }
@@ -81,9 +83,22 @@ export default {
         return notMatchSignIn;
       }
 
+      const payload = {
+        user: {
+          id: user.id,
+        },
+      };
+      
+      const jwtToken = jwt.sign(
+        payload,
+        config.jwtSecret,
+      );
+
       const responseDTO: SignInResponseDTO = {
         status: 200,
-        token: user.token,
+        data: {
+          jwt: jwtToken
+        }
       }
 
       return responseDTO;
