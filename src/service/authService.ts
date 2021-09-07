@@ -45,7 +45,7 @@ export default {
       if (uid == null) {
         return notExistUid;
       }
-
+      /*
       //User 생성
       const user = await User.create({
         uid: uid,
@@ -77,6 +77,44 @@ export default {
       return responseDTO;
 
     } catch (err) {
+      console.error(err);
+      return serverError;
+    }
+  },
+
+  signIn: async (dto: SignInRequestDTO) => {
+    try{
+      const { email, password } = dto;
+      const user = await User.findOne({ attributes: ['password'], where: { email: email} });
+      if (!user) {
+        return notMatchSignIn;
+      }
+
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (!isMatch) {
+        return notMatchSignIn;
+      }
+
+      const payload = {
+        user: {
+          id: user.id,
+        },
+      };
+      
+      const jwtToken = jwt.sign(
+        payload,
+        config.jwtSecret,
+      );
+
+      const responseDTO: SignInResponseDTO = {
+        status: 200,
+        data: {
+          jwt: jwtToken
+        }
+      }
+
+      return responseDTO;
+    } catch(err) {
       console.error(err);
       return serverError;
     }
