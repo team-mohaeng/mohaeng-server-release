@@ -5,7 +5,9 @@ import config from "../config"
 import { User } from "../models/User";
 import { SignUpRequestDTO } from "../dto/Auth/SignUp/request/SignUpRequestDTO";
 import { SignUpResponseDTO } from "../dto/Auth/SignUp/response/SignUpResponseDTO";
-import { serverError, notExistUid, alreadyExistEmail, alreadyExistNickname } from "../errors";
+import { SignInRequestDTO } from '../dto/Auth/SignIn/request/SignInRequestDTO';
+import { SignInResponseDTO } from '../dto/Auth/SignIn/response/SignInResponseDTO';
+import { serverError, notExistUid, alreadyExistEmail, alreadyExistNickname, notMatchSignIn } from "../errors";
 
 export default {
   signUp: async (dto: SignUpRequestDTO) => {
@@ -45,7 +47,7 @@ export default {
       if (uid == null) {
         return notExistUid;
       }
-      /*
+      
       //User 생성
       const user = await User.create({
         uid: uid,
@@ -85,7 +87,7 @@ export default {
   signIn: async (dto: SignInRequestDTO) => {
     try{
       const { email, password } = dto;
-      const user = await User.findOne({ attributes: ['password'], where: { email: email} });
+      const user = await User.findOne({ attributes: ['id', 'password'], where: { email: email} });
       if (!user) {
         return notMatchSignIn;
       }
@@ -100,6 +102,7 @@ export default {
           id: user.id,
         },
       };
+      console.log(user.id);
       
       const jwtToken = jwt.sign(
         payload,
