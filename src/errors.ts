@@ -31,9 +31,9 @@ export const alreadyExistEmail: IFail = {
   message: "중복된 이메일입니다"
 }
 
-export const notExistToken: IFail = {
+export const notExistUid: IFail = {
   status: 400,
-  message: "토큰 생성에 실패하였습니다."
+  message: "계정 생성에 실패하였습니다."
 }
 
 export const notGetToken: IFail = {

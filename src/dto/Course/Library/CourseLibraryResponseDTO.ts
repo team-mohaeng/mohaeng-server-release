@@ -15,7 +15,4 @@ export interface SimpleCourseResponseDTO {
   title: string;
   description: string;
   totalDays: number;
-  year: string;
-  month: string;
-  date: string;
 }

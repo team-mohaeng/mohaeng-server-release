@@ -1,13 +1,11 @@
 import * as admin from 'firebase-admin';
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import config from "../config";
+import config from "../config"
 import { User } from "../models/User";
 import { SignUpRequestDTO } from "../dto/Auth/SignUp/request/SignUpRequestDTO";
 import { SignUpResponseDTO } from "../dto/Auth/SignUp/response/SignUpResponseDTO";
-import { serverError, notExistToken, alreadyExistEmail, alreadyExistNickname, notMatchSignIn } from "../errors";
-import { SignInRequestDTO } from '../dto/Auth/SignIn/request/SignInRequestDTO';
-import { SignInResponseDTO } from '../dto/Auth/SignIn/response/SignInResponseDTO';
+import { serverError, notExistUid, alreadyExistEmail, alreadyExistNickname } from "../errors";
 
 export default {
   signUp: async (dto: SignUpRequestDTO) => {
@@ -29,7 +27,7 @@ export default {
       const encryptedPassword = await bcrypt.hash(password, salt);
 
       //firebase에 저장
-      let token;
+      let uid;
       await (admin
       .auth()
       .createUser({
@@ -37,30 +35,44 @@ export default {
         disabled: false,
       })
       .then((userRecord) => {
-        token = userRecord.uid;
+        uid = userRecord.uid;
       })
       .catch((error) => {
         console.log(error);
       })
       )
       
-      if (token == null) {
-        return notExistToken;
+      if (uid == null) {
+        return notExistUid;
       }
       /*
       //User 생성
-      await User.create({
-        token: token,
+      const user = await User.create({
+        uid: uid,
+        token: uid, //나중에 token으로 바꿔줘야함
         email: email,
         password: encryptedPassword,
         nickname: nickname,
         gender: gender,
         birth_year: birth_year
       });
-      */
+
+      const payload = {
+        user: {
+          id: user.id,
+        },
+      };
+
+      const jwtToken = jwt.sign(
+        payload,
+        config.jwtSecret,
+      );
+
       const responseDTO: SignUpResponseDTO = {
         status: 200,
-        token: token
+        data: {
+          jwt: jwtToken,
+        }
       }
       return responseDTO;
 
