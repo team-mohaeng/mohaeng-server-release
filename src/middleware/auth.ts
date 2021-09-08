@@ -1,6 +1,5 @@
 import jwt from "jsonwebtoken";
 import config from "../config";
-
 import { TOKEN_ERROR_MESSAGE } from "../constant";
 
 export default (req, res, next) => {
@@ -18,7 +17,6 @@ export default (req, res, next) => {
   // Verify token
   try {
     const decoded = jwt.verify(token, config.jwtSecret);
-
     req.body.user = decoded.user;
     next();
   } catch (err) {
