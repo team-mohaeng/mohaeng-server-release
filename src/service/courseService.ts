@@ -9,10 +9,9 @@ import { CompleteCourse } from "../models/CompleteCourse";
 import { User } from "../models/User";
 
 export default {
-  library: async (id: String) => {
+  library: async (id: string) => {
     try {
-      const userId = Number(id);
-      const user = await User.findOne({ where: { id: userId } });
+      const user = await User.findOne({ where: { id: id } });
       if (!user) {
         return notExistUser;
       }
@@ -23,7 +22,7 @@ export default {
 
       const completeCourses = await CompleteCourse.findAll({
         attributes: ["course_id", "end_date"],
-        where: { user_id: userId },
+        where: { user_id: id },
       });
 
       let beforeCourses: SimpleCourseResponseDTO[] = [];
@@ -82,15 +81,14 @@ export default {
       return serverError;
     }
   },
-  complete: async (id: String) => {
+  complete: async (id: string) => {
     try {
-      let userId = Number(id);
-      const user = await User.findOne({ where: { id: userId } });
+      const user = await User.findOne({ where: { id: id } });
       if (!user) {
         return notExistUser;
       }
 
-      const completeCourses = await CompleteCourse.findAll({ where: { user_id: userId } });
+      const completeCourses = await CompleteCourse.findAll({ where: { user_id: id } });
       if (completeCourses.length == 0) {
         const notExistCompleteCourse: CompleteCourseResponseDTO = {
           status: 202,
