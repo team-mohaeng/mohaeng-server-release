@@ -12,7 +12,6 @@ export interface TotalCompleteCourseResponseDTO {
   situation: number;
   property: number;
   title: string;
-  description: string;
   totalDays: number;
   year: string;
   month: string;
@@ -24,9 +23,6 @@ export interface TotalCompleteChallengeResponseDTO {
   day: number;
   situation: number;
   title: string;
-  happy: number;
-  beforeMent: string;
-  afterMent: string;
   year: string;
   month: string;
   date: string;

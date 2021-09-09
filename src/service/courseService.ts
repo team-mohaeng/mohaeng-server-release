@@ -120,9 +120,6 @@ export default {
             day: challenge.getDay(),
             situation: 2,
             title: challenge.getTitle(),
-            happy: challenge.getHappy(),
-            beforeMent: challenge.getBeforeMent(),
-            afterMent: challenge.getAfterMent(),
             year: year,
             month: month,
             date: date
@@ -139,7 +136,6 @@ export default {
           situation: 2,
           property: course.getProperty(),
           title: course.getTitle(),
-          description: course.getDescription(),
           totalDays: course.getTotalDays(),
           year: year,
           month: month,
