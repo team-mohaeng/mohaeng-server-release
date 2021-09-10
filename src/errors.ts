@@ -50,3 +50,8 @@ export const notMatchSignIn: IFail = {
   status: 401,
   message: "이메일 계정 또는 비밀번호를 확인해주세요",
 };
+
+export const notExistCourseId: IFail = {
+  status: 404,
+  message: "해당 id의 코스가 존재하지 않습니다."
+}

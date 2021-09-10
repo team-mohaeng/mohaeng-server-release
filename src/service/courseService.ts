@@ -1,11 +1,15 @@
 import { SERVER_ERROR_MESSAGE } from "../constant";
 import CompleteCourseResponseDTO, { TotalCompleteChallengeResponseDTO, TotalCompleteCourseResponseDTO, WrapCompleteCourseResponseDTO } from '../dto/Course/Complete/CompleteCourseResponseDTO';
 import CourseLibraryResponseDTO, { SimpleCourseResponseDTO } from '../dto/Course/Library/CourseLibraryResponseDTO';
+import StartCourseResponseDTO, { StartChallengeDetailResponseDTO, StartCourseDetailResponseDTO } from '../dto/Course/Start/StartCourseResponseDTO';
 import { courses } from '../dummy/Course';
-import { notExistUser } from "../errors";
+import { notExistCourseId, notExistUser } from "../errors";
 import { getDay, getMonth, getYear } from '../formatter/mohaengDateFormatter';
 import { IFail } from "../interfaces/IFail";
+import { BeforeChallenge } from '../models/BeforeChallenge';
+import { CompleteChallenge } from '../models/CompleteChallenge';
 import { CompleteCourse } from "../models/CompleteCourse";
+import { ProgressChallenge } from '../models/ProgressChallenge';
 import { User } from "../models/User";
 
 export default {
@@ -159,4 +163,124 @@ export default {
       return serverError;
     }
   },
+  start: async (id: string, courseId: string) => {
+    try {
+      let user = await User.findOne({
+        attributes: ['nickname', 'current_course_id', 'current_challenge_id', 'is_completed'],
+        where: { id: id }
+      });
+
+      if (!user) {
+        return notExistUser;
+      }
+
+      const cid = Number(courseId) - 1;
+      if ((cid + 1) > courses.length || (cid+1) < 0) {
+        return notExistCourseId;
+      }
+
+      let challenges = courses[cid].getChallenges();
+      // 코스 변경인 경우
+      if (challenges.length > user.current_challenge_id) {
+        // 패널티 부여
+        User.update(
+          { challenge_penalty: true },
+          { where: { id: id } }
+        );
+        // 챌린지 삭제
+        BeforeChallenge.destroy(
+          { where: { user_id: id } }
+        );
+        ProgressChallenge.destroy(
+          { where: { user_id: id } }
+        );
+        CompleteChallenge.destroy(
+          { where: { user_id: id } }
+        );
+      }
+
+      // 코스 진행하기
+      User.update(
+        {
+          current_course_id: cid+1,
+          current_challenge_id: 1,
+          is_completed: false
+        },
+        { where: { id: id } }
+      );
+      ProgressChallenge.create(
+        {
+          user_id: Number(id),
+          course_id: cid + 1,
+          challenge_id: 1
+        }
+      );
+      BeforeChallenge.create(
+        {
+          user_id: Number(id),
+          course_id: cid + 1,
+          challenge_id: 2
+        }
+      );
+
+      let startChallenges: StartChallengeDetailResponseDTO[] = [];
+      for (let i = 0; i < challenges.length; i++) {
+        let situation = 0;
+        let challenge = challenges[i];
+
+        if (i == 0) situation = 1;
+        startChallenges.push({
+          day: challenge.getDay(),
+          situation: situation,
+          title: challenge.getTitle(),
+          happy: challenge.getHappy(),
+          beforeMent: challenge.getBeforeMent(),
+          afterMent: challenge.getAfterMent(),
+          year: "",
+          month: "",
+          date: "",
+          badge: ""
+        });
+      }
+
+      let course = courses[cid];
+      const startCourse: StartCourseDetailResponseDTO = {
+        id: course.getId(),
+        situation: 1,
+        property: course.getProperty(),
+        title: course.getTitle(),
+        totalDays: course.getTotalDays(),
+        currentDay: 1,
+        year: "",
+        month: "",
+        date: "",
+        challenges: startChallenges
+      };
+
+      user = await User.findOne({
+        attributes: ['challenge_penalty'],
+        where: { id: id }
+      });
+
+      const responseDTO: StartCourseResponseDTO = {
+        status: 200,
+        data: {
+          isComplete: false,
+          isPenalty: user.challenge_penalty,
+          mainCharacterImg: "",
+          popupCharacterImg: "",
+          course: startCourse
+        }
+      };
+
+      return responseDTO;
+    } catch (err) {
+      console.error(err.message);
+      const serverError: IFail = {
+        status: 500,
+        message: SERVER_ERROR_MESSAGE,
+      };
+      return serverError;
+    }
+  }
 };
