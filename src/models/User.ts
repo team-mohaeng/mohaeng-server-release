@@ -4,12 +4,10 @@ import sequelize from './index';
 interface UserAttributes {
   id?: number; //not null, auto increment
   uid: string;
-  token: string;
+  token?: string;
   email : string;
   password: string;
   nickname: string;
-  gender: number;
-  birth_year: number;
   affinity?: number;
   level?: number;
   current_course_id?: number;
@@ -37,12 +35,10 @@ interface UserAttributes {
 export class User extends Model<UserAttributes>{
   public readonly id!: number;
   public uid!: string;
-  public token!: string;
+  public token: string;
   public email!: string;
   public password!: string;
   public nickname!: string;
-  public gender!: number;
-  public birth_year!: number;
   public affinity: number;
   public level: number;
   public current_course_id: number | null;
@@ -79,7 +75,6 @@ User.init(
     },
     token: {
       type: DataTypes.STRING(100),
-      allowNull: false,
       unique: true,
     },
     email: {
@@ -98,14 +93,6 @@ User.init(
       type: DataTypes.STRING(10),
       allowNull: false,
       unique: true,
-    },
-    gender: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      allowNull: false,
-    },
-    birth_year: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      allowNull: false,
     },
     affinity: {
       type: DataTypes.INTEGER.UNSIGNED,
