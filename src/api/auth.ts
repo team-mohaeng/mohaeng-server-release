@@ -3,7 +3,7 @@ import { check, validationResult } from "express-validator";
 import { SignUpRequestDTO } from "../dto/Auth/SignUp/request/SignUpRequestDTO";
 import { SignInRequestDTO } from "../dto/Auth/SignIn/request/SignInRequestDTO";
 import authService from "../service/authService";
-import verifyFCM from "../middleware/verifyFCM";
+import verifyFCM from "../middleware/verifyToken";
 
 const router = express.Router();
 
@@ -29,21 +29,16 @@ async (req, res) => {
     email,
     password,
     nickname,
-    gender,
-    birth_year
   } = req.body;
 
   const requestDTO: SignUpRequestDTO = {
     email: email,
     password: password,
     nickname: nickname,
-    gender: gender,
-    birth_year: birth_year
   };
   const result = await authService.signUp(requestDTO);
   res.status(result.status).json(result);
 })
-
 
 router.post("/signin", async (req, res) => {
   const {

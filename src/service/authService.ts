@@ -12,7 +12,7 @@ import { serverError, notExistUid, alreadyExistEmail, alreadyExistNickname, notM
 export default {
   signUp: async (dto: SignUpRequestDTO) => {
     try{
-      const { email, password, nickname, gender, birth_year } = dto;
+      const { email, password, nickname } = dto;
 
       const userEmail = await User.findOne({ attributes: ['email'], where: {email: email} });
       if (userEmail) {
@@ -51,12 +51,9 @@ export default {
       //User 생성
       const user = await User.create({
         uid: uid,
-        token: uid, //나중에 token으로 바꿔줘야함
         email: email,
         password: encryptedPassword,
         nickname: nickname,
-        gender: gender,
-        birth_year: birth_year
       });
 
       const payload = {
@@ -97,12 +94,13 @@ export default {
         return notMatchSignIn;
       }
 
+      //user.update -> firebase 토큰 추가 해주기
+
       const payload = {
         user: {
           id: user.id,
         },
       };
-      console.log(user.id);
       
       const jwtToken = jwt.sign(
         payload,

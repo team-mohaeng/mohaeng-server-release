@@ -3,7 +3,7 @@ import { notGetToken, expiredToken } from "../errors";
 
 export default (req, next) => {
   // Get token from header
-  const token = req.header("fcm");
+  const token = req.header("token");
 
   // Check if not token
   if (!token) {
