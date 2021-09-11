@@ -29,7 +29,7 @@ app.use("/apidoc", express.static(apidocPath));
 
 app.use("/api/profile", require("./api/profile"));
 app.use("/api/courses", require("./api/course"));
-app.use("/api/auth", require("./api/auth"));
+app.use("/api", require("./api/auth"));
 
 // error handler
 app.use(function (err, req, res, next) {
