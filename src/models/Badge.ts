@@ -4,12 +4,12 @@ import { User } from "./User"
 
 interface BadgeAttributes {
   id?: number;
-  user_id: number;
+  user_id: string;
 };
 
 export class Badge extends Model<BadgeAttributes>{
   public readonly id!: number;
-  public user_id!: number;
+  public user_id!: string;
 
   public static associations: {
     user_id: Association<User, Badge>;
@@ -23,7 +23,7 @@ Badge.init(
       primaryKey: true,
     },
     user_id: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       primaryKey: true,
 
     },
