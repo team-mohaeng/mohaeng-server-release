@@ -4,7 +4,7 @@ import { User } from "../models/User";
 import { Feed } from "../models/Feed";
 import { Badge } from "../models/Badge";
 import { levels }  from "../dummy/Level"
-import { getYear, getMonth, getYesterday } from "../formatter/feedDateFormatter";
+import { getYear, getMonth, getYesterday } from "../formatter/mohaengDateFormatter";
 import { feedLengthCheck, notExistFeedContent, notExistUser, serverError } from "../errors";
 
 export default {
@@ -38,7 +38,10 @@ export default {
 
       //안부 연속 쓰기 성공 여부
       if (
-        await Feed.findOne({ where: { user_id: id, create_time: {[Op.between]: [`${getYear()}-${getMonth()}-${getYesterday()}`, `${getYear()}-${getMonth()}-${getYesterday()} 23:59:59`]} }})
+        await Feed.findOne({
+          where: { user_id: id, 
+          create_time: {[Op.between]:
+          [`${getYear(new Date())}-${getMonth(new Date())}-${getYesterday(new Date())}`, `${getYear(new Date())}-${getMonth(new Date())}-${getYesterday(new Date())} 23:59:59`]} }})
       ) {
         user.feed_success_count=user.feed_success_count+1;
       }
@@ -103,7 +106,7 @@ export default {
       }
 
       //5: 안부 작성 [s] (중급) 15개 행복한 작성러
-      if (user.feed_count == 15) {
+      else if (user.feed_count == 15) {
         isBadgeNew = true;
         await Badge.create({
           id: 5,
@@ -112,7 +115,7 @@ export default {
       }
 
       //8: 안부 작성 작성 [s] (고급) 30개 프로 돌보미
-      if (user.feed_count == 30) {
+      else if (user.feed_count == 30) {
         isBadgeNew = true;
         await Badge.create({
           id: 8,
