@@ -4,7 +4,7 @@ import { User } from "./User"
 
 interface FeedAttributes {
   id?: number;
-  user_id: number;
+  user_id: string;
   nickname: string;
   content?: string;
   mood: number;
@@ -15,7 +15,7 @@ interface FeedAttributes {
 
 export class Feed extends Model<FeedAttributes>{
   public readonly id!: number;
-  public user_id!: number;
+  public user_id!: string;
   public nickname!: string;
   public content: string;
   public mood!: number;
@@ -31,7 +31,7 @@ export class Feed extends Model<FeedAttributes>{
 Feed.init(
   {
     user_id: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       allowNull: false,
     },
     nickname: {

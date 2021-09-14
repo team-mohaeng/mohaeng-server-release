@@ -15,7 +15,7 @@ export default {
         return notExistUser;
       }
 
-      if ( nickname.length > 6 || nickname.length ==0 ) {
+      if ( nickname.length > 6 || nickname.length == 0 ) {
         return nicknameLengthCheck;
       }
     

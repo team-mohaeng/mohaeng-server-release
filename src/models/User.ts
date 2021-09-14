@@ -95,7 +95,7 @@ User.init(
     },
     affinity: {
       type: DataTypes.INTEGER.UNSIGNED,
-      defaultValue: 20,
+      defaultValue: 0,
     },
     level: {
       type: DataTypes.STRING(10),

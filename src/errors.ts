@@ -55,3 +55,13 @@ export const notExistCourseId: IFail = {
   status: 404,
   message: "해당 id의 코스가 존재하지 않습니다."
 }
+
+export const notExistFeedContent: IFail = {
+  status: 412,
+  message: "안부 내용을 작성해주세요."
+}
+
+export const feedLengthCheck: IFail = {
+  status: 412,
+  message: "피드 내용은 40자 이하로 작성해주세요. "
+}
