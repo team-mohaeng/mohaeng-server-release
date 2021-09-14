@@ -1,5 +1,5 @@
 /* 뱃지 클래스 */
-class Badge {
+export class Badge {
   // 아이디, 이름, 획득방법, AWS S3 이미지 URL
   private id: number;
   private name: string;
