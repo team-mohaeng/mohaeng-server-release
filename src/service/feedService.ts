@@ -94,8 +94,6 @@ export default {
 
       //2: 안부 작성 [s] (초급) 1개 첫 안부 작성      
       let isBadgeNew = false;
-      console.log("feed_count: " + user.feed_count);
-      console.log("feed_success_count: " + user.feed_success_count);
       if (user.feed_count == 1) {
         isBadgeNew = true;
         await Badge.create({
@@ -153,6 +151,7 @@ export default {
         }, {
           where: { id: id }
         });
+        
       } else {
         await User.update({
           affinity: user.affinity,
