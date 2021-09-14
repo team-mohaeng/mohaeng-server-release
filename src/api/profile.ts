@@ -6,7 +6,6 @@ import auth from "../middleware/auth";
 const router = express.Router();
 
 router.put("/", auth, async (req, res) => {
-  console.log(req.body.user);
   const nickname = req.body.nickname;
   const requestDTO: ChangeNicknameRequestDTO = {
     nickname: nickname
