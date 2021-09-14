@@ -75,7 +75,6 @@ User.init(
     },
     token: {
       type: DataTypes.STRING(100),
-      unique: true,
     },
     email: {
       type: DataTypes.STRING(30),
