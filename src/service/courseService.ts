@@ -3,6 +3,7 @@ import CompleteCourseResponseDTO, { TotalCompleteChallengeResponseDTO, TotalComp
 import CourseLibraryResponseDTO, { SimpleCourseResponseDTO } from '../dto/Course/Library/CourseLibraryResponseDTO';
 import StartCourseResponseDTO, { StartChallengeDetailResponseDTO, StartCourseDetailResponseDTO } from '../dto/Course/Start/StartCourseResponseDTO';
 import { courses } from '../dummy/Course';
+import { challengeBadges } from '../dummy/Badge';
 import { notExistCourseId, notExistUser } from "../errors";
 import { getDay, getMonth, getYear } from '../formatter/mohaengDateFormatter';
 import { IFail } from "../interfaces/IFail";
@@ -166,7 +167,7 @@ export default {
   start: async (id: string, courseId: string) => {
     try {
       let user = await User.findOne({
-        attributes: ['nickname', 'current_course_id', 'current_challenge_id', 'is_completed'],
+        attributes: ['nickname', 'current_course_id', 'current_challenge_id', 'is_completed', 'challenge_success_count'],
         where: { id: id }
       });
 
@@ -227,8 +228,22 @@ export default {
       for (let i = 0; i < challenges.length; i++) {
         let situation = 0;
         let challenge = challenges[i];
+        let badgeName = "";
 
-        if (i == 0) situation = 1;
+        if (i == 0) {
+          situation = 1;
+
+          // 진행할 챌린지에 대해서 뱃지 조건
+          if (user.challenge_success_count + 1 == 3) {
+            badgeName = challengeBadges[0].getName();
+          } else if (user.challenge_success_count + 1 == 21) {
+            badgeName = challengeBadges[1].getName();
+          } else if (user.challenge_success_count + 1 == 49) {
+            badgeName = challengeBadges[2].getName();
+          }
+          console.log(badgeName);
+        }
+        
         startChallenges.push({
           day: challenge.getDay(),
           situation: situation,
@@ -239,7 +254,7 @@ export default {
           year: "",
           month: "",
           date: "",
-          badge: ""
+          badge: badgeName
         });
       }
 

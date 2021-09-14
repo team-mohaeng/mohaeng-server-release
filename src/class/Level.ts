@@ -1,4 +1,4 @@
-class Level {
+export class Level {
   private level: number;
   private fullHappy: number;
   private characterType?: number;
