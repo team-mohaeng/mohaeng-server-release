@@ -28,6 +28,7 @@ app.use(express.json());
 app.use("/apidoc", express.static(apidocPath));
 
 app.use("/api/profile", require("./api/profile"));
+app.use("/api/feed", require("./api/feed"));
 app.use("/api/courses", require("./api/course"));
 app.use("/api", require("./api/auth"));
 
