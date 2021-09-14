@@ -15,3 +15,10 @@ export function getDay(date: Date) {
 
   return day.toString();
 }
+
+export function getYesterday(date: Date) {
+  let yesterday = (date.getDate()-1).toString();
+  yesterday = parseInt(yesterday) >= 10 ? yesterday: '0' + yesterday;
+​
+  return yesterday.toString();
+}
