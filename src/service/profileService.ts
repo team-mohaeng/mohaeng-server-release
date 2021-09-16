@@ -1,6 +1,6 @@
 import { User } from "../models/User";
-import { ChangeNicknameRequestDTO } from "../dto/MyPage/nickname/request/ChangeNicknameRequestDto";
-import { ChangeNicknameResponseDTO } from "../dto/MyPage/nickname/response/ChangeNicknameResponseDto";
+import { ChangeNicknameRequestDTO } from "../dto/Profile/nickname/request/ChangeNicknameRequestDto";
+import { ChangeNicknameResponseDTO } from "../dto/Profile/nickname/response/ChangeNicknameResponseDto";
 import { SERVER_ERROR_MESSAGE } from "../constant";
 import { IFail } from "../interfaces/IFail";
 import { notExistUser, nicknameLengthCheck, sameNickname, alreadyExistNickname } from "../errors";
