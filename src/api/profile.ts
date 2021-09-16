@@ -1,5 +1,5 @@
 import express from "express";
-import { ChangeNicknameRequestDTO } from "../dto/Profile/nickname/request/ChangeNicknameRequestDto"
+import { ChangeNicknameRequestDTO } from "../dto/Profile/Nickname/request/ChangeNicknameRequestDTO"
 import profileService from "../service/profileService";
 import auth from "../middleware/auth";
 

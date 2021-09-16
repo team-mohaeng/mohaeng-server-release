@@ -1,5 +1,5 @@
 import express from "express";
-import { feedCreateRequestDTO } from "../dto/Feed/request/feedCreateRequestDTO";
+import { CreateFeedRequestDTO } from "../dto/Feed/Create/request/CreateFeedRequestDTO";
 import feedService from "../service/feedService";
 import auth from "../middleware/auth";
 import upload from "../modules/upload";
@@ -16,7 +16,7 @@ router.post("/", upload.single('image'), auth, async (req, res) => {
   }
   const feedParams = JSON.parse(req.body.feed);
   const { mood, content, isPrivate } = feedParams;
-  const requestDTO: feedCreateRequestDTO = {
+  const requestDTO: CreateFeedRequestDTO = {
     mood: mood,
     content: content,
     image: image,
