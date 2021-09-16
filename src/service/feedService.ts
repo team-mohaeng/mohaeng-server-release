@@ -6,10 +6,12 @@ import { Feed } from "../models/Feed";
 import { Badge } from "../models/Badge";
 import { levels }  from "../dummy/Level"
 import { getYear, getMonth, getYesterday, getDay } from "../formatter/mohaengDateFormatter";
-import { alreadyExsitEmoji, feedLengthCheck, notAuthorized, notExistFeedContent, notExistUser, notExsitEmoji, notExsitFeed, serverError } from "../errors";
+import { alreadyExsitEmoji, feedLengthCheck, notAuthorized, notExistFeedContent, notExistUser, notExistEmoji, notExsitFeed, serverError, wrongEmojiId } from "../errors";
 import { AddEmojiRequestDTO } from "../dto/Feed/Emoji/request/AddEmojiRequestDTO";
 import { Emoji } from "../models/Emoji";
 import { AddEmojiResponseDTO } from "../dto/Feed/Emoji/response/AddEmojiResponseDTO";
+import { DeleteEmojiRequestDTO } from "../dto/Feed/Emoji/request/DeleteEmojiRequestDTO";
+import { DeleteEmojiResponseDTO } from "../dto/Feed/Emoji/response/DeleteEmojiResponseDTO";
 
 export default {
   create:async(id: string, dto: feedCreateRequestDTO) => {
@@ -237,7 +239,7 @@ export default {
       const { emojiId } = dto;
       const emojiNumber = +emojiId;
       if (emojiNumber == 0 || emojiNumber>6){
-        return notExsitEmoji;
+        return wrongEmojiId;
       }
 
       //이미 이모지가 있는 경우
@@ -259,6 +261,34 @@ export default {
         message: "이모지를 추가하였습니다."
       };
       return requestDTO;
+
+    } catch (err) {
+      console.error(err);
+      return serverError;
+    }
+  },
+
+  deleteEmoji: async(userId: string, feedId: string, dto: DeleteEmojiRequestDTO) => {
+    try{
+      const user = await User.findOne({ where: { id: userId }});
+      if (!user) {
+        return notExistUser;
+      }
+      
+      const { emojiId } = dto;
+      const emoji = await Emoji.findOne({ where: { emoji_id: emojiId, user_id: userId, feed_id: feedId }});
+      if(emoji) {
+        await Emoji.destroy({where: { emoji_id: emojiId, user_id: userId, feed_id: feedId }});
+      }
+      else {
+        return notExistEmoji;
+      }
+
+      const responseDTO: DeleteEmojiResponseDTO = {
+        status: 200,
+        message: "이모지를 삭제했습니다."
+      }
+      return responseDTO;
 
     } catch (err) {
       console.error(err);
