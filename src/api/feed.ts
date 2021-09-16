@@ -25,4 +25,10 @@ router.post("/", upload.single('image'), auth, async (req, res) => {
   const result = await feedService.create(req.body.user.id, requestDTO);
   res.status(result.status).json(result);
 })
+
+router.post("/:id", auth, async (req, res) => {
+  const result = await feedService.delete(req.body.user.id, req.params.id);
+  res.status(result.status).json(result);
+})
+
 module.exports = router;
