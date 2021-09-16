@@ -1,6 +1,7 @@
 import express from "express";
 import { feedCreateRequestDTO } from "../dto/Feed/request/feedCreateRequestDTO";
 import { AddEmojiRequestDTO } from "../dto/Feed/Emoji/request/AddEmojiRequestDTO";
+import { DeleteEmojiRequestDTO } from "../dto/Feed/Emoji/request/DeleteEmojiRequestDTO";
 import feedService from "../service/feedService";
 import auth from "../middleware/auth";
 import upload from "../modules/upload";
@@ -38,6 +39,15 @@ router.put("/emoji/:id", auth, async (req, res) => {
     emojiId: emojiId
   }
   const result = await feedService.emoji(req.body.user.id, req.params.id, requestDTO);
+  res.status(result.status).json(result);
+})
+
+router.delete("/emoji/:id", auth, async (req, res) => {
+  const { emojiId } = req.body;
+  const requestDTO: DeleteEmojiRequestDTO = {
+    emojiId: emojiId
+  }
+  const result = await feedService.deleteEmoji(req.body.user.id, req.params.id, requestDTO);
   res.status(result.status).json(result);
 })
 
