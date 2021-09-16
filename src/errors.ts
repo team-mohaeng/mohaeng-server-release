@@ -75,3 +75,13 @@ export const notExsitFeed: IFail = {
   status: 405,
   message: "피드가 존재하지 않습니다."
 }
+
+export const notExsitEmoji: IFail = {
+  status: 404,
+  message: "잘못된 이모지 id입니다."
+}
+
+export const alreadyExsitEmoji: IFail = {
+  status: 404,
+  message: "이미 추가된 이모지입니다."
+}
