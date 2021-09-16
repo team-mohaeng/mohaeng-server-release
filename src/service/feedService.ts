@@ -1,11 +1,12 @@
 import { feedCreateRequestDTO } from "../dto/Feed/request/feedCreateRequestDTO";
 import { feedCreateResponseDTO, feedResponseDTO, levelUpResponseDTO, characterCardResponseDTO } from "../dto/Feed/response/feedCreateResponseDTO";
+import { DeleteFeedResponseDTO } from "../dto/Feed/response/DeleteFeedResponseDTO";
 import { User } from "../models/User";
 import { Feed } from "../models/Feed";
 import { Badge } from "../models/Badge";
 import { levels }  from "../dummy/Level"
-import { getYear, getMonth, getYesterday } from "../formatter/mohaengDateFormatter";
-import { feedLengthCheck, notExistFeedContent, notExistUser, serverError } from "../errors";
+import { getYear, getMonth, getYesterday, getDay } from "../formatter/mohaengDateFormatter";
+import { feedLengthCheck, notAuthorized, notExistFeedContent, notExistUser, notExsitFeed, serverError } from "../errors";
 
 export default {
   create:async(id: string, dto: feedCreateRequestDTO) => {
@@ -183,6 +184,35 @@ export default {
       return responseDTO;
 
     } catch (err) {
+      console.error(err);
+      return serverError;
+    }
+  },
+
+  delete: async(user_id: string, id: string) => {
+    try{
+      const feed = await Feed.findOne({ where: {id: id} });
+      if(!feed) {
+        return notExsitFeed;
+      }
+
+      if (user_id == feed.user_id) {
+        if (`${getYear(feed.create_time)}`==`${getYear(new Date())}` && `${getMonth(feed.create_time)}`==`${getMonth(new Date())}` && `${getDay(feed.create_time)}`==`${getDay(new Date())}`) {
+          await User.update({ is_written: false, feed_penalty: true }, { where: { id: user_id } });
+          await Feed.destroy({ where: {id: id} });
+        }
+        await Feed.destroy({ where: {id: id} });
+      }
+      else {
+        return notAuthorized;
+      }
+      const responseDTO: DeleteFeedResponseDTO = {
+        status: 200,
+        message: "피드를 삭제했습니다."
+      }
+      return responseDTO;
+
+    } catch(err){
       console.error(err);
       return serverError;
     }
