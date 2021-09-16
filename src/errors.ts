@@ -63,5 +63,15 @@ export const notExistFeedContent: IFail = {
 
 export const feedLengthCheck: IFail = {
   status: 412,
-  message: "피드 내용은 40자 이하로 작성해주세요. "
+  message: "피드 내용은 40자 이하로 작성해주세요."
+}
+
+export const notAuthorized: IFail = {
+  status: 403,
+  message: "작성자만 피드를 삭제할 수 있습니다."
+}
+
+export const notExsitFeed: IFail = {
+  status: 405,
+  message: "피드가 존재하지 않습니다."
 }
