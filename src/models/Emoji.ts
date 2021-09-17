@@ -4,15 +4,15 @@ import { User } from "./User";
 import { Feed } from "./Feed";
 
 interface EmojiAttributes {
-  user_id: number;
-  emoji_id: number;
-  feed_id: number;
+  user_id: string;
+  emoji_id: string;
+  feed_id: string;
 };
 
 export class Emoji extends Model<EmojiAttributes>{
-  public readonly user_id!: number;
-  public readonly emoji_id!: number;
-  public readonly feed_id!: number;
+  public readonly user_id!: string;
+  public readonly emoji_id!: string;
+  public readonly feed_id!: string;
 
   public static associations: {
     user_id: Association<User, Emoji>;
@@ -23,17 +23,17 @@ export class Emoji extends Model<EmojiAttributes>{
 Emoji.init(
   {
     user_id: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       allowNull: false,
       primaryKey: true,
     },
     emoji_id: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       allowNull: false,
       primaryKey: true,
     },
     feed_id: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       allowNull: false,
       primaryKey: true,
     },

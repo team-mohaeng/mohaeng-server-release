@@ -6,7 +6,12 @@ import { Feed } from "../models/Feed";
 import { Badge } from "../models/Badge";
 import { levels }  from "../dummy/Level"
 import { getYear, getMonth, getYesterday, getDay } from "../formatter/mohaengDateFormatter";
-import { feedLengthCheck, notAuthorized, notExistFeedContent, notExistUser, notExsitFeed, serverError } from "../errors";
+import { alreadyExsitEmoji, feedLengthCheck, notAuthorized, notExistFeedContent, notExistUser, notExistEmoji, notExsitFeed, serverError, wrongEmojiId } from "../errors";
+import { AddEmojiRequestDTO } from "../dto/Feed/Emoji/request/AddEmojiRequestDTO";
+import { Emoji } from "../models/Emoji";
+import { AddEmojiResponseDTO } from "../dto/Feed/Emoji/response/AddEmojiResponseDTO";
+import { DeleteEmojiRequestDTO } from "../dto/Feed/Emoji/request/DeleteEmojiRequestDTO";
+import { DeleteEmojiResponseDTO } from "../dto/Feed/Emoji/response/DeleteEmojiResponseDTO";
 
 export default {
   create:async(id: string, dto: CreateFeedRequestDTO) => {
@@ -191,7 +196,11 @@ export default {
 
   delete: async(userId: string, id: string) => {
     try{
-      const feed = await Feed.findOne({ where: {id: id} });
+      const user = await User.findOne({ where: { id: user_id }});
+      if (!user) {
+        return notExistUser;
+      }
+      const feed = await Feed.findOne({ where: {id: id}});
       if(!feed) {
         return notExsitFeed;
       }
@@ -201,7 +210,7 @@ export default {
           await User.update({ is_written: false, feed_penalty: true }, { where: { id: userId } });
           await Feed.destroy({ where: {id: id} });
         }
-        await Feed.destroy({ where: {id: id} });
+        await Feed.destroy({ where: {id: id}});
       }
       else {
         return notAuthorized;
@@ -213,6 +222,74 @@ export default {
       return responseDTO;
 
     } catch(err){
+      console.error(err);
+      return serverError;
+    }
+  },
+
+  emoji: async(userId: string, feedId: string, dto: AddEmojiRequestDTO) => {
+    try{
+      const user = await User.findOne({ where: { id: userId }});
+      if (!user) {
+        return notExistUser;
+      }
+
+      //잘못된 이모지 번호
+      const { emojiId } = dto;
+      const emojiNumber = +emojiId;
+      if (emojiNumber == 0 || emojiNumber>6){
+        return wrongEmojiId;
+      }
+
+      //이미 이모지가 있는 경우
+      const emojiExist = await Emoji.findOne({ where: { emoji_id: emojiId, user_id: userId, feed_id: feedId }});
+      if(emojiExist) {
+        return alreadyExsitEmoji;
+      }
+
+      const emoji = await Emoji.findOne({ where: { user_id: userId, feed_id: feedId }});
+      if (emoji) {
+        await Emoji.update({ emoji_id: emojiId }, { where: { user_id: userId, feed_id: feedId }});
+      }
+      else {
+        await Emoji.create({ emoji_id: emojiId, user_id: userId, feed_id: feedId });
+      }
+
+      const requestDTO: AddEmojiResponseDTO = {
+        status: 200,
+        message: "이모지를 추가하였습니다."
+      };
+      return requestDTO;
+
+    } catch (err) {
+      console.error(err);
+      return serverError;
+    }
+  },
+
+  deleteEmoji: async(userId: string, feedId: string, dto: DeleteEmojiRequestDTO) => {
+    try{
+      const user = await User.findOne({ where: { id: userId }});
+      if (!user) {
+        return notExistUser;
+      }
+      
+      const { emojiId } = dto;
+      const emoji = await Emoji.findOne({ where: { emoji_id: emojiId, user_id: userId, feed_id: feedId }});
+      if(emoji) {
+        await Emoji.destroy({where: { emoji_id: emojiId, user_id: userId, feed_id: feedId }});
+      }
+      else {
+        return notExistEmoji;
+      }
+
+      const responseDTO: DeleteEmojiResponseDTO = {
+        status: 200,
+        message: "이모지를 삭제했습니다."
+      }
+      return responseDTO;
+
+    } catch (err) {
       console.error(err);
       return serverError;
     }
