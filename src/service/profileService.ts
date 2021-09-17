@@ -1,9 +1,7 @@
 import { User } from "../models/User";
-import { ChangeNicknameRequestDTO } from "../dto/Profile/nickname/request/ChangeNicknameRequestDto";
-import { ChangeNicknameResponseDTO } from "../dto/Profile/nickname/response/ChangeNicknameResponseDto";
-import { SERVER_ERROR_MESSAGE } from "../constant";
-import { IFail } from "../interfaces/IFail";
-import { notExistUser, nicknameLengthCheck, sameNickname, alreadyExistNickname } from "../errors";
+import { ChangeNicknameRequestDTO } from "../dto/Profile/Nickname/request/ChangeNicknameRequestDTO";
+import { ChangeNicknameResponseDTO } from "../dto/Profile/Nickname/response/ChangeNicknameResponseDTO";
+import { notExistUser, nicknameLengthCheck, sameNickname, alreadyExistNickname, serverError } from "../errors";
 
 export default {
   changeNickname: async (id: string, dto: ChangeNicknameRequestDTO) => {
@@ -23,7 +21,7 @@ export default {
         return sameNickname;
       }
       
-      const hasNickname = await User.findOne({ attributes: ['nickname'], where: {nickname: nickname} });
+      const hasNickname = await User.findOne({ attributes: ['nickname'], where: {nickname: nickname } });
       if (hasNickname) {
         return alreadyExistNickname;
       }
@@ -33,6 +31,7 @@ export default {
       }, {
         where: {id: id}
       });
+      
       const responseDTO: ChangeNicknameResponseDTO = {
         status: 200,
         message: "닉네임을 변경했습니다."
@@ -40,11 +39,7 @@ export default {
       return responseDTO;
 
     } catch (err) {
-      console.error(err.message);
-      const serverError: IFail = {
-        status: 500,
-        message: SERVER_ERROR_MESSAGE,
-      };
+      console.error(err);
       return serverError;
     }
   }

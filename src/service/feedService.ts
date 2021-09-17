@@ -1,6 +1,6 @@
-import { feedCreateRequestDTO } from "../dto/Feed/request/feedCreateRequestDTO";
-import { feedCreateResponseDTO, feedResponseDTO, levelUpResponseDTO, characterCardResponseDTO } from "../dto/Feed/response/feedCreateResponseDTO";
-import { DeleteFeedResponseDTO } from "../dto/Feed/response/DeleteFeedResponseDTO";
+import { CreateFeedRequestDTO } from "../dto/Feed/Create/request/CreateFeedRequestDTO";
+import { CreateFeedResponseDTO, FeedResponseDTO, LevelUpResponseDTO, CharacterCardResponseDTO } from "../dto/Feed/Create/response/CreateFeedResponseDTO";
+import { DeleteFeedResponseDTO } from "../dto/Feed/Delete/DeleteFeedResponseDTO";
 import { User } from "../models/User";
 import { Feed } from "../models/Feed";
 import { Badge } from "../models/Badge";
@@ -14,7 +14,7 @@ import { DeleteEmojiRequestDTO } from "../dto/Feed/Emoji/request/DeleteEmojiRequ
 import { DeleteEmojiResponseDTO } from "../dto/Feed/Emoji/response/DeleteEmojiResponseDTO";
 
 export default {
-  create:async(id: string, dto: feedCreateRequestDTO) => {
+  create:async(id: string, dto: CreateFeedRequestDTO) => {
     try{
       const sequelize = require("sequelize")
       const Op = sequelize.Op;
@@ -81,12 +81,12 @@ export default {
         user.level = ++user.level;
       }
 
-      let levelUpResponse: levelUpResponseDTO;
+      let levelUpResponse: LevelUpResponseDTO;
       if (levelUp) {
         //캐릭터카드 확정 후 수정 예정
-        const characterCards: Array<characterCardResponseDTO> = new Array<characterCardResponseDTO>();
+        const characterCards: Array<CharacterCardResponseDTO> = new Array<CharacterCardResponseDTO>();
         characterCards.forEach((characterCard) => {
-          const characterCardResponse: characterCardResponseDTO = {
+          const characterCardResponse: CharacterCardResponseDTO = {
             id: 1,
             image: "imageUrl"
           }
@@ -174,7 +174,7 @@ export default {
         });
       }
 
-      const feedResponse: feedResponseDTO = {
+      const feedResponse: FeedResponseDTO = {
         happy: happy,
         userHappy: user.affinity,
         totalHappy: totalHappy,
@@ -182,7 +182,7 @@ export default {
         levelUp: levelUpResponse
       }
 
-      const responseDTO: feedCreateResponseDTO = {
+      const responseDTO: CreateFeedResponseDTO = {
         status: 200,
         data: feedResponse
       }
@@ -194,7 +194,7 @@ export default {
     }
   },
 
-  delete: async(user_id: string, id: string) => {
+  delete: async(userId: string, id: string) => {
     try{
       const user = await User.findOne({ where: { id: user_id }});
       if (!user) {
@@ -205,10 +205,9 @@ export default {
         return notExsitFeed;
       }
 
-      if (user_id == feed.user_id) {
-        //오늘 작성한 피드를 삭제할 경우
+      if (userId == feed.user_id) {
         if (`${getYear(feed.create_time)}`==`${getYear(new Date())}` && `${getMonth(feed.create_time)}`==`${getMonth(new Date())}` && `${getDay(feed.create_time)}`==`${getDay(new Date())}`) {
-          await User.update({ is_written: false, feed_penalty: true }, { where: { id: user_id } });
+          await User.update({ is_written: false, feed_penalty: true }, { where: { id: userId } });
           await Feed.destroy({ where: {id: id} });
         }
         await Feed.destroy({ where: {id: id}});

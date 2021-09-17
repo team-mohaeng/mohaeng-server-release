@@ -1,5 +1,5 @@
 import express from "express";
-import { feedCreateRequestDTO } from "../dto/Feed/request/feedCreateRequestDTO";
+import { CreateFeedRequestDTO } from "../dto/Feed/Create/request/CreateFeedRequestDTO";
 import { AddEmojiRequestDTO } from "../dto/Feed/Emoji/request/AddEmojiRequestDTO";
 import { DeleteEmojiRequestDTO } from "../dto/Feed/Emoji/request/DeleteEmojiRequestDTO";
 import feedService from "../service/feedService";
@@ -18,7 +18,7 @@ router.post("/", upload.single('image'), auth, async (req, res) => {
   }
   const feedParams = JSON.parse(req.body.feed);
   const { mood, content, isPrivate } = feedParams;
-  const requestDTO: feedCreateRequestDTO = {
+  const requestDTO: CreateFeedRequestDTO = {
     mood: mood,
     content: content,
     image: image,
