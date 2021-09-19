@@ -22,12 +22,13 @@ export default {
       }
 
       const currentCourseId = user.current_course_id;
-      console.log("현재 진행 중인 코스 아이디: " + currentCourseId);
       const isProgress = currentCourseId != null ? true : false;
 
       const completeCourses = await CompleteCourse.findAll({
-        attributes: ["course_id", "end_date"],
+        attributes: ["course_id"],
+        group: ["user_id", "course_id"],
         where: { user_id: id },
+        order: ["course_id"]
       });
 
       let beforeCourses: SimpleCourseResponseDTO[] = [];
@@ -35,20 +36,22 @@ export default {
 
       for (let i = 0; i < courses.length; ++i) {
         let flag = false;
-        if ((i+1) == currentCourseId) {
+        if (isProgress && (i+1) == currentCourseId) {
           continue; // 현재 진행 중인 코스면 skip
         }
+
+        let course = courses[i];
         
         // 완료한 코스일 경우
         for (let j = 0; j < completeCourses.length; ++j) {
-          if (completeCourses[j].course_id == (i + 1)) {
+          if (completeCourses[j].course_id == course.getId()) {
             afterCourses.push({
-              id: courses[i+1].getId(),
+              id: course.getId(),
               situation: 2,
-              property: courses[i+1].getProperty(),
-              title: courses[i+1].getTitle(),
-              description: courses[i+1].getDescription(),
-              totalDays: courses[i+1].getTotalDays()
+              property: course.getProperty(),
+              title: course.getTitle(),
+              description: course.getDescription(),
+              totalDays: course.getTotalDays()
             });
             flag = true;
             break;
@@ -58,12 +61,12 @@ export default {
         // 진행 전인 코스일 경우
         if (!flag) {
           beforeCourses.push({
-            id: courses[i].getId(),
+            id: course.getId(),
             situation: 0,
-            property: courses[i].getProperty(),
-            title: courses[i].getTitle(),
-            description: courses[i].getDescription(),
-            totalDays: courses[i].getTotalDays()
+            property: course.getProperty(),
+            title: course.getTitle(),
+            description: course.getDescription(),
+            totalDays: course.getTotalDays()
           });
         }
       }
