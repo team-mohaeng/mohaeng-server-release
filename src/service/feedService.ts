@@ -35,6 +35,8 @@ export default {
       await Feed.create({
         user_id: id,
         nickname: user.nickname,
+        current_course_id: user.current_course_id,
+        current_challenge_id: user.current_course_id,
         mood: mood,
         content: content,
         image: image,
@@ -196,7 +198,7 @@ export default {
 
   delete: async(userId: string, id: string) => {
     try{
-      const user = await User.findOne({ where: { id: user_id }});
+      const user = await User.findOne({ where: { id: userId }});
       if (!user) {
         return notExistUser;
       }
