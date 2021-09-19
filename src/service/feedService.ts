@@ -5,13 +5,16 @@ import { User } from "../models/User";
 import { Feed } from "../models/Feed";
 import { Badge } from "../models/Badge";
 import { levels }  from "../dummy/Level"
-import { getYear, getMonth, getYesterday, getDay } from "../formatter/mohaengDateFormatter";
+import { courses } from '../dummy/Course';
+import { getYear, getMonth, getDay, getYesterday } from "../formatter/mohaengDateFormatter";
 import { feedLengthCheck, notAuthorized, notExistFeedContent, notExistUser, notExsitFeed, serverError } from "../errors";
+import { ReadFeadResponseDTO, FeedDTO, EmojiDTO } from "../dto/Feed/Read/response/ReadFeedResponseDTO";
+import { Emoji } from "../models/Emoji";
+const sequelize = require("sequelize");
 
 export default {
   create:async(id: string, dto: feedCreateRequestDTO) => {
     try{
-      const sequelize = require("sequelize")
       const Op = sequelize.Op;
       const { mood, content, image, isPrivate } = dto;
       const user = await User.findOne({ where: {id: id} });
@@ -213,6 +216,90 @@ export default {
       return responseDTO;
 
     } catch(err){
+      console.error(err);
+      return serverError;
+    }
+  },
+
+  myFeed: async(userId: string, year: string, month: string) => {
+    try{
+      const user = await User.findOne({ where: {id: userId} });
+      if (!user) {
+        return notExistUser;
+      }
+      
+      const feedResponse: Array<FeedDTO> = new Array<FeedDTO>();
+      const Op = sequelize.Op;
+      const yearNumber = +year;
+      const monthNumber = +month;
+      const week = new Array("일", "월", "화", "수", "목", "금", "토");
+      const myFeeds = await Feed.findAll({ 
+        where: { user_id: userId,
+        create_time: {[Op.between]:
+          [`${year}-${month}`, `${year}-${month}-${getDay(new Date(yearNumber, monthNumber, 0))} 23:59:59`]
+      }}})
+      
+      for (let i = 0; i < myFeeds.length; i++) {
+        const emoji: Array<EmojiDTO> = new Array<EmojiDTO>();
+        const emojis = await Emoji.findAll({ where: { feed_id: myFeeds[i].id }})
+        let myEmoji = await Emoji.findOne( { where: { user_id: userId, feed_id: myFeeds[i].id }})
+        let userEmoji;
+        if (!myEmoji) {
+          userEmoji = "0";
+        }
+        else {
+          userEmoji = myEmoji.emoji_id;
+        }
+        //ㅋㅋ 이게 아닌데...ㅋㅋ 피드부터 뜯어고치자^^~
+        let course;
+        if (!user.current_course_id) {
+          course = "";
+        }
+        else {
+          course = courses[user.current_course_id].getTitle()
+        }
+
+        //feedResponse처리 이모지 추가하면 뱃지주는 코드 작성하기 + count 99로 제한 걸기(이슈부터파기)
+      }
+
+      /*
+      myFeeds.forEach((feed)=> {
+        
+
+        
+
+        const myFeed: MyFeedDTO = {
+          postId: feed.id,
+          course: course,
+          challenge: user.current_challenge_id,
+          image: feed.image,
+          mood: feed.mood,
+          content: feed.content,
+          nickname: feed.nickname,
+          year: getYear(feed.create_time),
+          month: getMonth(feed.create_time),
+          date: getDay(feed.create_time),
+          day: week[feed.create_time.getDay()],
+          isReport: false,
+          isDelete: true
+        }
+        feedResponse.push(myFeed);
+      })
+      */
+      const responseDTO: DeleteFeedResponseDTO = {
+        status: 200,
+        message: "피드를 삭제했습니다."
+      }
+      /*
+      const responseDTO: MyFeedResponseDTO = {
+        status: 200,
+        data: feedResponse
+      }
+      */
+      return responseDTO;
+    }
+
+    catch (err) {
       console.error(err);
       return serverError;
     }
