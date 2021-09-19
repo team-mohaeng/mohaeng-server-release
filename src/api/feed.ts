@@ -1,5 +1,7 @@
 import express from "express";
-import { feedCreateRequestDTO } from "../dto/Feed/request/feedCreateRequestDTO";
+import { CreateFeedRequestDTO } from "../dto/Feed/Create/request/CreateFeedRequestDTO";
+import { AddEmojiRequestDTO } from "../dto/Feed/Emoji/request/AddEmojiRequestDTO";
+import { DeleteEmojiRequestDTO } from "../dto/Feed/Emoji/request/DeleteEmojiRequestDTO";
 import feedService from "../service/feedService";
 import auth from "../middleware/auth";
 import upload from "../modules/upload";
@@ -16,7 +18,7 @@ router.post("/", upload.single('image'), auth, async (req, res) => {
   }
   const feedParams = JSON.parse(req.body.feed);
   const { mood, content, isPrivate } = feedParams;
-  const requestDTO: feedCreateRequestDTO = {
+  const requestDTO: CreateFeedRequestDTO = {
     mood: mood,
     content: content,
     image: image,
@@ -31,6 +33,22 @@ router.post("/:id", auth, async (req, res) => {
   res.status(result.status).json(result);
 })
 
+router.put("/emoji/:id", auth, async (req, res) => {
+  const { emojiId } = req.body;
+  const requestDTO: AddEmojiRequestDTO = {
+    emojiId: emojiId
+  }
+  const result = await feedService.emoji(req.body.user.id, req.params.id, requestDTO);
+  res.status(result.status).json(result);
+})
 
+router.delete("/emoji/:id", auth, async (req, res) => {
+  const { emojiId } = req.body;
+  const requestDTO: DeleteEmojiRequestDTO = {
+    emojiId: emojiId
+  }
+  const result = await feedService.deleteEmoji(req.body.user.id, req.params.id, requestDTO);
+  res.status(result.status).json(result);
+})
 
 module.exports = router;

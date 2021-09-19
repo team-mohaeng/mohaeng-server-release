@@ -1,4 +1,4 @@
-export interface feedCreateRequestDTO {
+export interface CreateFeedRequestDTO {
   mood: number;
   content: string;
   image: string;

@@ -6,6 +6,8 @@ interface FeedAttributes {
   id?: string;
   user_id: string;
   nickname: string;
+  current_course_id: number;
+  current_challenge_id: number;
   content?: string;
   mood: number;
   image?: string;
@@ -17,6 +19,8 @@ export class Feed extends Model<FeedAttributes>{
   public readonly id!: string;
   public user_id!: string;
   public nickname!: string;
+  public current_course_id!: number;
+  public current_challenge_id!: number;
   public content: string;
   public mood!: number;
   public image: string;
@@ -36,6 +40,14 @@ Feed.init(
     },
     nickname: {
       type: DataTypes.STRING,
+      allowNull: false,
+    },
+    current_course_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    current_challenge_id: {
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     content: {
