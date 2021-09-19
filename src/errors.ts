@@ -55,3 +55,8 @@ export const notExistCourseId: IFail = {
   status: 404,
   message: "해당 id의 코스가 존재하지 않습니다."
 }
+
+export const notExistProgressCourse: IFail = {
+  status: 404,
+  message: "진행 중인 코스가 없습니다."
+};
