@@ -241,7 +241,7 @@ export default {
       //잘못된 이모지 번호
       const { emojiId } = dto;
       const emojiNumber = +emojiId;
-      if (emojiNumber == 0 || emojiNumber>6){
+      if (emojiNumber == 0 || emojiNumber > 6){
         return wrongEmojiId;
       }
 
@@ -298,6 +298,7 @@ export default {
       return serverError;
     }
   },
+
   myFeed: async(userId: string, year: string, month: string) => {
     try{
       const user = await User.findOne({ where: {id: userId} });
@@ -310,26 +311,25 @@ export default {
       const yearNumber = +year;
       const monthNumber = +month;
       const week = new Array("일", "월", "화", "수", "목", "금", "토");
+      
+      //한 달 동안 쓴 피드 모두 가져오기
       const myFeeds = await Feed.findAll({ 
         where: { user_id: userId,
         create_time: {[Op.between]:
-          [`${year}-${month}`, `${year}-${month}-${getDay(new Date(yearNumber, monthNumber, 0))} 23:59:59`]
+          [`${year}-${month}`, `${year}-${month}-${getDay(new Date(yearNumber, monthNumber, 0))} 23:59:59`] //달의 마지막날 구하기
       }}})
-      
       
       for (let i = 0; i < myFeeds.length; i++) {
         const emojiArray: Array<EmojiDTO> = new Array<EmojiDTO>();
         const emojis = await Emoji.findAll({ where: { feed_id: myFeeds[i].id }})
-        for (let j = 1; j < 7; j++) {
-          //console.log(`${i}번째: `)
-          //console.log(j); 
-          const newEmojiArray = emojis.filter(emoji => emoji.emoji_id==`${j}`)
-          //console.log(newEmojiArray.length);
-          emojiArray.push({id: j.toString(), count: newEmojiArray.length});
-        }
-        //console.log(`${i}번째: ` + emojiArray);
 
-        //console.log(emojis);
+        //각 피드마다 이모지의 종류와 그 개수
+        for (let emojiNumber = 1; emojiNumber < 7; emojiNumber++) {
+          const newEmojiArray = emojis.filter(emoji => emoji.emoji_id==`${emojiNumber}`)
+          emojiArray.push({id: emojiNumber.toString(), count: newEmojiArray.length});
+        }
+        
+        //사용자가 피드에 이모지를 추가했는지 여부
         let myEmoji = await Emoji.findOne( { attributes: ["emoji_id"], where: { user_id: userId, feed_id: myFeeds[i].id }})
         let userEmoji;
         if (!myEmoji) {
@@ -357,16 +357,7 @@ export default {
           isDelete: true
         }
         feedResponse.push(myFeed);
-
-        //feedResponse처리 이모지 추가하면 뱃지주는 코드 작성하기 + count 99로 제한 걸기(이슈부터파기)
       }
-
-     /*
-      const responseDTO: DeleteFeedResponseDTO = {
-        status: 200,
-        message: "피드를 삭제했습니다."
-      }
-      */
       
       const responseDTO: ReadFeedResponseDTO = {
         status: 200,
