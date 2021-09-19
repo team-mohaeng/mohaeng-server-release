@@ -297,5 +297,88 @@ export default {
       console.error(err);
       return serverError;
     }
+  },
+  myFeed: async(userId: string, year: string, month: string) => {
+    try{
+      const user = await User.findOne({ where: {id: userId} });
+      if (!user) {
+        return notExistUser;
+      }
+      
+      const feedResponse: Array<FeedDTO> = new Array<FeedDTO>();
+      const Op = sequelize.Op;
+      const yearNumber = +year;
+      const monthNumber = +month;
+      const week = new Array("일", "월", "화", "수", "목", "금", "토");
+      const myFeeds = await Feed.findAll({ 
+        where: { user_id: userId,
+        create_time: {[Op.between]:
+          [`${year}-${month}`, `${year}-${month}-${getDay(new Date(yearNumber, monthNumber, 0))} 23:59:59`]
+      }}})
+      
+      
+      for (let i = 0; i < myFeeds.length; i++) {
+        const emojiArray: Array<EmojiDTO> = new Array<EmojiDTO>();
+        const emojis = await Emoji.findAll({ where: { feed_id: myFeeds[i].id }})
+        for (let j = 1; j < 7; j++) {
+          //console.log(`${i}번째: `)
+          //console.log(j); 
+          const newEmojiArray = emojis.filter(emoji => emoji.emoji_id==`${j}`)
+          //console.log(newEmojiArray.length);
+          emojiArray.push({id: j.toString(), count: newEmojiArray.length});
+        }
+        //console.log(`${i}번째: ` + emojiArray);
+
+        //console.log(emojis);
+        let myEmoji = await Emoji.findOne( { attributes: ["emoji_id"], where: { user_id: userId, feed_id: myFeeds[i].id }})
+        let userEmoji;
+        if (!myEmoji) {
+          userEmoji = "0";
+        }
+        else {
+          userEmoji = myEmoji.emoji_id;
+        }
+        
+        const myFeed: FeedDTO = {
+          postId: myFeeds[i].id,
+          course: courses[myFeeds[i].current_course_id-1].getTitle(), //인덱스 때문에 -1
+          challenge: user.current_challenge_id,
+          image: myFeeds[i].image,
+          mood: myFeeds[i].mood,
+          content: myFeeds[i].content,
+          nickname: myFeeds[i].nickname,
+          year: getYear(myFeeds[i].create_time),
+          month: getMonth(myFeeds[i].create_time),
+          date: getDay(myFeeds[i].create_time),
+          day: week[myFeeds[i].create_time.getDay()],
+          emoji: emojiArray,
+          myEmoji: userEmoji,
+          isReport: false,
+          isDelete: true
+        }
+        feedResponse.push(myFeed);
+
+        //feedResponse처리 이모지 추가하면 뱃지주는 코드 작성하기 + count 99로 제한 걸기(이슈부터파기)
+      }
+
+     /*
+      const responseDTO: DeleteFeedResponseDTO = {
+        status: 200,
+        message: "피드를 삭제했습니다."
+      }
+      */
+      
+      const responseDTO: ReadFeedResponseDTO = {
+        status: 200,
+        data: feedResponse
+      }
+      
+      return responseDTO;
+    }
+
+    catch (err) {
+      console.error(err);
+      return serverError;
+    }
   }
 }
