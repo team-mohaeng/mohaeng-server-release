@@ -326,6 +326,10 @@ export default {
         //각 피드마다 이모지의 종류와 그 개수
         for (let emojiNumber = 1; emojiNumber < 7; emojiNumber++) {
           const newEmojiArray = emojis.filter(emoji => emoji.emoji_id==`${emojiNumber}`)
+          //이모지 개수 0개일 경우 생략
+          if (newEmojiArray.length == 0) {
+            continue;
+          }
           //이모지 최대 개수 99개 제한
           if (newEmojiArray.length >= 99) {
             newEmojiArray.length=99;
