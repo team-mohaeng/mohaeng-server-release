@@ -156,7 +156,6 @@ export default {
         await User.update({
           affinity: user.affinity,
           level: user.level,
-          is_written:true,
           feed_count: user.feed_count,
           badge_count: user.badge_count+1,
           is_feed_new: true,
@@ -170,7 +169,6 @@ export default {
         await User.update({
           affinity: user.affinity,
           level: user.level,
-          is_written:true,
           feed_count: user.feed_count,
           is_feed_new: true,
           feed_success_count: user.feed_success_count
@@ -212,7 +210,7 @@ export default {
 
       if (userId == feed.user_id) {
         if (`${getYear(feed.create_time)}`==`${getYear(new Date())}` && `${getMonth(feed.create_time)}`==`${getMonth(new Date())}` && `${getDay(feed.create_time)}`==`${getDay(new Date())}`) {
-          await User.update({ is_written: false, feed_penalty: true }, { where: { id: userId } });
+          await User.update({ is_feed_new: false, feed_penalty: true }, { where: { id: userId }});
           await Feed.destroy({ where: {id: id} });
         }
         await Feed.destroy({ where: {id: id}});
