@@ -390,22 +390,20 @@ export default {
 
       //안부 작성 가능 여부
       let hasFeed;
-      //오늘의 챌린지 수행 여부
-      const isChallengeCompleted = getYear(user.recent_challenge_date) == getYear(new Date()) && getMonth(user.recent_challenge_date) == getMonth(new Date()) && getDay(user.recent_challenge_date) == getDay(new Date())
       //피드 작성 가능
-      if (user.is_feed_new == false && isChallengeCompleted) {
+      if (!user.is_feed_new && user.is_completed) {
         hasFeed = 0;
       }
       //피드 이미 작성
-      else if (user.is_feed_new == true) {
+      else if (user.is_feed_new) {
         hasFeed = 1;
       }
       //코스 수행 전
-      else if (user.current_course_id == null) {
+      else if (!user.current_course_id) {
         hasFeed = 2;
       }
       //챌린지 수행 전
-      else if (!isChallengeCompleted) {
+      else if (!user.is_completed) {
         hasFeed = 2;
       }
 
