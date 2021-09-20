@@ -106,48 +106,48 @@ export default {
         }
       }
 
-      //2: 안부 작성 [s] (초급) 1개 첫 안부 작성      
+      //12: 안부 작성 1개, 첫 안부 작성      
       let isBadgeNew = false;
       if (user.feed_count == 1) {
         isBadgeNew = true;
         await Badge.create({
-          id: 2,
+          id: 12,
           user_id: id
         })
       }
 
-      //5: 안부 작성 [s] (중급) 15개 행복한 작성러
+      //13: 안부 작성 15개, 행복한 작성러
       else if (user.feed_count == 15) {
         isBadgeNew = true;
         await Badge.create({
-          id: 5,
+          id: 13,
           user_id: id
         })
       }
 
-      //8: 안부 작성 작성 [s] (고급) 30개 프로 돌보미
+      //14: 안부 작성 작성 30개, 프로 돌보미
       else if (user.feed_count == 30) {
         isBadgeNew = true;
         await Badge.create({
-          id: 8,
+          id: 14,
           user_id: id
         })
       }
 
-      //11: 안부 [s] 20일 연속 작성  꾸주니 꾸주니
+      //15: 안부 20일 연속 작성, 꾸주니 꾸주니
       if (user.feed_success_count == 20) {
         isBadgeNew = true;
         await Badge.create({
-          id: 11,
+          id: 15,
           user_id: id
         })
       }
 
-      //12: 안부 피드에 공유하기 20회, 킹쉐어
+      //16: 공개 안부 작성 20개, 킹쉐어
       if (await Feed.count({ where: { user_id: id, isPrivate: false }}) == 19) {
         isBadgeNew = true;
         await Badge.create({
-          id: 12,
+          id: 16,
           user_id: id
         })
       };
@@ -258,6 +258,39 @@ export default {
       }
       else {
         await Emoji.create({ emoji_id: emojiId, user_id: userId, feed_id: feedId });
+      }
+
+      //17: 스티커 붙이기 5개, 관심의 시작
+      let isBadgeNew = false;
+      const emojiCount = await Emoji.count({ where: { user_id: userId }});
+      if (emojiCount == 5) {
+        isBadgeNew = true;
+        await Badge.create({
+          id: 17,
+          user_id: userId
+        })
+      }
+
+      //18: 스티커 붙이기 30개, 관심 전달자
+      else if (emojiCount == 30) {
+        isBadgeNew = true;
+        await Badge.create({
+          id: 18,
+          user_id: userId
+        })
+      }
+
+      //19: 스티커 붙이기 60개, 모행의 마당발
+      else if (emojiCount == 60) {
+        isBadgeNew = true;
+        await Badge.create({
+          id: 19,
+          user_id: userId
+        })
+      }
+
+      if (isBadgeNew) {
+        User.update({ is_badge_new: true }, { where: { id: userId }});
       }
 
       const requestDTO: AddEmojiResponseDTO = {
