@@ -236,9 +236,32 @@ export default {
         return notExistUser;
       }
 
+      //잘못된 이모지 번호
+      const { emojiId } = dto;
+      const emojiNumber = +emojiId;
+      if (emojiNumber == 0 || emojiNumber>6){
+        return wrongEmojiId;
+      }
+
+      //이미 이모지가 있는 경우
+      const emojiExist = await Emoji.findOne({ where: { emoji_id: emojiId, user_id: userId, feed_id: feedId }});
+      if(emojiExist) {
+        return alreadyExsitEmoji;
+      }
+
+      const emoji = await Emoji.findOne({ where: { user_id: userId, feed_id: feedId }});
+      if (emoji) {
+        await Emoji.update({ emoji_id: emojiId }, { where: { user_id: userId, feed_id: feedId }});
+      }
+      else {
+        await Emoji.create({ emoji_id: emojiId, user_id: userId, feed_id: feedId });
+      }
+
       //17: 스티커 붙이기 5개, 관심의 시작
       let isBadgeNew = false;
-      const emojiCount = await User.count({where: {id: userId}});
+      const emojiCount = await Emoji.count({ where: { user_id: userId }});
+      //주석 지워라!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      console.log(emojiCount);
       if (emojiCount == 5) {
         isBadgeNew = true;
         await Badge.create({
@@ -267,28 +290,6 @@ export default {
 
       if (isBadgeNew) {
         User.update({ is_badge_new: true }, { where: { id: userId }});
-      }
-
-
-      //잘못된 이모지 번호
-      const { emojiId } = dto;
-      const emojiNumber = +emojiId;
-      if (emojiNumber == 0 || emojiNumber>6){
-        return wrongEmojiId;
-      }
-
-      //이미 이모지가 있는 경우
-      const emojiExist = await Emoji.findOne({ where: { emoji_id: emojiId, user_id: userId, feed_id: feedId }});
-      if(emojiExist) {
-        return alreadyExsitEmoji;
-      }
-
-      const emoji = await Emoji.findOne({ where: { user_id: userId, feed_id: feedId }});
-      if (emoji) {
-        await Emoji.update({ emoji_id: emojiId }, { where: { user_id: userId, feed_id: feedId }});
-      }
-      else {
-        await Emoji.create({ emoji_id: emojiId, user_id: userId, feed_id: feedId });
       }
 
       const requestDTO: AddEmojiResponseDTO = {
