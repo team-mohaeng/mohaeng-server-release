@@ -14,7 +14,6 @@ interface UserAttributes {
   current_challenge_id?: number;
   current_progress_percent?: number;
   is_completed?: boolean;
-  is_written?: boolean;
   feed_count?: number;
   complete_course_count?: number;
   complete_challenge_count?: number;
@@ -45,7 +44,6 @@ export class User extends Model<UserAttributes>{
   public current_challenge_id: number | null;
   public current_progress_percent: number | null;
   public is_completed: boolean;
-  public is_written: boolean;
   public feed_count: number;
   public complete_course_count: number;
   public complete_challenge_count: number;
@@ -114,10 +112,6 @@ User.init(
       allowNull: true,
     },
     is_completed: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
-    },
-    is_written: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
