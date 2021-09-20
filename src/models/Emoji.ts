@@ -10,10 +10,9 @@ interface EmojiAttributes {
 };
 
 export class Emoji extends Model<EmojiAttributes>{
+  public emoji_id!: string;
   public readonly user_id!: string;
-  public readonly emoji_id!: string;
   public readonly feed_id!: string;
-
   public static associations: {
     user_id: Association<User, Emoji>;
     feed_id: Association<Feed, Emoji>;

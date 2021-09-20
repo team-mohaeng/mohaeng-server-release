@@ -3,7 +3,7 @@ import sequelize from "./index";
 import { User } from "./User"
 
 interface FeedAttributes {
-  id?: number;
+  id?: string;
   user_id: string;
   nickname: string;
   current_course_id: number;
@@ -16,7 +16,7 @@ interface FeedAttributes {
 };
 
 export class Feed extends Model<FeedAttributes>{
-  public readonly id!: number;
+  public readonly id!: string;
   public user_id!: string;
   public nickname!: string;
   public current_course_id!: number;

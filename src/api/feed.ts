@@ -51,4 +51,9 @@ router.delete("/emoji/:id", auth, async (req, res) => {
   res.status(result.status).json(result);
 })
 
+router.get("/:year/:month", auth, async (req, res) => {
+  const result = await feedService.myFeed(req.body.user.id, req.params.year, req.params.month);
+  res.status(result.status).json(result);
+})
+
 module.exports = router;

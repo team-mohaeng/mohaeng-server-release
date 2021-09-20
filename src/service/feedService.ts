@@ -5,6 +5,8 @@ import { User } from "../models/User";
 import { Feed } from "../models/Feed";
 import { Badge } from "../models/Badge";
 import { levels }  from "../dummy/Level"
+import { courses } from '../dummy/Course';
+import { ReadFeedResponseDTO, FeedDTO, EmojiDTO } from "../dto/Feed/Read/response/ReadFeedResponseDTO";
 import { getYear, getMonth, getYesterday, getDay } from "../formatter/mohaengDateFormatter";
 import { alreadyExsitEmoji, feedLengthCheck, notAuthorized, notExistFeedContent, notExistUser, notExistEmoji, notExsitFeed, serverError, wrongEmojiId } from "../errors";
 import { AddEmojiRequestDTO } from "../dto/Feed/Emoji/request/AddEmojiRequestDTO";
@@ -12,11 +14,11 @@ import { Emoji } from "../models/Emoji";
 import { AddEmojiResponseDTO } from "../dto/Feed/Emoji/response/AddEmojiResponseDTO";
 import { DeleteEmojiRequestDTO } from "../dto/Feed/Emoji/request/DeleteEmojiRequestDTO";
 import { DeleteEmojiResponseDTO } from "../dto/Feed/Emoji/response/DeleteEmojiResponseDTO";
+const sequelize = require("sequelize");
 
 export default {
   create:async(id: string, dto: CreateFeedRequestDTO) => {
     try{
-      const sequelize = require("sequelize")
       const Op = sequelize.Op;
       const { mood, content, image, isPrivate } = dto;
       const user = await User.findOne({ where: {id: id} });
@@ -239,7 +241,7 @@ export default {
       //잘못된 이모지 번호
       const { emojiId } = dto;
       const emojiNumber = +emojiId;
-      if (emojiNumber == 0 || emojiNumber>6){
+      if (emojiNumber == 0 || emojiNumber > 6){
         return wrongEmojiId;
       }
 
@@ -292,6 +294,88 @@ export default {
       return responseDTO;
 
     } catch (err) {
+      console.error(err);
+      return serverError;
+    }
+  },
+
+  myFeed: async(userId: string, year: string, month: string) => {
+    try{
+      const user = await User.findOne({ where: {id: userId} });
+      if (!user) {
+        return notExistUser;
+      }
+      
+      const feedResponse: Array<FeedDTO> = new Array<FeedDTO>();
+      const Op = sequelize.Op;
+      const yearNumber = +year;
+      const monthNumber = +month;
+      const week = new Array("일", "월", "화", "수", "목", "금", "토");
+      
+      //한 달 동안 쓴 피드 모두 가져오기
+      const myFeeds = await Feed.findAll({ 
+        where: { user_id: userId,
+        create_time: {[Op.between]:
+          [`${year}-${month}`, `${year}-${month}-${getDay(new Date(yearNumber, monthNumber, 0))} 23:59:59`] //달의 마지막날 구하기
+      }}})
+      
+      for (let i = 0; i < myFeeds.length; i++) {
+        const emojiArray: Array<EmojiDTO> = new Array<EmojiDTO>();
+        const emojis = await Emoji.findAll({ where: { feed_id: myFeeds[i].id }})
+
+        //각 피드마다 이모지의 종류와 그 개수
+        for (let emojiNumber = 1; emojiNumber < 7; emojiNumber++) {
+          const newEmojiArray = emojis.filter(emoji => emoji.emoji_id==`${emojiNumber}`)
+          //이모지 개수 0개일 경우 생략
+          if (newEmojiArray.length == 0) {
+            continue;
+          }
+          //이모지 최대 개수 99개 제한
+          if (newEmojiArray.length >= 99) {
+            newEmojiArray.length=99;
+          }
+          emojiArray.push({id: emojiNumber.toString(), count: newEmojiArray.length});
+        }
+        
+        //사용자가 피드에 이모지를 추가했는지 여부
+        let myEmoji = await Emoji.findOne( { attributes: ["emoji_id"], where: { user_id: userId, feed_id: myFeeds[i].id }})
+        let userEmoji;
+        if (!myEmoji) {
+          userEmoji = "0";
+        }
+        else {
+          userEmoji = myEmoji.emoji_id;
+        }
+        
+        const myFeed: FeedDTO = {
+          postId: myFeeds[i].id,
+          course: courses[myFeeds[i].current_course_id-1].getTitle(), //인덱스 때문에 -1
+          challenge: user.current_challenge_id,
+          image: myFeeds[i].image,
+          mood: myFeeds[i].mood,
+          content: myFeeds[i].content,
+          nickname: myFeeds[i].nickname,
+          year: getYear(myFeeds[i].create_time),
+          month: getMonth(myFeeds[i].create_time),
+          date: getDay(myFeeds[i].create_time),
+          day: week[myFeeds[i].create_time.getDay()],
+          emoji: emojiArray,
+          myEmoji: userEmoji,
+          isReport: false,
+          isDelete: true
+        }
+        feedResponse.push(myFeed);
+      }
+      
+      const responseDTO: ReadFeedResponseDTO = {
+        status: 200,
+        data: feedResponse
+      }
+      
+      return responseDTO;
+    }
+
+    catch (err) {
       console.error(err);
       return serverError;
     }
