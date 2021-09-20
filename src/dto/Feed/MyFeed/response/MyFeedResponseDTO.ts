@@ -1,4 +1,4 @@
-export interface ReadFeedResponseDTO {
+export interface MyFeedResponseDTO {
   status: number;
   data: FeedDTO[];
 }

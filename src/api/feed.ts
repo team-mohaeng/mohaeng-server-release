@@ -56,4 +56,9 @@ router.get("/:year/:month", auth, async (req, res) => {
   res.status(result.status).json(result);
 })
 
+router.get("/", auth, async (req, res) => {
+  const result = await feedService.feed(req.body.user.id);
+  res.status(result.status).json(result);
+})
+
 module.exports = router;
