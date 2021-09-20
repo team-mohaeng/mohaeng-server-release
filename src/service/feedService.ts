@@ -260,8 +260,6 @@ export default {
       //17: 스티커 붙이기 5개, 관심의 시작
       let isBadgeNew = false;
       const emojiCount = await Emoji.count({ where: { user_id: userId }});
-      //주석 지워라!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      console.log(emojiCount);
       if (emojiCount == 5) {
         isBadgeNew = true;
         await Badge.create({
