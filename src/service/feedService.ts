@@ -1,25 +1,26 @@
 import { CreateFeedRequestDTO } from "../dto/Feed/Create/request/CreateFeedRequestDTO";
 import { CreateFeedResponseDTO, FeedResponseDTO, LevelUpResponseDTO, CharacterCardResponseDTO } from "../dto/Feed/Create/response/CreateFeedResponseDTO";
 import { DeleteFeedResponseDTO } from "../dto/Feed/Delete/DeleteFeedResponseDTO";
-import { User } from "../models/User";
-import { Feed } from "../models/Feed";
-import { Badge } from "../models/Badge";
-import { levels }  from "../dummy/Level"
-import { courses } from '../dummy/Course';
-import { ReadFeedResponseDTO, FeedDTO, EmojiDTO } from "../dto/Feed/Read/response/ReadFeedResponseDTO";
-import { getYear, getMonth, getYesterday, getDay } from "../formatter/mohaengDateFormatter";
-import { alreadyExsitEmoji, feedLengthCheck, notAuthorized, notExistFeedContent, notExistUser, notExistEmoji, notExsitFeed, serverError, wrongEmojiId } from "../errors";
+import { MyFeedResponseDTO, FeedDTO, EmojiDTO } from "../dto/Feed/MyFeed/response/MyFeedResponseDTO";
+import { CommunityResponseDTO } from "../dto/Feed/Community/CommunityResponseDTO";
 import { AddEmojiRequestDTO } from "../dto/Feed/Emoji/request/AddEmojiRequestDTO";
-import { Emoji } from "../models/Emoji";
 import { AddEmojiResponseDTO } from "../dto/Feed/Emoji/response/AddEmojiResponseDTO";
 import { DeleteEmojiRequestDTO } from "../dto/Feed/Emoji/request/DeleteEmojiRequestDTO";
 import { DeleteEmojiResponseDTO } from "../dto/Feed/Emoji/response/DeleteEmojiResponseDTO";
+import { User } from "../models/User";
+import { Feed } from "../models/Feed";
+import { Badge } from "../models/Badge";
+import { Emoji } from "../models/Emoji";
+import { levels }  from "../dummy/Level"
+import { courses } from '../dummy/Course';
+import { getYear, getMonth, getYesterday, getDay } from "../formatter/mohaengDateFormatter";
+import { alreadyExsitEmoji, feedLengthCheck, notAuthorized, notExistFeedContent, notExistUser, notExistEmoji, notExsitFeed, serverError, wrongEmojiId } from "../errors";
 const sequelize = require("sequelize");
+const Op = sequelize.Op;
 
 export default {
   create:async(id: string, dto: CreateFeedRequestDTO) => {
     try{
-      const Op = sequelize.Op;
       const { mood, content, image, isPrivate } = dto;
       const user = await User.findOne({ where: {id: id} });
       if (!user) {
@@ -307,7 +308,6 @@ export default {
       }
       
       const feedResponse: Array<FeedDTO> = new Array<FeedDTO>();
-      const Op = sequelize.Op;
       const yearNumber = +year;
       const monthNumber = +month;
       const week = new Array("일", "월", "화", "수", "목", "금", "토");
@@ -367,7 +367,7 @@ export default {
         feedResponse.push(myFeed);
       }
       
-      const responseDTO: ReadFeedResponseDTO = {
+      const responseDTO: MyFeedResponseDTO = {
         status: 200,
         data: feedResponse
       }
@@ -378,6 +378,126 @@ export default {
     catch (err) {
       console.error(err);
       return serverError;
+    }
+  },
+
+  feed: async(userId: string) => {
+    try{
+      const user = await User.findOne({ where: { id: userId }});
+      if (!user) {
+        return notExistUser;
+      }
+
+      //안부 작성 가능 여부
+      let hasFeed;
+      //오늘의 챌린지 수행 여부
+      const isChallengeCompleted = getYear(user.recent_challenge_date) == getYear(new Date()) && getMonth(user.recent_challenge_date) == getMonth(new Date()) && getDay(user.recent_challenge_date) == getDay(new Date())
+      //피드 작성 가능
+      if (user.is_feed_new == false && isChallengeCompleted) {
+        hasFeed = 0;
+      }
+      //피드 이미 작성
+      else if (user.is_feed_new == true) {
+        hasFeed = 1;
+      }
+      //코스 수행 전
+      else if (user.current_course_id == null) {
+        hasFeed = 2;
+      }
+      //챌린지 수행 전
+      else if (!isChallengeCompleted) {
+        hasFeed = 2;
+      }
+
+      const userCount = await Feed.count({ 
+        where: { create_time: {[Op.between]:
+          [`${getYear(new Date())}-${getMonth(new Date())}-${getDay(new Date())}`, `${getYear(new Date())}-${getMonth(new Date())}-${getDay(new Date())} 23:59:59`]
+      }}})
+      
+      const feedResponse: Array<FeedDTO> = new Array<FeedDTO>();
+      const week = new Array("일", "월", "화", "수", "목", "금", "토");
+
+      //피드 모두 가져오기
+      const feeds = await Feed.findAll({ order: [["id", "DESC"]]});
+      
+      for (let i = 0; i < feeds.length; i++) {
+        const emojiArray: Array<EmojiDTO> = new Array<EmojiDTO>();
+        const emojis = await Emoji.findAll({ where: { feed_id: feeds[i].id }})
+
+        //각 피드마다 이모지의 종류와 그 개수
+        for (let emojiNumber = 1; emojiNumber < 7; emojiNumber++) {
+          const newEmojiArray = emojis.filter(emoji => emoji.emoji_id == `${emojiNumber}`)
+          //이모지 개수 0개일 경우 생략
+          if (newEmojiArray.length == 0) {
+            continue;
+          }
+          //이모지 최대 개수 99개 제한
+          if (newEmojiArray.length >= 99) {
+            newEmojiArray.length=99;
+          }
+          emojiArray.push({id: emojiNumber.toString(), count: newEmojiArray.length});
+        }
+        
+        //사용자가 피드에 이모지를 추가했는지 여부
+        let myEmoji = await Emoji.findOne({ attributes: ["emoji_id"], where: { user_id: userId, feed_id: feeds[i].id }})
+        let userEmoji;
+        if (!myEmoji) {
+          userEmoji = "0";
+        }
+        else {
+          userEmoji = myEmoji.emoji_id;
+        }
+
+        //신고 가능 여부
+        let isReport;
+        if (user.nickname != feeds[i].nickname) {
+          isReport = true;
+        }
+        else {
+          isReport = false;
+        }
+
+        //삭제 가능 여부
+        let isDelete;
+        if (user.nickname == feeds[i].nickname) {
+          isDelete = true;
+        }
+        else {
+          isDelete = false;
+        }
+
+        const myFeed: FeedDTO = {
+          postId: feeds[i].id,
+          course: courses[feeds[i].current_course_id-1].getTitle(), //인덱스 때문에 -1
+          challenge: user.current_challenge_id,
+          image: feeds[i].image,
+          mood: feeds[i].mood,
+          content: feeds[i].content,
+          nickname: feeds[i].nickname,
+          year: getYear(feeds[i].create_time),
+          month: getMonth(feeds[i].create_time),
+          date: getDay(feeds[i].create_time),
+          day: week[feeds[i].create_time.getDay()],
+          emoji: emojiArray,
+          myEmoji: userEmoji,
+          isReport: isReport,
+          isDelete: isDelete
+        }
+        feedResponse.push(myFeed);
+      }
+
+      const responseDTO: CommunityResponseDTO = {
+        status: 200,
+        isNew: user.is_feed_new,
+        hasFeed: hasFeed,
+        userCount: userCount,
+        data: feedResponse
+      }
+      
+      return responseDTO;
+    } catch(err) {
+        console.error(err);
+        return serverError;
     }
   }
 }
