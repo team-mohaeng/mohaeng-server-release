@@ -48,12 +48,13 @@ export default {
       user.feed_count=user.feed_count+1;
 
       //안부 연속 쓰기 성공 여부
-      if (
-        await Feed.findOne({
-          where: { user_id: id, 
-          create_time: {[Op.between]:
-          [`${getYear(new Date())}-${getMonth(new Date())}-${getYesterday(new Date())}`, `${getYear(new Date())}-${getMonth(new Date())}-${getYesterday(new Date())} 23:59:59`]} }})
-      ) {
+      const yesterdayFeed = await Feed.findOne({
+        where: { user_id: id, 
+        create_time: {[Op.between]:
+        [`${getYear(new Date())}-${getMonth(new Date())}-${getYesterday(new Date())}`, `${getYear(new Date())}-${getMonth(new Date())}-${getYesterday(new Date())} 23:59:59`]}}
+      })
+
+      if (yesterdayFeed) {
         user.feed_success_count=user.feed_success_count+1;
       }
       else {
@@ -106,57 +107,71 @@ export default {
         }
       }
 
-      //12: 안부 작성 1개, 첫 안부 작성      
+      //12: 안부 작성 1개, 첫 안부 작성
       let isBadgeNew = false;
       if (user.feed_count == 1) {
-        isBadgeNew = true;
-        await Badge.create({
+        const badge = await Badge.findOne({ where: { id: 12, user_id: id }});
+        if (!badge) {
+          isBadgeNew = true;
+          await Badge.create({
           id: 12,
           user_id: id
-        })
+          })
+        }
       }
 
       //13: 안부 작성 15개, 행복한 작성러
       else if (user.feed_count == 15) {
-        isBadgeNew = true;
-        await Badge.create({
+        const badge = await Badge.findOne({ where: { id: 13, user_id: id }});
+        if (!badge) {
+          isBadgeNew = true;
+          await Badge.create({
           id: 13,
           user_id: id
-        })
+          })
+        }
       }
 
       //14: 안부 작성 작성 30개, 프로 돌보미
       else if (user.feed_count == 30) {
-        isBadgeNew = true;
-        await Badge.create({
+        const badge = await Badge.findOne({ where: { id: 14, user_id: id }});
+        if (!badge) {
+          isBadgeNew = true;
+          await Badge.create({
           id: 14,
           user_id: id
-        })
+          })
+        }
       }
 
       //15: 안부 20일 연속 작성, 꾸주니 꾸주니
       if (user.feed_success_count == 20) {
-        isBadgeNew = true;
-        await Badge.create({
+        const badge = await Badge.findOne({ where: { id: 15, user_id: id }});
+        if (!badge) {
+          isBadgeNew = true;
+          await Badge.create({
           id: 15,
           user_id: id
-        })
+          })
+        }
       }
 
       //16: 공개 안부 작성 20개, 킹쉐어
       if (await Feed.count({ where: { user_id: id, isPrivate: false }}) == 19) {
-        isBadgeNew = true;
-        await Badge.create({
+        const badge = await Badge.findOne({ where: { id: 16, user_id: id }});
+        if (!badge) {
+          isBadgeNew = true;
+          await Badge.create({
           id: 16,
           user_id: id
-        })
+          })
+        }
       };
 
       if (isBadgeNew) {
         await User.update({
           affinity: user.affinity,
           level: user.level,
-          is_written:true,
           feed_count: user.feed_count,
           badge_count: user.badge_count+1,
           is_feed_new: true,
@@ -170,7 +185,6 @@ export default {
         await User.update({
           affinity: user.affinity,
           level: user.level,
-          is_written:true,
           feed_count: user.feed_count,
           is_feed_new: true,
           feed_success_count: user.feed_success_count
@@ -201,25 +215,52 @@ export default {
 
   delete: async(userId: string, id: string) => {
     try{
-      const user = await User.findOne({ where: { id: userId }});
+      const user = await User.findOne({ attributes: ["is_feed_new", "feed_penalty", "feed_count", "feed_success_count"], where: { id: userId }}); 
       if (!user) {
         return notExistUser;
       }
-      const feed = await Feed.findOne({ where: {id: id}});
+      const feed = await Feed.findOne({ attributes: ["id", "user_id", "create_time"], where: { id: id }}); 
       if(!feed) {
         return notExsitFeed;
       }
 
-      if (userId == feed.user_id) {
-        if (`${getYear(feed.create_time)}`==`${getYear(new Date())}` && `${getMonth(feed.create_time)}`==`${getMonth(new Date())}` && `${getDay(feed.create_time)}`==`${getDay(new Date())}`) {
-          await User.update({ is_written: false, feed_penalty: true }, { where: { id: userId } });
-          await Feed.destroy({ where: {id: id} });
-        }
-        await Feed.destroy({ where: {id: id}});
+      const todayFeed = `${getYear(feed.create_time)}`==`${getYear(new Date())}` && `${getMonth(feed.create_time)}`==`${getMonth(new Date())}` && `${getDay(feed.create_time)}`==`${getDay(new Date())}`;
+      const yesterdayFeed = await Feed.findOne({
+        attributes: ["id"],
+        where: { user_id: userId, 
+        create_time: {[Op.between]:
+        [`${getYear(feed.create_time)}-${getMonth(feed.create_time)}-${getYesterday(feed.create_time)}`, `${getYear(feed.create_time)}-${getMonth(feed.create_time)}-${getYesterday(feed.create_time)} 23:59:59`]}}
+      })
+
+      //전날 피드가 있고 오늘 작성한 피드를 삭제할 경우 -> 피드 패널티, 연속 피드 작성 실패
+      if (userId == feed.user_id && todayFeed && yesterdayFeed) {
+        console.log(user.feed_count);
+        await User.update({ is_feed_new: false, feed_count: user.feed_count-1, feed_penalty: true, feed_success_count: 0 }, { where: { id: userId }});
+        await Feed.destroy({ where: { id: id }});
       }
+
+      //전날 피드가 없고 오늘 작성한 피드를 삭제할 경우 -> 피드 패널티
+      else if (userId == feed.user_id && todayFeed) {
+        await User.update({ is_feed_new: false, feed_count: user.feed_count-1, feed_penalty: true }, { where: { id: userId }});
+        await Feed.destroy({ where: { id: id }});
+      }
+
+      //전날 피드가 있고 오늘 이전의 피드를 삭제할 경우 -> 피드 연속 작성 실패
+      else if (userId == feed.user_id && yesterdayFeed) { 
+        await User.update({ feed_count: user.feed_count-1, feed_success_count: 0 }, { where: { id: userId }});
+        await Feed.destroy({ where: { id: id }});
+      }
+
+      //오늘 이전의 피드를 삭제할 경우
+      else if (userId = feed.user_id) {
+        await User.update({ feed_count: user.feed_count-1 }, { where: { id: userId } });
+        await Feed.destroy({ where: { id: id }});
+      }
+
       else {
         return notAuthorized;
       }
+      
       const responseDTO: DeleteFeedResponseDTO = {
         status: 200,
         message: "피드를 삭제했습니다."
@@ -264,29 +305,38 @@ export default {
       let isBadgeNew = false;
       const emojiCount = await Emoji.count({ where: { user_id: userId }});
       if (emojiCount == 5) {
-        isBadgeNew = true;
-        await Badge.create({
+        const badge = await Badge.findOne({ where: { id: 17, user_id: userId }});
+        if (!badge) {
+          isBadgeNew = true;
+          await Badge.create({
           id: 17,
           user_id: userId
-        })
+          })
+        }
       }
 
       //18: 스티커 붙이기 30개, 관심 전달자
       else if (emojiCount == 30) {
-        isBadgeNew = true;
-        await Badge.create({
+        const badge = await Badge.findOne({ where: { id: 18, user_id: userId }});
+        if (!badge) {
+          isBadgeNew = true;
+          await Badge.create({
           id: 18,
           user_id: userId
-        })
+          })
+        }
       }
 
       //19: 스티커 붙이기 60개, 모행의 마당발
       else if (emojiCount == 60) {
-        isBadgeNew = true;
-        await Badge.create({
+        const badge = await Badge.findOne({ where: { id: 19, user_id: userId }});
+        if (!badge) {
+          isBadgeNew = true;
+          await Badge.create({
           id: 19,
           user_id: userId
-        })
+          })
+        }
       }
 
       if (isBadgeNew) {
