@@ -28,7 +28,7 @@ router.post("/", upload.single('image'), auth, async (req, res) => {
   res.status(result.status).json(result);
 })
 
-router.post("/:id", auth, async (req, res) => {
+router.delete("/:id", auth, async (req, res) => {
   const result = await feedService.delete(req.body.user.id, req.params.id);
   res.status(result.status).json(result);
 })
