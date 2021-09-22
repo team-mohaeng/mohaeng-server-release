@@ -70,12 +70,6 @@ export default {
         happy = 15;
       }
 
-      if (user.challenge_penalty) {
-        happy = 0;
-      }
-      else {
-        happy = 15;
-      }
       user.affinity = user.affinity + happy;
 
       //level의 happy지수보다 user의 해피지수가 높다면 levelup
@@ -174,6 +168,7 @@ export default {
           level: user.level,
           feed_count: user.feed_count,
           badge_count: user.badge_count+1,
+          feed_penalty: false,
           is_feed_new: true,
           is_badge_new: isBadgeNew,
           feed_success_count: user.feed_success_count
@@ -186,6 +181,7 @@ export default {
           affinity: user.affinity,
           level: user.level,
           feed_count: user.feed_count,
+          feed_penalty: false,
           is_feed_new: true,
           feed_success_count: user.feed_success_count
         }, {
