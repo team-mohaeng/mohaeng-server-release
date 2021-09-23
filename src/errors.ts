@@ -51,15 +51,29 @@ export const notMatchSignIn: IFail = {
   message: "이메일 계정 또는 비밀번호를 확인해주세요",
 };
 
+export const invalidCourseChallengeId: IFail = {
+  status: 400,
+  message: "현재 진행 중인 코스 또는 챌린지가 아닙니다."
+};
+
 export const notExistCourseId: IFail = {
   status: 404,
   message: "해당 id의 코스가 존재하지 않습니다."
 }
 
+export const notExistChallengeId: IFail = {
+  status: 404,
+  message: "해당 id의 챌린지가 존재하지 않습니다."
+};
 
 export const notExistProgressCourse: IFail = {
   status: 404,
   message: "진행 중인 코스가 없습니다."
+};
+
+export const alreadyCompleteChallenge: IFail = {
+  status: 409,
+  message: "이미 인증이 완료되었습니다."
 };
 
 export const notExistFeedContent: IFail = {
