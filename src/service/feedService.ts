@@ -361,7 +361,7 @@ export default {
       const { emojiId } = dto;
       const emoji = await Emoji.findOne({ where: { emoji_id: emojiId, user_id: userId, feed_id: feedId }});
       if(emoji) {
-        await Emoji.destroy({where: { emoji_id: emojiId, user_id: userId, feed_id: feedId }});
+        await Emoji.destroy({ where: { emoji_id: emojiId, user_id: userId, feed_id: feedId }});
       }
       else {
         return notExistEmoji;
@@ -381,10 +381,11 @@ export default {
 
   myFeed: async(userId: string, year: string, month: string) => {
     try{
-      const user = await User.findOne({ where: {id: userId} });
+      const user = await User.findOne({ attributes: ["current_challenge_id"], where: { id: userId }});
       if (!user) {
         return notExistUser;
       }
+      await User.update({ is_feed_new: false }, { where: { id: userId }})
       
       const feedResponse: Array<FeedDTO> = new Array<FeedDTO>();
       const yearNumber = +year;
@@ -393,6 +394,7 @@ export default {
       
       //한 달 동안 쓴 피드 모두 가져오기
       const myFeeds = await Feed.findAll({ 
+        order: [["id", "DESC"]],
         where: { user_id: userId,
         create_time: {[Op.between]:
           [`${year}-${month}`, `${year}-${month}-${getDay(new Date(yearNumber, monthNumber, 0))} 23:59:59`] //달의 마지막날 구하기
@@ -417,7 +419,7 @@ export default {
         }
         
         //사용자가 피드에 이모지를 추가했는지 여부
-        let myEmoji = await Emoji.findOne( { attributes: ["emoji_id"], where: { user_id: userId, feed_id: myFeeds[i].id }})
+        let myEmoji = await Emoji.findOne({ attributes: ["emoji_id"], where: { user_id: userId, feed_id: myFeeds[i].id }})
         let userEmoji;
         if (!myEmoji) {
           userEmoji = "0";
