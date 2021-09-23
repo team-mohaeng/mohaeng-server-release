@@ -266,71 +266,70 @@ export default {
       const today = new Date(); // 오늘
       let recentChallengeDate = new Date(); // DB에 저장된 최근 챌린지 완료 날짜 다음날
       recentChallengeDate = new Date(recentChallengeDate.setDate(user.recent_challenge_date.getDate() + 1));
+      // 챌린지 연속 수행 여부
+      if (getYear(today) == getYear(recentChallengeDate) && getMonth(today) == getMonth(recentChallengeDate) && getDay(today) == getDay(recentChallengeDate)) { // 연속 수행에 성공한 경우
+        challengeSuccessCount++;
+      } else {
+        challengeSuccessCount = 1;
+      }
 
-      // 패널티가 없는 경우만 해피지수 & 코스 뱃지를 얻을 수 있음
+      // 코스 완료라면 코스 뱃지를 얻을 수 있음
+      if (completeCourse) {
+        let propertyCount = [0, 0, 0, 0, 0, 0, 0];
+        const completeCourses = await CompleteCourse.findAll({
+          where: { user_id: id }
+        });
+
+        // 유저가 완료한 코스 속성을 카운트
+        // 현재 속성이 2개라면 3개 완료했으니까, 뱃지 부여
+        for (let i = 0; i < completeCourses.length; i++) {
+          propertyCount[courses[completeCourses[i].course_id - 1].getProperty() - 1]++;
+        }
+        const currentProperty = course.getProperty();
+        if (propertyCount[currentProperty - 1] == 2) {  // 코스 뱃지를 얻을 수 있는 경우
+          isBadgeNew = true;  // 뱃지 부여 여부 true
+          Badge.create({
+            id: currentProperty,
+            user_id: id
+          });
+          badgeCount++; // 뱃지 개수 +1
+        }
+      }
+      
+      // 챌린지 수행 횟수 뱃지
+      // 받을 수 있다면, 뱃지 부여 여부 true & 뱃지 개수 +1
+      if (completeChallengeCount == 3) {
+        isBadgeNew = true;
+        // 챌린지 한걸음
+        Badge.create({
+          id: 8,
+          user_id: id
+        });
+        badgeCount++;
+      }
+      else if (completeChallengeCount == 21) {
+        isBadgeNew = true;
+        // 성장한 챌린저
+        Badge.create({
+          id: 9,
+          user_id: id
+        });
+        badgeCount++;
+      }
+      else if (completeChallengeCount == 49) {
+        isBadgeNew = true;
+        // 챌린지 챔피언
+        Badge.create({
+          id: 10,
+          user_id: id
+        });
+        badgeCount++;
+      }
+
+      // 패널티가 없는 경우만 해피지수를 얻을 수 있음
       if (!user.challenge_penalty) {
         userHappy += challenge.getHappy();  // 챌린지 해피지수
-
-        // 코스 완료라면 코스 뱃지를 얻을 수 있음
-        if (completeCourse) {
-          userHappy += course.getHappy(); // 코스 해피지수
-          let propertyCount = [0, 0, 0, 0, 0, 0, 0];
-          const completeCourses = await CompleteCourse.findAll({
-            where: { user_id: id }
-          });
-
-          // 유저가 완료한 코스 속성을 카운트
-          // 현재 속성이 2개라면 3개 완료했으니까, 뱃지 부여
-          for (let i = 0; i < completeCourses.length; i++) {
-            propertyCount[courses[completeCourses[i].course_id - 1].getProperty() - 1]++;
-          }
-          const currentProperty = course.getProperty();
-          if (propertyCount[currentProperty - 1] == 2) {  // 코스 뱃지를 얻을 수 있는 경우
-            isBadgeNew = true;  // 뱃지 부여 여부 true
-            Badge.create({
-              id: currentProperty,
-              user_id: id
-            });
-            badgeCount++; // 뱃지 개수 +1
-          }
-        }
-        
-        // 챌린지 수행 횟수 뱃지
-        // 받을 수 있다면, 뱃지 부여 여부 true & 뱃지 개수 +1
-        if (completeChallengeCount == 3) {
-          isBadgeNew = true;
-          // 챌린지 한걸음
-          Badge.create({
-            id: 8,
-            user_id: id
-          });
-          badgeCount++;
-        }
-        else if (completeChallengeCount == 21) {
-          isBadgeNew = true;
-          // 성장한 챌린저
-          Badge.create({
-            id: 9,
-            user_id: id
-          });
-          badgeCount++;
-        }
-        else if (completeChallengeCount == 49) {
-          isBadgeNew = true;
-          // 챌린지 챔피언
-          Badge.create({
-            id: 10,
-            user_id: id
-          });
-          badgeCount++;
-        }
-        
-        // 챌린지 연속 수행 여부
-        if (getYear(today) == getYear(recentChallengeDate) && getMonth(today) == getMonth(recentChallengeDate) && getDay(today) == getDay(recentChallengeDate)) { // 연속 수행에 성공한 경우
-          challengeSuccessCount++;
-        } else {
-          challengeSuccessCount = 1;
-        }
+        if (completeCourse) userHappy += course.getHappy(); // 코스 해피지수
 
         // 현재 affinity에 userHappy를 더하면 레벨이 올라가는지 확인
         // 레벨업시 캐릭터 카드 부여 처리
