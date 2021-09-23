@@ -6,7 +6,7 @@ interface CompleteChallengeAttributes {
   user_id: number;
   course_id: number;
   challenge_id: number;
-  date: Date;
+  date?: Date;
 };
 
 export class CompleteChallenge extends Model<CompleteChallengeAttributes>{
@@ -40,6 +40,8 @@ CompleteChallenge.init(
     },
     date: {
       type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
     }
   },
   {
