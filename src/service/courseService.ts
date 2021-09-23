@@ -283,7 +283,7 @@ export default {
         status: 200,
         data: {
           isComplete: false,
-          isPenalty: user.challenge_penalty,
+          isPenalty: isPenalty,
           mainCharacterImg: "",
           popupCharacterImg: "",
           course: startCourse
