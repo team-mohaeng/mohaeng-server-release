@@ -184,13 +184,11 @@ export default {
       }
 
       let challenges = courses[cid].getChallenges();
+      let isPenalty = false;
       // 코스 변경인 경우
       if (challenges.length > user.current_challenge_id) {
         // 패널티 부여
-        User.update(
-          { challenge_penalty: true },
-          { where: { id: id } }
-        );
+        isPenalty = true;
         // 챌린지 삭제
         BeforeChallenge.destroy(
           { where: { user_id: id } }
@@ -208,7 +206,8 @@ export default {
         {
           current_course_id: cid+1,
           current_challenge_id: 1,
-          is_completed: false
+          is_completed: false,
+          challenge_penalty: isPenalty,
         },
         { where: { id: id } }
       );
