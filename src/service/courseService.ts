@@ -257,14 +257,14 @@ export default {
             if (!badge) badges.push(challengeCountBadges[0].getName());
           }
         }
-        
+        // 챌린지 멘트 부분에 ㅁㅁㅁ 부분에 유저 닉네임 적용
         startChallenges.push({
           day: challenge.getDay(),
           situation: situation,
           title: challenge.getTitle(),
           happy: challenge.getHappy(),
-          beforeMent: challenge.getBeforeMent(),
-          afterMent: challenge.getAfterMent(),
+          beforeMent: challenge.getBeforeMent().replace(/ㅁㅁㅁ/gi, user.nickname),
+          afterMent: challenge.getAfterMent().replace(/ㅁㅁㅁ/gi, user.nickname),
           year: "",
           month: "",
           date: "",
