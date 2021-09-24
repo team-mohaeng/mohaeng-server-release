@@ -108,6 +108,7 @@ export default {
       }
 
       let responseCourses: TotalCompleteCourseResponseDTO[] = [];
+      let responseId = 1;
 
       for (let i = 0; i < completeCourses.length; ++i) {
         let responseChallenges: TotalCompleteChallengeResponseDTO[] = [];
@@ -138,7 +139,7 @@ export default {
         const month = getMonth(completeDate);
         const date = getDay(completeDate);
         responseCourses.push({
-          id: course.getId(),
+          id: responseId++,
           situation: 2,
           property: course.getProperty(),
           title: course.getTitle(),
