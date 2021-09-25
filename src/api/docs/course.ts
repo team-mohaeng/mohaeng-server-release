@@ -109,7 +109,7 @@
  *        "title": "나 돌아갈래",
  *        "totalDays": 7,
  *        "year": "2021",
- *        "month": "9",
+ *        "month": "09",
  *        "date": "26",
  *        "challenges": [
  *          {
@@ -117,7 +117,7 @@
  *            "situation": 2,
  *            "title": "교복 입은 사진 찾아보기",
  *            "year": "2021",
- *            "month": "9",
+ *            "month": "09",
  *            "date": "20",
  *          },
  *          // ...
@@ -265,5 +265,18 @@
  *      ]
  *    }
  *  }
+ * }
+ * 
+ * @apiErrorExample Error-Response:
+ * 401 존재하지 않는 유저
+ * {
+ *  "status": 401,
+ *  "message": "유저가 존재하지 않습니다."
+ * }
+ * 
+ * 404 존재하지 않는 코스
+ * {
+ *  "status": 404,
+ *  "message": "해당 id의 코스가 존재하지 않습니다."
  * }
  */
