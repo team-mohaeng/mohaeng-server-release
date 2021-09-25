@@ -30,7 +30,7 @@ Skin.init(
     },
     is_new: {
       type: DataTypes.BOOLEAN,
-      defaultValue: false,
+      defaultValue: true,
     }
   },
   {
