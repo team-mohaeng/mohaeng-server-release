@@ -1,25 +1,16 @@
 define({ "api": [
   {
-    "type": "put",
-    "url": "/api/profile/:id",
-    "title": "닉네임 변경",
+    "type": "get",
+    "url": "/api/courses",
+    "title": "코스 목록 조회",
     "version": "1.0.0",
-    "name": "changeNickname",
-    "group": "Profile",
+    "name": "Library",
+    "group": "코스",
     "header": {
       "examples": [
         {
           "title": "Header-Example:",
-          "content": "{\n \"Content-Type\": \"application/json\"\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "parameter": {
-      "examples": [
-        {
-          "title": "Request-Example:",
-          "content": "{\n \"nickname\": \"시원뿡\",\n}",
+          "content": "{\n \"Content-Type\": \"application/json\",\n \"Bearer\": \"{jwt}\"\n}",
           "type": "json"
         }
       ]
@@ -29,17 +20,66 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
+            "type": "Boolean",
+            "optional": false,
+            "field": "isProgress",
+            "description": "<p>유저가 현재 진행하고 있는 코스가 존재하는지 여부</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Object[]",
+            "optional": false,
+            "field": "courses",
+            "description": "<p>코스 목록들. 진행하지 않은 코스 -&gt; 완료한 코스 순서로 보냄</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>코스 아이디</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "situation",
+            "description": "<p>코스 진행 상태 (0: 진행 전, 2: 완료)</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "property",
+            "description": "<p>코스 속성 (1 ~ 7 -&gt; 자세한 목록은 추후 슬랙에 공지)</p>"
+          },
+          {
+            "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "message",
-            "description": ""
+            "field": "title",
+            "description": "<p>코스 제목</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "description",
+            "description": "<p>코스 설명</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "totalDays",
+            "description": "<p>코스 총 날짜 수</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "200 OK\n{\n \"status\": 200,\n \"message\": \"닉네임을 변경했습니다.\"\n}",
+          "content": "200 코스 목록 조회 성공\n{\n \"status\": 200,\n \"data\": {\n   \"isProgress\": true,\n   \"courses\": [\n     {\n       \"id\": 1,\n       \"situation\": 0,\n       \"property\": 1,\n       \"title\": \"초보 사진가\",\n       \"description\": \"초보 사진가 설명\",\n       \"totalDays\": 7\n     },\n     // ...\n     {\n       \"id\": 7,\n       \"situation\": 2,\n       \"property\": 3,\n       \"title\": \"나 돌아갈래\",\n       \"description\": \"나 돌아갈래 설명\",\n       \"totalDays\": 7\n     },\n     // ...\n   ]\n }\n}",
           "type": "json"
         }
       ]
@@ -48,32 +88,12 @@ define({ "api": [
       "examples": [
         {
           "title": "Error-Response:",
-          "content": "401 유효하지 않은 유저\n{\n \"status\": 401,\n \"message\": \"유저가 존재하지 않습니다.\"\n}",
-          "type": "json"
-        },
-        {
-          "title": "Error-Response:",
-          "content": "400 닉네임 글자 제한\n{\n \"status\": 400,\n \"message\": \"닉네임은 1-6글자 이내로 작성해주세요\"\n}",
-          "type": "json"
-        },
-        {
-          "title": "Error-Response:",
-          "content": "400 닉네임 중복\n{\n \"status\": 403,\n \"message\": \"이미 사용 중인 닉네임입니다.\"\n}",
-          "type": "json"
-        },
-        {
-          "title": "Error-Response:",
-          "content": "400 이전과 같은 닉네임\n{\n \"status\": 403,\n \"message\": \"기존 닉네임과 다른 닉네임으로 설정해주세요.\"\n}",
-          "type": "json"
-        },
-        {
-          "title": "Error-Response:",
-          "content": "500 서버 에러\n{\n \"status\": 500,\n \"message\": \"서버 에러입니다. 서버 파트에게 문의해주세요 *^^*\"\n}",
+          "content": "401 존재하지 않는 유저\n{\n \"status\": 401,\n \"message\": \"유저가 존재하지 않습니다.\"\n}",
           "type": "json"
         }
       ]
     },
-    "filename": "src/apidoc/profile.ts",
-    "groupTitle": "Profile"
+    "filename": "src/api/docs/course.ts",
+    "groupTitle": "코스"
   }
 ] });

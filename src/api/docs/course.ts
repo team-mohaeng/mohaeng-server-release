@@ -5,7 +5,7 @@
  * @apiName Library
  * @apiGroup 코스
  * 
- * @apiHeaderExample {json}
+ * @apiHeaderExample {json} Header-Example:
  * {
  *  "Content-Type": "application/json",
  *  "Bearer": "{jwt}"
@@ -21,7 +21,7 @@
  * @apiSuccess {Number} totalDays 코스 총 날짜 수
  * 
  * @apiSuccessExample {json} Success-Response:
- * 200
+ * 200 코스 목록 조회 성공
  * {
  *  "status": 200,
  *  "data": {
