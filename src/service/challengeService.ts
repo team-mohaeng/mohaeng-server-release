@@ -326,6 +326,25 @@ export default {
         badgeCount++;
       }
 
+      // 챌린지 연속 수행 뱃지
+      if (challengeSuccessCount == 21) {
+        // 뱃지를 소유하고있지 않을 경우에만 부여
+        const badge = await Badge.findAll({
+          where: {
+            id: challengeCountBadges[0].getId(),
+            user_id: id
+          }
+        });
+        if (badge.length == 0) {
+          isBadgeNew = true;
+          Badge.create({
+            id: challengeCountBadges[0].getId(),
+            user_id: id
+          });
+          badgeCount++;
+        }
+      }
+
       // 패널티가 없는 경우만 해피지수를 얻을 수 있음
       if (!user.challenge_penalty) {
         userHappy += challenge.getHappy();  // 챌린지 해피지수
