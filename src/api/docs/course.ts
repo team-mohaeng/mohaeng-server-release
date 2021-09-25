@@ -176,7 +176,7 @@
  * @apiSuccess {String[]} badges 해당 챌린지 완료 시 받을 수 있는 뱃지 이름 목록
  * 
  * @apiSuccessExample {json} Success-Response:
- * 200 챌린지 진행 중
+ * 200 코스 진행/변경 완료 (변경이라면 isPenalty : true)
  * {
  *  "status": 200,
  *  "data": {
@@ -211,57 +211,6 @@
  *          ]
  *        },
  *        // ...
- *      ]
- *    }
- *  }
- * }
- * 
- * 200 챌린지 진행 완료해서 코스 완료
- * {
- *  "status": 200,
- *  "data": {
- *    "isComplete": true,
- *    "isPenalty": false,
- *    "mainCharacterImg": "url",
- *    "popupCharacterImg": "url",
- *    "course": {
- *      "id": 1,
- *      "situation": 2,
- *      "property": 1,
- *      "title": "초보 사진가",
- *      "totalDays": 7,
- *      "currentDay": 7,
- *      "year": "2021",
- *      "month": "09",
- *      "date": "26",
- *      "challenges": [
- *        {
- *          "day": 1,
- *          "situation": 2,
- *          "title": "하늘 사진 찍기"
- *          "happy": 12,
- *          "beforeMent": "난 몽글몽글한 구름들을 보면 기분이 좋아지더라~ 오늘 너희 동네의 하늘은 어때?",
- *          "afterMent": "엇, 그 구름 약간 날 닮은 것 같은데!? 일부러 이런 구름 찍어온거야? 너~",
- *          "year": "2021",
- *          "month": "09",
- *          "date": "20",
- *          "badges": []
- *        },
- *        // ...
- *        {
- *          "day": 7,
- *          "situation": 2,
- *          "title": "하늘 사진 찍기"
- *          "happy": 12,
- *          "beforeMent": "난 몽글몽글한 구름들을 보면 기분이 좋아지더라~ 오늘 너희 동네의 하늘은 어때?",
- *          "afterMent": "엇, 그 구름 약간 날 닮은 것 같은데!? 일부러 이런 구름 찍어온거야? 너~",
- *          "year": "2021",
- *          "month": "09",
- *          "date": "26",
- *          "badges": [
- *            "건강 코스 3개"
- *          ]
- *        },
  *      ]
  *    }
  *  }
