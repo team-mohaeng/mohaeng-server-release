@@ -1,5 +1,130 @@
 [
   {
+    "type": "put",
+    "url": "/api/today/:courseId/:challengeId",
+    "title": "챌린지 인증하기",
+    "version": "1.0.0",
+    "name": "Certification",
+    "group": "챌린지",
+    "header": {
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\",\n \"Bearer\": \"{jwt}\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "characterImg",
+            "description": "<p>인증 팝업창에 나타날 캐릭터 이미지</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "challengeCompletion",
+            "description": "<p>챌린지 성공 응답 객체</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "happy",
+            "description": "<p>유저가 해당 단계에서 받은 해피지수</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "userHappy",
+            "description": "<p>해피지수를 받은 후 유저의 총 해피지수</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "fullHappy",
+            "description": "<p>유저의 현재 레벨의 총 해피지수</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Boolean",
+            "optional": false,
+            "field": "isPenalty",
+            "description": "<p>패널티 적용 여부. 패널티가 true라면 해피지수는 0</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "courseCompletion",
+            "description": "<p>코스 완료 응답 객체</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "property",
+            "description": "<p>완료한 코스의 속성</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "title",
+            "description": "<p>완료한 코스의 제목</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "levelUp",
+            "description": "<p>레벨업 응답 객체</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "level",
+            "description": "<p>레벨업한 레벨</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "styleImg",
+            "description": "<p>유저가 받을 스타일의 이미지</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "200 챌린지만 성공 (코스 완료 X, 레벨업 X)\n{\n \"status\": 200,\n \"data\": {\n   \"characterImg\": \"url\",\n   \"challengeCompletion\": {\n     \"happy\": 25,\n     \"userHappy\": 28,\n     \"fullHappy\": 35,\n     \"isPenalty\": false\n   },\n   \"courseCompletion\": {},\n   \"levelUp\": {},\n }\n}\n\n200 챌린지 성공 후 코스 완료 (레벨업 X)\n{\n \"status\": 200,\n \"data\": {\n   \"characterImg\": \"url\",\n   \"challengeCompletion\": {\n     \"happy\": 25,\n     \"userHappy\": 28,\n     \"fullHappy\": 100,\n     \"isPenalty\": false\n   },\n   \"courseCompletion\": {\n     \"property\": 1,\n     \"title\": \"초보 사진가\",\n     \"happy\": 20,\n     \"userHappy\": 48,\n     \"fullHappy\": 100\n   },\n   \"levelUp\": {},\n }\n}\n\n200 챌린지 성공 후 코스 완료 (레벨업 O)\n{\n \"status\": 200,\n \"data\": {\n   \"characterImg\": \"url\",\n   \"challengeCompletion\": {\n     \"happy\": 25,\n     \"userHappy\": 17,\n     \"fullHappy\": 35,\n     \"isPenalty\": false\n   },\n   \"courseCompletion\": {\n     \"property\": 1,\n     \"title\": \"초보 사진가\",\n     \"happy\": 20,\n     \"userHappy\": 2,\n     \"fullHappy\": 40\n   },\n   \"levelUp\": {\n     \"level\": 5,\n     \"styleImg\": \"url\"\n   },\n }\n}\n\n200 패널티가 있을 때\n{\n \"status\": 200,\n \"data\": {\n   \"characterImg\": \"\",\n   \"challengeCompletion\": {\n     \"happy\": 0,\n     \"userHappy\": 2,\n     \"fullHappy\": 25,\n     \"isPenalty\": true\n   },\n   \"courseCompletion\": {},\n   \"levelUp\": {}\n }\n}\n\n200 만렙으로 레벨업한 경우\n{\n \"status\": 200,\n \"data\": {\n   \"characterImg\": \"url\",\n   \"challengeCompletion\": {\n     \"happy\": 10,\n     \"userHappy\": 0,\n     \"fullHappy\": 330,\n     \"isPenalty\": false\n   },\n   \"courseCompletion\": {},\n   \"levelUp\": {\n     \"level\": 40,\n     \"styleImg\": \"url\"\n   },\n }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "400 현재 진행 중인 코스 또는 챌린지가 아닐 때\n{\n \"status\": 400,\n \"message\": \"현재 진행 중인 코스 또는 챌린지가 아닙니다.\"\n}\n\n401 존재하지 않는 유저\n{\n \"status\": 401,\n \"message\": \"유저가 존재하지 않습니다.\"\n}\n\n404 존재하지 않는 코스\n{\n \"status\": 404,\n \"message\": \"해당 id의 코스가 존재하지 않습니다.\"\n}\n\n404 존재하지 않는 챌린지\n{\n \"status\": 404,\n \"message\": \"해당 id의 챌린지가 존재하지 않습니다.\"\n}\n\n409 이미 인증한 경우\n{\n \"status\": 409,\n \"message\": \"이미 인증이 완료되었습니다.\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/api/docs/challenge.ts",
+    "groupTitle": "챌린지"
+  },
+  {
     "type": "get",
     "url": "/api/today",
     "title": "오늘의 챌린지 조회",
