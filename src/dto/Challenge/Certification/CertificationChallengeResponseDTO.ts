@@ -11,10 +11,10 @@ export interface CertificationDetailResponseDTO {
 }
 
 export interface CertificationChallengeCompletionResponseDTO {
-  happy: number;
-  fullHappy: number;
-  userHappy: number;
-  isPenalty: boolean;
+  happy?: number;
+  userHappy?: number;
+  fullHappy?: number;
+  isPenalty?: boolean;
 }
 
 export interface CertificationCourseCompletionResponseDTO {
@@ -22,6 +22,7 @@ export interface CertificationCourseCompletionResponseDTO {
   title?: string;
   happy?: number;
   userHappy?: number;
+  fullHappy?: number;
 }
 
 export interface CertificationLevelUpResponseDTO {
