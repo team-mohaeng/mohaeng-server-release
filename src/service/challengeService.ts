@@ -76,7 +76,7 @@ export default {
             situation = 2;
 
             // 챌린지를 완료한 날짜
-            const completeDate = user.recent_challenge_date;
+            const completeDate = completeChallenge.find(e => e.challenge_id == (i+1)).date;
             year = getYear(completeDate);
             month = getMonth(completeDate);
             date = getDay(completeDate);
@@ -162,7 +162,7 @@ export default {
       if (user.is_completed && challenges.length - 1 == challengeId) {
         situation = 2;
         // 현재 진행한 챌린지 날짜를 가져옴 (마지막 챌린지이기 때문에)
-        const completeDate = user.recent_challenge_date;
+        const completeDate = completeChallenge.find(e => e.challenge_id == user.current_challenge_id).date;
         year = getYear(completeDate);
         month = getMonth(completeDate);
         date = getDay(completeDate);
