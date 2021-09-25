@@ -142,3 +142,160 @@
  *  "message": "진행 중인 코스가 없습니다."
  * }
  */
+
+/**
+ * @api {put} /api/today/:courseId/:challengeId 챌린지 인증하기
+ * 
+ * @apiVersion 1.0.0
+ * @apiName Certification
+ * @apiGroup 챌린지
+ * 
+ * @apiHeaderExample {json} Header-Example:
+ * {
+ *  "Content-Type": "application/json",
+ *  "Bearer": "{jwt}"
+ * }
+ * 
+ * @apiSuccess {String} characterImg 인증 팝업창에 나타날 캐릭터 이미지
+ * @apiSuccess {Object} challengeCompletion 챌린지 성공 응답 객체
+ * @apiSuccess {Number} happy 유저가 해당 단계에서 받은 해피지수
+ * @apiSuccess {Number} userHappy 해피지수를 받은 후 유저의 총 해피지수
+ * @apiSuccess {Number} fullHappy 유저의 현재 레벨의 총 해피지수
+ * @apiSuccess {Boolean} isPenalty 패널티 적용 여부. 패널티가 true라면 해피지수는 0
+ * @apiSuccess {Object} courseCompletion 코스 완료 응답 객체
+ * @apiSuccess {Number} property 완료한 코스의 속성
+ * @apiSuccess {String} title 완료한 코스의 제목
+ * @apiSuccess {Object} levelUp 레벨업 응답 객체
+ * @apiSuccess {Number} level 레벨업한 레벨
+ * @apiSuccess {String} styleImg 유저가 받을 스타일의 이미지
+ * 
+ * @apiSuccessExample {json} Success-Response:
+ * 200 챌린지만 성공 (코스 완료 X, 레벨업 X)
+ * {
+ *  "status": 200,
+ *  "data": {
+ *    "characterImg": "url",
+ *    "challengeCompletion": {
+ *      "happy": 25,
+ *      "userHappy": 28,
+ *      "fullHappy": 35,
+ *      "isPenalty": false
+ *    },
+ *    "courseCompletion": {},
+ *    "levelUp": {},
+ *  }
+ * }
+ * 
+ * 200 챌린지 성공 후 코스 완료 (레벨업 X)
+ * {
+ *  "status": 200,
+ *  "data": {
+ *    "characterImg": "url",
+ *    "challengeCompletion": {
+ *      "happy": 25,
+ *      "userHappy": 28,
+ *      "fullHappy": 100,
+ *      "isPenalty": false
+ *    },
+ *    "courseCompletion": {
+ *      "property": 1,
+ *      "title": "초보 사진가",
+ *      "happy": 20,
+ *      "userHappy": 48,
+ *      "fullHappy": 100
+ *    },
+ *    "levelUp": {},
+ *  }
+ * }
+ * 
+ * 200 챌린지 성공 후 코스 완료 (레벨업 O)
+ * {
+ *  "status": 200,
+ *  "data": {
+ *    "characterImg": "url",
+ *    "challengeCompletion": {
+ *      "happy": 25,
+ *      "userHappy": 17,
+ *      "fullHappy": 35,
+ *      "isPenalty": false
+ *    },
+ *    "courseCompletion": {
+ *      "property": 1,
+ *      "title": "초보 사진가",
+ *      "happy": 20,
+ *      "userHappy": 2,
+ *      "fullHappy": 40
+ *    },
+ *    "levelUp": {
+ *      "level": 5,
+ *      "styleImg": "url"
+ *    },
+ *  }
+ * }
+ * 
+ * 200 패널티가 있을 때
+ * {
+ *  "status": 200,
+ *  "data": {
+ *    "characterImg": "",
+ *    "challengeCompletion": {
+ *      "happy": 0,
+ *      "userHappy": 2,
+ *      "fullHappy": 25,
+ *      "isPenalty": true
+ *    },
+ *    "courseCompletion": {},
+ *    "levelUp": {}
+ *  }
+ * }
+ * 
+ * 200 만렙으로 레벨업한 경우
+ * {
+ *  "status": 200,
+ *  "data": {
+ *    "characterImg": "url",
+ *    "challengeCompletion": {
+ *      "happy": 10,
+ *      "userHappy": 0,
+ *      "fullHappy": 330,
+ *      "isPenalty": false
+ *    },
+ *    "courseCompletion": {},
+ *    "levelUp": {
+ *      "level": 40,
+ *      "styleImg": "url"
+ *    },
+ *  }
+ * }
+ * 
+ * @apiErrorExample Error-Response:
+ * 400 현재 진행 중인 코스 또는 챌린지가 아닐 때
+ * {
+ *  "status": 400,
+ *  "message": "현재 진행 중인 코스 또는 챌린지가 아닙니다."
+ * }
+ * 
+ * 401 존재하지 않는 유저
+ * {
+ *  "status": 401,
+ *  "message": "유저가 존재하지 않습니다."
+ * }
+ * 
+ * 404 존재하지 않는 코스
+ * {
+ *  "status": 404,
+ *  "message": "해당 id의 코스가 존재하지 않습니다."
+ * }
+ * 
+ * 404 존재하지 않는 챌린지
+ * {
+ *  "status": 404,
+ *  "message": "해당 id의 챌린지가 존재하지 않습니다."
+ * }
+ * 
+ * 409 이미 인증한 경우
+ * {
+ *  "status": 409,
+ *  "message": "이미 인증이 완료되었습니다."
+ * }
+ */
