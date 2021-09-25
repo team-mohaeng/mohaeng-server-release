@@ -216,14 +216,72 @@ export default {
       let completeCourseCount = user.complete_course_count; // 완료한 코스 개수 -> 코스 완료라면 +1 처리
       const completeChallengeCount = user.complete_challenge_count + 1; // 완료한 챌린지 개수 -> +1 처리
       let challengeSuccessCount = user.challenge_success_count; // 챌린지 연속 수행 횟수
+      let currentProgressPercent = Number((challenge.getDay() / course.getTotalDays()) * 100);  // 현재 챌린지 진행상황
 
       let isBadgeNew = false; // 뱃지 부여 여부
       let badgeCount = user.badge_count;  // 유저가 소유한 뱃지 개수
+
+      let challengeCompletionDTO: CertificationChallengeCompletionResponseDTO = {};
+      let courseCompletionDTO: CertificationCourseCompletionResponseDTO = {};
+      let levelUpDTO: CertificationLevelUpResponseDTO = {};
+
+      // 패널티가 없고 만렙이 아닐 경우만 해피지수를 얻을 수 있음
+      if (!user.challenge_penalty && userLevel < 40) {
+        userHappy += challenge.getHappy();  // 챌린지 해피지수
+
+        // 현재 affinity에 userHappy를 더하면 레벨이 올라가는지 확인
+        // 레벨업시 캐릭터 카드 부여 처리
+        if (userHappy > levels[userLevel - 1].getFullHappy()) {
+          levelUp = true;
+          if (userLevel + 1 == 40) userHappy = 0;
+          else userHappy -= levels[userLevel - 1].getFullHappy();
+          userLevel++;
+
+          // 레벨업 response
+          levelUpDTO = {
+            level: userLevel,
+            styleImg: ""
+          };
+        }
+      }
+
+      // 챌린지 response
+      challengeCompletionDTO = {
+        happy: challenge.getHappy(),
+        userHappy: userHappy,
+        fullHappy: levels[userLevel - 1].getFullHappy(),
+        isPenalty: user.challenge_penalty
+      };
 
       // 코스 완료라면
       if (course.getTotalDays() == challenge.getDay()) {
         completeCourse = true;  // 코스 완료 여부 true
         completeCourseCount++;  // 완료 코스 개수 +1
+        
+        userHappy += course.getHappy(); // 코스 해피지수
+        // 현재 affinity에 userHappy를 더하면 레벨이 올라가는지 확인
+        // 레벨업시 캐릭터 카드 부여 처리
+        if (userHappy > levels[userLevel - 1].getFullHappy()) {
+          levelUp = true;
+          if (userLevel + 1 == 40) userHappy = 0;
+          else userHappy -= levels[userLevel - 1].getFullHappy();
+          userLevel++;
+
+          // 레벨업 response
+          levelUpDTO = {
+            level: userLevel,
+            styleImg: ""
+          };
+        }
+
+        // 코스 완료 response
+        courseCompletionDTO = {
+          property: course.getProperty(),
+          title: course.getTitle(),
+          happy: course.getHappy(),
+          userHappy: userHappy,
+          fullHappy: levels[userLevel-1].getFullHappy(),
+        };
       }
 
       // 마지막 챌린지 성공이 아니라면 BeforeChallenge 에서 챌린지 삭제
@@ -345,25 +403,12 @@ export default {
         }
       }
 
-      // 패널티가 없는 경우만 해피지수를 얻을 수 있음
-      if (!user.challenge_penalty) {
-        userHappy += challenge.getHappy();  // 챌린지 해피지수
-        if (completeCourse) userHappy += course.getHappy(); // 코스 해피지수
-
-        // 현재 affinity에 userHappy를 더하면 레벨이 올라가는지 확인
-        // 레벨업시 캐릭터 카드 부여 처리
-        if (userHappy > levels[userLevel - 1].getFullHappy()) {
-          levelUp = true;
-          userHappy -= levels[userLevel - 1].getFullHappy();
-          userLevel++;
-        }
-      }
-
       // 유저 정보 업데이트
       User.update(
         {
           affinity: userHappy,
           level: userLevel,
+          current_progress_percent: currentProgressPercent,
           is_completed: true,
           complete_course_count: completeCourseCount,
           complete_challenge_count: completeChallengeCount,
@@ -376,33 +421,6 @@ export default {
         },
         { where: {id: id} }
       );
-      
-      // 챌린지는 항상 완료됨
-      let challengeCompletionDTO: CertificationChallengeCompletionResponseDTO = {
-        happy: challenge.getHappy(),
-        fullHappy: levels[userLevel - 1].getFullHappy(),
-        userHappy: userHappy,
-        isPenalty: user.challenge_penalty
-      };
-      let courseCompletionDTO: CertificationCourseCompletionResponseDTO = {};
-      let levelUpDTO: CertificationLevelUpResponseDTO = {};
-
-      // 코스를 완료했다면
-      if (completeCourse) {
-        courseCompletionDTO = {
-          property: course.getProperty(),
-          title: course.getTitle(),
-          happy: course.getHappy(),
-          userHappy: userHappy
-        };
-      }
-      // 레벨업을 했다면
-      if (levelUp) {
-        levelUpDTO = {
-          level: userLevel,
-          styleImg: ""
-        };
-      }
 
       const responseDTO: CertificationChallengeResponseDTO = {
         status: 200,
