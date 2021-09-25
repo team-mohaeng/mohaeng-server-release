@@ -208,9 +208,11 @@ export default {
       const course = courses[course_id - 1];  // 현재 코스
       const challenge = course.getChallenges()[challenge_id - 1]; // 현재 완료한 챌린지
 
-      let userHappy = user.affinity; // 유저에 업데이트될 해피지수
-      let userLevel = user.level; // 유저에 업데이트될 레벨
+      let userHappy = Number(user.affinity); // 유저에 업데이트될 해피지수
+      let userLevel = Number(user.level); // 유저에 업데이트될 레벨
       let levelUp = false;  // 레벨업 여부
+      let canGetHappy = !user.challenge_penalty && (userLevel < 40);  // 패널티가 없고 만렙이 아닐 경우만 해피지수를 얻을 수 있음
+      let happy = 0;  // 유저가 해당 단계에 받는 얻는 해피지수
 
       let completeCourse = false; // 챌린지 인증 시 코스 완료 여부
       let completeCourseCount = user.complete_course_count; // 완료한 코스 개수 -> 코스 완료라면 +1 처리
@@ -225,16 +227,19 @@ export default {
       let courseCompletionDTO: CertificationCourseCompletionResponseDTO = {};
       let levelUpDTO: CertificationLevelUpResponseDTO = {};
 
-      // 패널티가 없고 만렙이 아닐 경우만 해피지수를 얻을 수 있음
-      if (!user.challenge_penalty && userLevel < 40) {
-        userHappy += challenge.getHappy();  // 챌린지 해피지수
-
+      if (canGetHappy) {
         // 현재 affinity에 userHappy를 더하면 레벨이 올라가는지 확인
         // 레벨업시 캐릭터 카드 부여 처리
-        if (userHappy > levels[userLevel - 1].getFullHappy()) {
+        if (userHappy + challenge.getHappy() > levels[userLevel - 1].getFullHappy()) {
           levelUp = true;
-          if (userLevel + 1 == 40) userHappy = 0;
-          else userHappy -= levels[userLevel - 1].getFullHappy();
+          if (userLevel + 1 == 40) {  // 만렙이면
+            happy = levels[userLevel - 1].getFullHappy() - userHappy; // 레벨업으로 받는 해피지수가 달라짐
+            userHappy = 0;
+          }
+          else {
+            userHappy = userHappy + challenge.getHappy() - levels[userLevel - 1].getFullHappy();
+            happy = challenge.getHappy();
+          }
           userLevel++;
 
           // 레벨업 response
@@ -247,7 +252,7 @@ export default {
 
       // 챌린지 response
       challengeCompletionDTO = {
-        happy: challenge.getHappy(),
+        happy: (canGetHappy)? happy: 0,
         userHappy: userHappy,
         fullHappy: levels[userLevel - 1].getFullHappy(),
         isPenalty: user.challenge_penalty
@@ -257,28 +262,38 @@ export default {
       if (course.getTotalDays() == challenge.getDay()) {
         completeCourse = true;  // 코스 완료 여부 true
         completeCourseCount++;  // 완료 코스 개수 +1
-        
-        userHappy += course.getHappy(); // 코스 해피지수
-        // 현재 affinity에 userHappy를 더하면 레벨이 올라가는지 확인
-        // 레벨업시 캐릭터 카드 부여 처리
-        if (userHappy > levels[userLevel - 1].getFullHappy()) {
-          levelUp = true;
-          if (userLevel + 1 == 40) userHappy = 0;
-          else userHappy -= levels[userLevel - 1].getFullHappy();
-          userLevel++;
+      
+        // 챌린지 점수를 받아서 만렙으로 레벨업했을 경우
+        if (levelUp && userLevel == 40) canGetHappy = false;
 
-          // 레벨업 response
-          levelUpDTO = {
-            level: userLevel,
-            styleImg: ""
-          };
+        if (canGetHappy) {
+          // 현재 affinity에 userHappy를 더하면 레벨이 올라가는지 확인
+          // 레벨업시 캐릭터 카드 부여 처리
+          if (userHappy + course.getHappy() > levels[userLevel - 1].getFullHappy()) {
+            levelUp = true;
+            if (userLevel + 1 == 40) {
+              happy = levels[userLevel - 1].getFullHappy() - userHappy;
+              userHappy = 0;
+            }
+            else {
+              userHappy = userHappy + course.getHappy() - levels[userLevel - 1].getFullHappy();
+              happy = course.getHappy();
+            }
+            userLevel++;
+  
+            // 레벨업 response
+            levelUpDTO = {
+              level: userLevel,
+              styleImg: ""
+            };
+          }
         }
 
         // 코스 완료 response
         courseCompletionDTO = {
           property: course.getProperty(),
           title: course.getTitle(),
-          happy: course.getHappy(),
+          happy: (canGetHappy)? happy: 0,
           userHappy: userHappy,
           fullHappy: levels[userLevel-1].getFullHappy(),
         };
