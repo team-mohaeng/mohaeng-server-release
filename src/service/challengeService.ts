@@ -1,6 +1,6 @@
 import { SERVER_ERROR_MESSAGE } from "../constant";
 import { courses } from '../dummy/Course';
-import { challengeBadges, challengeCountBadges } from '../dummy/Badge';
+import { challengeBadges, challengeCountBadges, courseBadges } from '../dummy/Badge';
 import { levels } from '../dummy/Level';
 import { invalidCourseChallengeId, alreadyCompleteChallenge, notExistChallengeId, notExistCourseId, notExistProgressCourse, notExistUser } from "../errors";
 import { getDay, getMonth, getYear } from '../formatter/mohaengDateFormatter';
@@ -48,6 +48,9 @@ export default {
       // 현재 코스의 챌린지들
       const challenges = course.getChallenges();
       let todayChallenges: TodayChallengeDetailResponseDTO[] = [];
+      let completeCourse = false;
+
+      if (challenges.length - 1 == challengeId) completeCourse = true;
 
       for (let i = 0; i < challenges.length; i++) {
         const challenge = challenges[i];  // 현재 체크중인 챌린지
@@ -83,6 +86,34 @@ export default {
             situation = 1;
           }
 
+          // 코스 완료라면
+          if (completeCourse) {
+            let propertyCount = [0, 0, 0, 0, 0, 0, 0];
+            const completeCourses = await CompleteCourse.findAll({
+              where: { user_id: id }
+            });
+
+            // 유저가 완료한 코스 속성을 카운트
+            // 현재 속성이 2개라면 3개 완료했으니까, 뱃지 부여
+            for (let i = 0; i < completeCourses.length; i++) {
+              propertyCount[courses[completeCourses[i].course_id - 1].getProperty() - 1]++;
+            }
+
+            const currentProperty = course.getProperty();
+            if (propertyCount[currentProperty - 1] == 2) {  // 코스 뱃지를 얻을 수 있는 경우
+              const courseBadge = courseBadges[currentProperty - 1];
+              const badge = await Badge.findAll({
+                where: {
+                  id: courseBadge.getId(),
+                  user_id: id
+                }
+              });
+              console.log(badge);
+
+              if (badge.length == 0) badges.push(courseBadge.getName());
+            }
+          }
+
           // 챌린지 수행 횟수 뱃지
           if (user.complete_challenge_count + 1 == 3) {
             badges.push(challengeBadges[0].getName());
@@ -94,7 +125,14 @@ export default {
 
           // 챌린지 연속 21일 수행
           if (user.challenge_success_count + 1 == 21) {
-            badges.push(challengeCountBadges[0].getName());
+            // 뱃지를 소유하고있지 않을 경우에만 부여
+            const badge = await Badge.findAll({
+              where: {
+                id: challengeCountBadges[0].getId(),
+                user_id: id
+              }
+            });
+            if (badge.length == 0) badges.push(challengeCountBadges[0].getName());
           }
         }
         // 진행 전인거는 따로 처리 필요 없음
