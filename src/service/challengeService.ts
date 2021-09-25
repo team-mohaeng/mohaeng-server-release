@@ -20,8 +20,8 @@ export default {
       // 닉네임, 현재 진행 중인 코스 아이디, 현재 진행 중인 챌린지 아이디, 챌린지 수행 여부, 코스 변경 패널티 여부
       // 완료한 챌린지 개수, 연속 수행한 챌린지 개수, 현재 유저의 캐릭터 타입, 현재 유저의 캐릭터 카드
       const user = await User.findOne({
-        attributes: ['nickname', 'current_course_id', 'current_challenge_id', 'is_completed', 'challenge_penalty',
-                    'complete_challenge_count', 'recent_challenge_date', 'challenge_success_count', 'character_type', 'character_card'],
+        attributes: ['nickname', 'current_course_id', 'current_challenge_id', 'is_completed', 
+                    'complete_challenge_count', 'challenge_success_count', 'character_type', 'character_card'],
         where: { id: id }
       });
 
