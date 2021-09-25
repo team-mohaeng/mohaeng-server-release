@@ -21,7 +21,7 @@ export default {
       // 완료한 챌린지 개수, 연속 수행한 챌린지 개수, 현재 유저의 캐릭터 타입, 현재 유저의 캐릭터 카드
       const user = await User.findOne({
         attributes: ['nickname', 'current_course_id', 'current_challenge_id', 'is_completed', 'challenge_penalty',
-                    'complete_challenge_count', 'challenge_success_count', 'character_type', 'character_card'],
+                    'complete_challenge_count', 'recent_challenge_date', 'challenge_success_count', 'character_type', 'character_card'],
         where: { id: id }
       });
 
@@ -73,7 +73,7 @@ export default {
             situation = 2;
 
             // 챌린지를 완료한 날짜
-            const completeDate = completeChallenge.find(e => e.challenge_id == (i + 1)).date;
+            const completeDate = user.recent_challenge_date;
             year = getYear(completeDate);
             month = getMonth(completeDate);
             date = getDay(completeDate);
@@ -83,21 +83,18 @@ export default {
             situation = 1;
           }
 
-          // 패널티가 적용되지 않는다면 뱃지 부여 가능
-          if (!user.challenge_penalty) {
-            // 챌린지 수행 횟수 뱃지
-            if (user.complete_challenge_count + 1 == 3) {
-              badges.push(challengeBadges[0].getName());
-            } else if (user.complete_challenge_count + 1 == 21) {
-              badges.push(challengeBadges[1].getName());
-            } else if (user.complete_challenge_count + 1 == 49) {
-              badges.push(challengeBadges[2].getName());
-            }
+          // 챌린지 수행 횟수 뱃지
+          if (user.complete_challenge_count + 1 == 3) {
+            badges.push(challengeBadges[0].getName());
+          } else if (user.complete_challenge_count + 1 == 21) {
+            badges.push(challengeBadges[1].getName());
+          } else if (user.complete_challenge_count + 1 == 49) {
+            badges.push(challengeBadges[2].getName());
+          }
 
-            // 챌린지 연속 21일 수행
-            if (user.challenge_success_count + 1 == 21) {
-              badges.push(challengeCountBadges[0].getName());
-            }
+          // 챌린지 연속 21일 수행
+          if (user.challenge_success_count + 1 == 21) {
+            badges.push(challengeCountBadges[0].getName());
           }
         }
         // 진행 전인거는 따로 처리 필요 없음
@@ -127,7 +124,7 @@ export default {
       if (user.is_completed && challenges.length - 1 == challengeId) {
         situation = 2;
         // 현재 진행한 챌린지 날짜를 가져옴 (마지막 챌린지이기 때문에)
-        const completeDate = completeChallenge.find(e => e.challenge_id == user.current_challenge_id).date;
+        const completeDate = user.recent_challenge_date;
         year = getYear(completeDate);
         month = getMonth(completeDate);
         date = getDay(completeDate);
