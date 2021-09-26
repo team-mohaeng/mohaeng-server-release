@@ -1,6 +1,6 @@
 import { SERVER_ERROR_MESSAGE } from "../constant";
 import { courses } from '../dummy/Course';
-import { challengeBadges, challengeCountBadges } from '../dummy/Badge';
+import { challengeBadges, challengeCountBadges, courseBadges } from '../dummy/Badge';
 import { levels } from '../dummy/Level';
 import { invalidCourseChallengeId, alreadyCompleteChallenge, notExistChallengeId, notExistCourseId, notExistProgressCourse, notExistUser } from "../errors";
 import { getDay, getMonth, getYear } from '../formatter/mohaengDateFormatter';
@@ -20,7 +20,7 @@ export default {
       // 닉네임, 현재 진행 중인 코스 아이디, 현재 진행 중인 챌린지 아이디, 챌린지 수행 여부, 코스 변경 패널티 여부
       // 완료한 챌린지 개수, 연속 수행한 챌린지 개수, 현재 유저의 캐릭터 타입, 현재 유저의 캐릭터 카드
       const user = await User.findOne({
-        attributes: ['nickname', 'current_course_id', 'current_challenge_id', 'is_completed', 'challenge_penalty',
+        attributes: ['nickname', 'current_course_id', 'current_challenge_id', 'is_completed', 
                     'complete_challenge_count', 'challenge_success_count', 'character_type', 'character_card'],
         where: { id: id }
       });
@@ -48,6 +48,9 @@ export default {
       // 현재 코스의 챌린지들
       const challenges = course.getChallenges();
       let todayChallenges: TodayChallengeDetailResponseDTO[] = [];
+      let completeCourse = false;
+
+      if (challenges.length - 1 == challengeId) completeCourse = true;
 
       for (let i = 0; i < challenges.length; i++) {
         const challenge = challenges[i];  // 현재 체크중인 챌린지
@@ -73,7 +76,7 @@ export default {
             situation = 2;
 
             // 챌린지를 완료한 날짜
-            const completeDate = completeChallenge.find(e => e.challenge_id == (i + 1)).date;
+            const completeDate = completeChallenge.find(e => e.challenge_id == (i+1)).date;
             year = getYear(completeDate);
             month = getMonth(completeDate);
             date = getDay(completeDate);
@@ -83,21 +86,53 @@ export default {
             situation = 1;
           }
 
-          // 패널티가 적용되지 않는다면 뱃지 부여 가능
-          if (!user.challenge_penalty) {
-            // 챌린지 수행 횟수 뱃지
-            if (user.complete_challenge_count + 1 == 3) {
-              badges.push(challengeBadges[0].getName());
-            } else if (user.complete_challenge_count + 1 == 21) {
-              badges.push(challengeBadges[1].getName());
-            } else if (user.complete_challenge_count + 1 == 49) {
-              badges.push(challengeBadges[2].getName());
+          // 코스 완료라면
+          if (completeCourse) {
+            let propertyCount = [0, 0, 0, 0, 0, 0, 0];
+            const completeCourses = await CompleteCourse.findAll({
+              where: { user_id: id }
+            });
+
+            // 유저가 완료한 코스 속성을 카운트
+            // 현재 속성이 2개라면 3개 완료했으니까, 뱃지 부여
+            for (let i = 0; i < completeCourses.length; i++) {
+              propertyCount[courses[completeCourses[i].course_id - 1].getProperty() - 1]++;
             }
 
-            // 챌린지 연속 21일 수행
-            if (user.challenge_success_count + 1 == 21) {
-              badges.push(challengeCountBadges[0].getName());
+            const currentProperty = course.getProperty();
+            if (propertyCount[currentProperty - 1] == 2) {  // 코스 뱃지를 얻을 수 있는 경우
+              const courseBadge = courseBadges[currentProperty - 1];
+              const badge = await Badge.findAll({
+                where: {
+                  id: courseBadge.getId(),
+                  user_id: id
+                }
+              });
+              console.log(badge);
+
+              if (badge.length == 0) badges.push(courseBadge.getName());
             }
+          }
+
+          // 챌린지 수행 횟수 뱃지
+          if (user.complete_challenge_count + 1 == 3) {
+            badges.push(challengeBadges[0].getName());
+          } else if (user.complete_challenge_count + 1 == 21) {
+            badges.push(challengeBadges[1].getName());
+          } else if (user.complete_challenge_count + 1 == 49) {
+            badges.push(challengeBadges[2].getName());
+          }
+
+          // 챌린지 연속 21일 수행
+          if (user.challenge_success_count + 1 == 21) {
+            // 뱃지를 소유하고있지 않을 경우에만 부여
+            const badge = await Badge.findAll({
+              where: {
+                id: challengeCountBadges[0].getId(),
+                user_id: id
+              }
+            });
+            if (badge.length == 0) badges.push(challengeCountBadges[0].getName());
           }
         }
         // 진행 전인거는 따로 처리 필요 없음
