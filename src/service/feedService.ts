@@ -14,7 +14,7 @@ import { Emoji } from "../models/Emoji";
 import { levels }  from "../dummy/Level"
 import { courses } from '../dummy/Course';
 import { getYear, getMonth, getYesterday, getDay } from "../formatter/mohaengDateFormatter";
-import { alreadyExsitEmoji, feedLengthCheck, notAuthorized, notExistFeedContent, notExistUser, notExistEmoji, notExsitFeed, serverError, wrongEmojiId } from "../errors";
+import { alreadyExsitEmoji, feedLengthCheck, notAuthorized, notExistFeedContent, notExistUser, notExistEmoji, notExistFeed, serverError, wrongEmojiId } from "../errors";
 const sequelize = require("sequelize");
 const Op = sequelize.Op;
 
@@ -209,7 +209,7 @@ export default {
       }
       const feed = await Feed.findOne({ attributes: ["id", "user_id", "create_time"], where: { id: id }}); 
       if(!feed) {
-        return notExsitFeed;
+        return notExistFeed;
       }
 
       const todayFeed = `${getYear(feed.create_time)}`==`${getYear(new Date())}` && `${getMonth(feed.create_time)}`==`${getMonth(new Date())}` && `${getDay(feed.create_time)}`==`${getDay(new Date())}`;
@@ -283,7 +283,7 @@ export default {
 
       const feed = await Feed.findOne({ attributes: ["id"], where: { id: feedId }});
       if (!feed) {
-        return notExsitFeed;
+        return notExistFeed;
       }
 
       const emoji = await Emoji.findOne({ where: { user_id: userId, feed_id: feedId }});
