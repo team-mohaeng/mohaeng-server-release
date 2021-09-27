@@ -1,3 +1,5 @@
+import { toUnicode } from "punycode";
+
 export interface CreateFeedResponseDTO {
   status: number;
   data: FeedResponseDTO;
@@ -12,12 +14,6 @@ export interface FeedResponseDTO {
 }
 
 export interface LevelUpResponseDTO {
-  level: number;
-  characterType: number;
-  characterCard: CharacterCardResponseDTO[]
-}
-
-export interface CharacterCardResponseDTO {
-  id: number;
-  image: string;
+  level?: number;
+  styleImg?: string;
 }
