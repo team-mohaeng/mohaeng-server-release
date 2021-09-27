@@ -1,5 +1,3 @@
-import { toUnicode } from "punycode";
-
 export interface CreateFeedResponseDTO {
   status: number;
   data: FeedResponseDTO;
