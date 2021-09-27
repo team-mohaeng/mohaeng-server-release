@@ -407,14 +407,14 @@ export default {
           if (newEmojiArray.length >= 99) {
             newEmojiArray.length=99;
           }
-          emojiArray.push({id: emojiNumber.toString(), count: newEmojiArray.length});
+          emojiArray.push({id: emojiNumber, count: newEmojiArray.length});
         }
         
         //사용자가 피드에 이모지를 추가했는지 여부
         let myEmoji = await Emoji.findOne({ attributes: ["emoji_id"], where: { user_id: userId, feed_id: myFeeds[i].id }})
         let userEmoji;
         if (!myEmoji) {
-          userEmoji = "0";
+          userEmoji = 0;
         }
         else {
           userEmoji = myEmoji.emoji_id;
@@ -506,14 +506,14 @@ export default {
           if (newEmojiArray.length >= 99) {
             newEmojiArray.length=99;
           }
-          emojiArray.push({id: emojiNumber.toString(), count: newEmojiArray.length});
+          emojiArray.push({id: emojiNumber, count: newEmojiArray.length});
         }
         
         //사용자가 피드에 이모지를 추가했는지 여부
         let myEmoji = await Emoji.findOne({ attributes: ["emoji_id"], where: { user_id: userId, feed_id: feeds[i].id }})
         let userEmoji;
         if (!myEmoji) {
-          userEmoji = "0";
+          userEmoji = 0;
         }
         else {
           userEmoji = myEmoji.emoji_id;
