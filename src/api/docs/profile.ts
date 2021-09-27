@@ -32,28 +32,24 @@
  *  "message": "유저가 존재하지 않습니다."
  * }
  * 
- * @apiErrorExample Error-Response:
  * 412 닉네임 글자 제한
  * {
  *  "status": 412,
  *  "message": "닉네임은 1-6글자 이내로 작성해주세요"
  * }
  * 
- * @apiErrorExample Error-Response:
  * 412 닉네임 중복
  * {
  *  "status": 412,
  *  "message": "이미 사용 중인 닉네임입니다."
  * }
  * 
- * @apiErrorExample Error-Response:
  * 412 이전과 같은 닉네임
  * {
  *  "status": 412,
  *  "message": "기존 닉네임과 다른 닉네임으로 설정해주세요."
  * }
  * 
- * @apiErrorExample Error-Response:
  * 500 서버 에러
  * {
  *  "status": 500,
