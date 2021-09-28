@@ -25,7 +25,7 @@ export interface FeedDTO {
 }
 
 export interface EmojiDTO {
-  id: string;
+  id: number;
   count: number;
 }
 

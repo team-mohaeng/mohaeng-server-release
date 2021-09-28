@@ -23,7 +23,6 @@ admin.initializeApp({
   databaseURL: config.firebaseDB
 });
   
-
 app.use(express.json());
 app.use("/apidoc", express.static(apidocPath));
 
@@ -32,6 +31,7 @@ app.use("/api/feed", require("./api/feed"));
 app.use("/api/courses", require("./api/course"));
 app.use("/api", require("./api/auth"));
 app.use("/api/today", require("./api/challenge"));
+app.use("/api/character", require("./api/character"));
 
 // error handler
 app.use(function (err, req, res, next) {
@@ -39,7 +39,6 @@ app.use(function (err, req, res, next) {
   res.locals.message = err.message;
   res.locals.error = req.app.get("env") === "production" ? err : {};
 
-  
   // render the error page
   res.status(err.status || 500);
   res.json({

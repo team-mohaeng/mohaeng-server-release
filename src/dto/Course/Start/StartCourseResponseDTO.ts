@@ -34,5 +34,5 @@ export interface StartChallengeDetailResponseDTO {
   year: string;
   month: string;
   date: string;
-  badge: string;
+  badges: string[];
 }

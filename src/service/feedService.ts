@@ -1,5 +1,5 @@
 import { CreateFeedRequestDTO } from "../dto/Feed/Create/request/CreateFeedRequestDTO";
-import { CreateFeedResponseDTO, FeedResponseDTO, LevelUpResponseDTO, CharacterCardResponseDTO } from "../dto/Feed/Create/response/CreateFeedResponseDTO";
+import { CreateFeedResponseDTO, FeedResponseDTO, LevelUpResponseDTO } from "../dto/Feed/Create/response/CreateFeedResponseDTO";
 import { DeleteFeedResponseDTO } from "../dto/Feed/Delete/DeleteFeedResponseDTO";
 import { MyFeedResponseDTO, FeedDTO, EmojiDTO } from "../dto/Feed/MyFeed/response/MyFeedResponseDTO";
 import { CommunityResponseDTO } from "../dto/Feed/Community/CommunityResponseDTO";
@@ -14,7 +14,7 @@ import { Emoji } from "../models/Emoji";
 import { levels }  from "../dummy/Level"
 import { courses } from '../dummy/Course';
 import { getYear, getMonth, getYesterday, getDay } from "../formatter/mohaengDateFormatter";
-import { alreadyExsitEmoji, feedLengthCheck, notAuthorized, notExistFeedContent, notExistUser, notExistEmoji, notExsitFeed, serverError, wrongEmojiId } from "../errors";
+import { alreadyExsitEmoji, feedLengthCheck, notAuthorized, notExistFeedContent, notExistUser, notExistEmoji, notExistFeed, serverError, wrongEmojiId } from "../errors";
 const sequelize = require("sequelize");
 const Op = sequelize.Op;
 
@@ -22,7 +22,7 @@ export default {
   create:async(id: string, dto: CreateFeedRequestDTO) => {
     try{
       const { mood, content, image, isPrivate } = dto;
-      const user = await User.findOne({ where: {id: id} });
+      const user = await User.findOne({ where: { id: id }});
       if (!user) {
         return notExistUser;
       }
@@ -35,7 +35,7 @@ export default {
         return feedLengthCheck;
       }
 
-      await Feed.create({
+      Feed.create({
         user_id: id,
         nickname: user.nickname,
         current_course_id: user.current_course_id,
@@ -55,10 +55,10 @@ export default {
       })
 
       if (yesterdayFeed) {
-        user.feed_success_count=user.feed_success_count+1;
+        user.feed_success_count=user.feed_success_count + 1;
       }
       else {
-        user.feed_success_count=0;
+        user.feed_success_count = 1;
       }
       
       //user 패널티 여부
@@ -70,47 +70,47 @@ export default {
         happy = 15;
       }
 
+      //만렙 달성
+      if (user.level == 40) {
+        happy = 0;
+        user.affinity = 0;
+      }
+      else {
+        happy = 15;
+      }
+
       user.affinity = user.affinity + happy;
 
       //level의 happy지수보다 user의 해피지수가 높다면 levelup
       let levelUp = false;
       let totalHappy = levels[user.level-1].getFullHappy();
-      if (user.affinity>=totalHappy) {
-        levelUp = true;
-        user.affinity = user.affinity - totalHappy;
-        user.level = ++user.level;
+      if (user.level < 40) {
+        if (user.affinity >= totalHappy) {
+          levelUp = true;
+          user.affinity = user.affinity - totalHappy;
+          user.level = ++user.level;
+        }
       }
-
-      let levelUpResponse: LevelUpResponseDTO;
+      
+      let levelUpResponse: LevelUpResponseDTO = {};
+      //levelUp 했을 때만 아니면 null
       if (levelUp) {
-        //캐릭터카드 확정 후 수정 예정
-        const characterCards: Array<CharacterCardResponseDTO> = new Array<CharacterCardResponseDTO>();
-        characterCards.forEach((characterCard) => {
-          const characterCardResponse: CharacterCardResponseDTO = {
-            id: 1,
-            image: "imageUrl"
-          }
-          characterCards.push(characterCardResponse);
-        })
-        
-        //levelUp 했을 때만 아니면 null
+        User.update({ is_style_new: true }, { where: { id: id}})
         levelUpResponse = {
           level: user.level,
-          characterType: 1,
-          characterCard: characterCards
+          styleImg: ""
         }
       }
 
-      //12: 안부 작성 1개, 첫 안부 작성
       let isBadgeNew = false;
+      let badgeCount = 0;
       if (user.feed_count == 1) {
+        //12: 안부 작성 1개, 첫 안부 작성
         const badge = await Badge.findOne({ where: { id: 12, user_id: id }});
         if (!badge) {
           isBadgeNew = true;
-          await Badge.create({
-          id: 12,
-          user_id: id
-          })
+          Badge.create({ id: 12, user_id: id });
+          ++badgeCount;
         }
       }
 
@@ -119,10 +119,8 @@ export default {
         const badge = await Badge.findOne({ where: { id: 13, user_id: id }});
         if (!badge) {
           isBadgeNew = true;
-          await Badge.create({
-          id: 13,
-          user_id: id
-          })
+          Badge.create({ id: 13, user_id: id});
+          ++badgeCount;
         }
       }
 
@@ -131,10 +129,8 @@ export default {
         const badge = await Badge.findOne({ where: { id: 14, user_id: id }});
         if (!badge) {
           isBadgeNew = true;
-          await Badge.create({
-          id: 14,
-          user_id: id
-          })
+          Badge.create({ id: 14, user_id: id});
+          ++badgeCount;
         }
       }
 
@@ -143,10 +139,8 @@ export default {
         const badge = await Badge.findOne({ where: { id: 15, user_id: id }});
         if (!badge) {
           isBadgeNew = true;
-          await Badge.create({
-          id: 15,
-          user_id: id
-          })
+          Badge.create({ id: 15, user_id: id });
+          ++badgeCount;
         }
       }
 
@@ -155,19 +149,17 @@ export default {
         const badge = await Badge.findOne({ where: { id: 16, user_id: id }});
         if (!badge) {
           isBadgeNew = true;
-          await Badge.create({
-          id: 16,
-          user_id: id
-          })
+          Badge.create({ id: 16, user_id: id });
+          ++badgeCount;
         }
       };
 
       if (isBadgeNew) {
-        await User.update({
+        User.update({
           affinity: user.affinity,
           level: user.level,
           feed_count: user.feed_count,
-          badge_count: user.badge_count+1,
+          badge_count: user.badge_count+badgeCount,
           feed_penalty: false,
           is_feed_new: true,
           is_badge_new: isBadgeNew,
@@ -177,7 +169,7 @@ export default {
         });
         
       } else {
-        await User.update({
+        User.update({
           affinity: user.affinity,
           level: user.level,
           feed_count: user.feed_count,
@@ -217,7 +209,7 @@ export default {
       }
       const feed = await Feed.findOne({ attributes: ["id", "user_id", "create_time"], where: { id: id }}); 
       if(!feed) {
-        return notExsitFeed;
+        return notExistFeed;
       }
 
       const todayFeed = `${getYear(feed.create_time)}`==`${getYear(new Date())}` && `${getMonth(feed.create_time)}`==`${getMonth(new Date())}` && `${getDay(feed.create_time)}`==`${getDay(new Date())}`;
@@ -231,26 +223,26 @@ export default {
       //전날 피드가 있고 오늘 작성한 피드를 삭제할 경우 -> 피드 패널티, 연속 피드 작성 실패
       if (userId == feed.user_id && todayFeed && yesterdayFeed) {
         console.log(user.feed_count);
-        await User.update({ is_feed_new: false, feed_count: user.feed_count-1, feed_penalty: true, feed_success_count: 0 }, { where: { id: userId }});
-        await Feed.destroy({ where: { id: id }});
+        User.update({ is_feed_new: false, feed_count: user.feed_count-1, feed_penalty: true, feed_success_count: 1 }, { where: { id: userId }});
+        Feed.destroy({ where: { id: id }});
       }
 
       //전날 피드가 없고 오늘 작성한 피드를 삭제할 경우 -> 피드 패널티
       else if (userId == feed.user_id && todayFeed) {
-        await User.update({ is_feed_new: false, feed_count: user.feed_count-1, feed_penalty: true }, { where: { id: userId }});
-        await Feed.destroy({ where: { id: id }});
+        User.update({ is_feed_new: false, feed_count: user.feed_count-1, feed_penalty: true }, { where: { id: userId }});
+        Feed.destroy({ where: { id: id }});
       }
-
+      
       //전날 피드가 있고 오늘 이전의 피드를 삭제할 경우 -> 피드 연속 작성 실패
       else if (userId == feed.user_id && yesterdayFeed) { 
-        await User.update({ feed_count: user.feed_count-1, feed_success_count: 0 }, { where: { id: userId }});
-        await Feed.destroy({ where: { id: id }});
+        User.update({ feed_count: user.feed_count-1, feed_success_count: 1 }, { where: { id: userId }});
+        Feed.destroy({ where: { id: id }});
       }
 
       //오늘 이전의 피드를 삭제할 경우
       else if (userId = feed.user_id) {
-        await User.update({ feed_count: user.feed_count-1 }, { where: { id: userId } });
-        await Feed.destroy({ where: { id: id }});
+        User.update({ feed_count: user.feed_count-1 }, { where: { id: userId } });
+        Feed.destroy({ where: { id: id }});
       }
 
       else {
@@ -289,6 +281,11 @@ export default {
         return alreadyExsitEmoji;
       }
 
+      const feed = await Feed.findOne({ attributes: ["id"], where: { id: feedId }});
+      if (!feed) {
+        return notExistFeed;
+      }
+
       const emoji = await Emoji.findOne({ where: { user_id: userId, feed_id: feedId }});
       if (emoji) {
         await Emoji.update({ emoji_id: emojiId }, { where: { user_id: userId, feed_id: feedId }});
@@ -299,15 +296,14 @@ export default {
 
       //17: 스티커 붙이기 5개, 관심의 시작
       let isBadgeNew = false;
+      let badgeCount = 0;
       const emojiCount = await Emoji.count({ where: { user_id: userId }});
       if (emojiCount == 5) {
         const badge = await Badge.findOne({ where: { id: 17, user_id: userId }});
         if (!badge) {
           isBadgeNew = true;
-          await Badge.create({
-          id: 17,
-          user_id: userId
-          })
+          Badge.create({ id: 17, user_id: userId })
+          ++badgeCount;
         }
       }
 
@@ -316,10 +312,8 @@ export default {
         const badge = await Badge.findOne({ where: { id: 18, user_id: userId }});
         if (!badge) {
           isBadgeNew = true;
-          await Badge.create({
-          id: 18,
-          user_id: userId
-          })
+          Badge.create({ id: 18, user_id: userId });
+          ++badgeCount;
         }
       }
 
@@ -328,15 +322,13 @@ export default {
         const badge = await Badge.findOne({ where: { id: 19, user_id: userId }});
         if (!badge) {
           isBadgeNew = true;
-          await Badge.create({
-          id: 19,
-          user_id: userId
-          })
+          Badge.create({ id: 19, user_id: userId });
+          ++badgeCount;
         }
       }
 
       if (isBadgeNew) {
-        User.update({ is_badge_new: true }, { where: { id: userId }});
+        User.update({ is_badge_new: true, badge_count: user.badge_count+badgeCount }, { where: { id: userId }});
       }
 
       const requestDTO: AddEmojiResponseDTO = {
@@ -361,7 +353,7 @@ export default {
       const { emojiId } = dto;
       const emoji = await Emoji.findOne({ where: { emoji_id: emojiId, user_id: userId, feed_id: feedId }});
       if(emoji) {
-        await Emoji.destroy({where: { emoji_id: emojiId, user_id: userId, feed_id: feedId }});
+        Emoji.destroy({ where: { emoji_id: emojiId, user_id: userId, feed_id: feedId }});
       }
       else {
         return notExistEmoji;
@@ -381,10 +373,11 @@ export default {
 
   myFeed: async(userId: string, year: string, month: string) => {
     try{
-      const user = await User.findOne({ where: {id: userId} });
+      const user = await User.findOne({ attributes: ["current_challenge_id"], where: { id: userId }});
       if (!user) {
         return notExistUser;
       }
+      User.update({ is_feed_new: false }, { where: { id: userId }})
       
       const feedResponse: Array<FeedDTO> = new Array<FeedDTO>();
       const yearNumber = +year;
@@ -393,6 +386,7 @@ export default {
       
       //한 달 동안 쓴 피드 모두 가져오기
       const myFeeds = await Feed.findAll({ 
+        order: [["id", "DESC"]],
         where: { user_id: userId,
         create_time: {[Op.between]:
           [`${year}-${month}`, `${year}-${month}-${getDay(new Date(yearNumber, monthNumber, 0))} 23:59:59`] //달의 마지막날 구하기
@@ -413,14 +407,14 @@ export default {
           if (newEmojiArray.length >= 99) {
             newEmojiArray.length=99;
           }
-          emojiArray.push({id: emojiNumber.toString(), count: newEmojiArray.length});
+          emojiArray.push({id: emojiNumber, count: newEmojiArray.length});
         }
         
         //사용자가 피드에 이모지를 추가했는지 여부
-        let myEmoji = await Emoji.findOne( { attributes: ["emoji_id"], where: { user_id: userId, feed_id: myFeeds[i].id }})
+        let myEmoji = await Emoji.findOne({ attributes: ["emoji_id"], where: { user_id: userId, feed_id: myFeeds[i].id }})
         let userEmoji;
         if (!myEmoji) {
-          userEmoji = "0";
+          userEmoji = 0;
         }
         else {
           userEmoji = myEmoji.emoji_id;
@@ -512,14 +506,14 @@ export default {
           if (newEmojiArray.length >= 99) {
             newEmojiArray.length=99;
           }
-          emojiArray.push({id: emojiNumber.toString(), count: newEmojiArray.length});
+          emojiArray.push({id: emojiNumber, count: newEmojiArray.length});
         }
         
         //사용자가 피드에 이모지를 추가했는지 여부
         let myEmoji = await Emoji.findOne({ attributes: ["emoji_id"], where: { user_id: userId, feed_id: feeds[i].id }})
         let userEmoji;
         if (!myEmoji) {
-          userEmoji = "0";
+          userEmoji = 0;
         }
         else {
           userEmoji = myEmoji.emoji_id;
