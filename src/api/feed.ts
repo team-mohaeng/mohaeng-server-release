@@ -5,6 +5,7 @@ import { DeleteEmojiRequestDTO } from "../dto/Feed/Emoji/request/DeleteEmojiRequ
 import feedService from "../service/feedService";
 import auth from "../middleware/auth";
 import upload from "../modules/upload";
+import { ReportFeedRequestDTO } from "../dto/Feed/Report/request/ReportFeedRequestDTO";
 
 const router = express.Router();
 
@@ -58,6 +59,15 @@ router.get("/:year/:month", auth, async (req, res) => {
 
 router.get("/", auth, async (req, res) => {
   const result = await feedService.feed(req.body.user.id);
+  res.status(result.status).json(result);
+})
+
+router.post("/report", auth, async (req, res) => {
+  const { postId } = req.body;
+  const requestDTO: ReportFeedRequestDTO = {
+    postId: postId
+  }
+  const result = await feedService.report(req.body.user.id, requestDTO);
   res.status(result.status).json(result);
 })
 
