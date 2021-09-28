@@ -10,6 +10,7 @@ const CompleteChallenge_1 = require("../models/CompleteChallenge");
 const CompleteCourse_1 = require("../models/CompleteCourse");
 const ProgressChallenge_1 = require("../models/ProgressChallenge");
 const User_1 = require("../models/User");
+const Badge_2 = require("../models/Badge");
 exports.default = {
     library: async (id) => {
         try {
@@ -95,6 +96,7 @@ exports.default = {
                 return notExistCompleteCourse;
             }
             let responseCourses = [];
+            let responseId = 1;
             for (let i = 0; i < completeCourses.length; ++i) {
                 let responseChallenges = [];
                 const dates = completeCourses[i].challenge_dates.split(",");
@@ -121,7 +123,7 @@ exports.default = {
                 const month = (0, mohaengDateFormatter_1.getMonth)(completeDate);
                 const date = (0, mohaengDateFormatter_1.getDay)(completeDate);
                 responseCourses.push({
-                    id: course.getId(),
+                    id: responseId++,
                     situation: 2,
                     property: course.getProperty(),
                     title: course.getTitle(),
@@ -152,7 +154,7 @@ exports.default = {
     start: async (id, courseId) => {
         try {
             let user = await User_1.User.findOne({
-                attributes: ['nickname', 'current_course_id', 'current_challenge_id', 'is_completed', 'challenge_success_count'],
+                attributes: ['nickname', 'current_course_id', 'current_challenge_id', 'is_completed', 'complete_challenge_count', 'challenge_success_count'],
                 where: { id: id }
             });
             if (!user) {
@@ -163,10 +165,11 @@ exports.default = {
                 return errors_1.notExistCourseId;
             }
             let challenges = Course_1.courses[cid].getChallenges();
+            let isPenalty = false;
             // 코스 변경인 경우
-            if (challenges.length > user.current_challenge_id) {
+            if (user.current_course_id != null && user.current_challenge_id != null) {
                 // 패널티 부여
-                User_1.User.update({ challenge_penalty: true }, { where: { id: id } });
+                isPenalty = true;
                 // 챌린지 삭제
                 BeforeChallenge_1.BeforeChallenge.destroy({ where: { user_id: id } });
                 ProgressChallenge_1.ProgressChallenge.destroy({ where: { user_id: id } });
@@ -176,7 +179,8 @@ exports.default = {
             User_1.User.update({
                 current_course_id: cid + 1,
                 current_challenge_id: 1,
-                is_completed: false
+                is_completed: false,
+                challenge_penalty: isPenalty,
             }, { where: { id: id } });
             ProgressChallenge_1.ProgressChallenge.create({
                 user_id: Number(id),
@@ -192,32 +196,44 @@ exports.default = {
             for (let i = 0; i < challenges.length; i++) {
                 let situation = 0;
                 let challenge = challenges[i];
-                let badgeName = "";
+                let badges = [];
                 if (i == 0) {
                     situation = 1;
                     // 진행할 챌린지에 대해서 뱃지 조건
-                    if (user.challenge_success_count + 1 == 3) {
-                        badgeName = Badge_1.challengeBadges[0].getName();
+                    if (user.complete_challenge_count + 1 == 3) {
+                        badges.push(Badge_1.challengeBadges[0].getName());
                     }
-                    else if (user.challenge_success_count + 1 == 21) {
-                        badgeName = Badge_1.challengeBadges[1].getName();
+                    else if (user.complete_challenge_count + 1 == 21) {
+                        badges.push(Badge_1.challengeBadges[1].getName());
                     }
-                    else if (user.challenge_success_count + 1 == 49) {
-                        badgeName = Badge_1.challengeBadges[2].getName();
+                    else if (user.complete_challenge_count + 1 == 49) {
+                        badges.push(Badge_1.challengeBadges[2].getName());
                     }
-                    console.log(badgeName);
+                    // 챌린지 연속 21일 수행
+                    if (user.challenge_success_count + 1 == 21) {
+                        // 뱃지를 소유하고있지 않을 경우에만 부여
+                        const badge = await Badge_2.Badge.findAll({
+                            where: {
+                                id: Badge_1.challengeCountBadges[0].getId(),
+                                user_id: id
+                            }
+                        });
+                        if (!badge)
+                            badges.push(Badge_1.challengeCountBadges[0].getName());
+                    }
                 }
+                // 챌린지 멘트 부분에 ㅁㅁㅁ 부분에 유저 닉네임 적용
                 startChallenges.push({
                     day: challenge.getDay(),
                     situation: situation,
                     title: challenge.getTitle(),
                     happy: challenge.getHappy(),
-                    beforeMent: challenge.getBeforeMent(),
-                    afterMent: challenge.getAfterMent(),
+                    beforeMent: challenge.getBeforeMent().replace(/ㅁㅁㅁ/gi, user.nickname),
+                    afterMent: challenge.getAfterMent().replace(/ㅁㅁㅁ/gi, user.nickname),
                     year: "",
                     month: "",
                     date: "",
-                    badge: badgeName
+                    badges: badges
                 });
             }
             let course = Course_1.courses[cid];
@@ -241,7 +257,7 @@ exports.default = {
                 status: 200,
                 data: {
                     isComplete: false,
-                    isPenalty: user.challenge_penalty,
+                    isPenalty: isPenalty,
                     mainCharacterImg: "",
                     popupCharacterImg: "",
                     course: startCourse

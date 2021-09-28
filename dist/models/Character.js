@@ -27,6 +27,10 @@ Character.init({
         allowNull: false,
         primaryKey: true,
     },
+    is_new: {
+        type: sequelize_1.DataTypes.BOOLEAN,
+        defaultValue: true,
+    }
 }, {
     modelName: 'Character',
     tableName: 'Character',
