@@ -111,3 +111,13 @@ export const notExistEmoji: IFail = {
   message: "피드에 붙여진 이모지가 아닙니다."
 }
 
+export const notExistSkin: IFail = {
+  status: 405,
+  message: "유저가 갖고 있는 스킨이 아닙니다."
+}
+
+export const notExistCharacter: IFail = {
+  status: 405,
+  message: "유저가 갖고 있는 캐릭터가 아닙니다."
+}
+
