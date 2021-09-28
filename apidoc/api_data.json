@@ -306,6 +306,63 @@
     "groupTitle": "챌린지"
   },
   {
+    "type": "put",
+    "url": "/api/character",
+    "title": "캐릭터 변경",
+    "version": "1.0.0",
+    "name": "setCharacter",
+    "group": "캐릭터",
+    "header": {
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\",\n \"Bearer\": \"{jwt}\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "parameter": {
+      "examples": [
+        {
+          "title": "Request-Example:",
+          "content": "{\n \"characterSkin\": 3,\n \"characterType\": 1,\n \"characterCard\": 2\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": ""
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "200 OK 캐릭터 변경\n{\n \"status\": 200,\n \"message\": \"캐릭터를 변경하였습니다.\" \n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "401 존재하지 않는 유저\n{\n \"status\": 401,\n \"message\": \"유저가 존재하지 않습니다.\"\n}\n\n405 유저가 갖고 있지 않은 스킨인 경우\n{\n \"status\": 405,\n \"message\": \"유저가 갖고 있는 스킨이 아닙니다.\"\n}\n\n405 유저가 갖고 있지 않은 캐릭터인 경우\n{\n \"status\": 405,\n \"message\": \"유저가 갖고 있는 캐릭터가 아닙니다.\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/api/docs/character.ts",
+    "groupTitle": "캐릭터"
+  },
+  {
     "type": "get",
     "url": "/api/courses/complete",
     "title": "완료한 코스 목록 조회",
