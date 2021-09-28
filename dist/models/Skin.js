@@ -20,6 +20,10 @@ Skin.init({
         type: sequelize_1.DataTypes.INTEGER,
         primaryKey: true,
     },
+    is_new: {
+        type: sequelize_1.DataTypes.BOOLEAN,
+        defaultValue: true,
+    }
 }, {
     modelName: 'Skin',
     tableName: 'Skin',

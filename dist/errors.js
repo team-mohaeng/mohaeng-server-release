@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.notExistEmoji = exports.alreadyExsitEmoji = exports.wrongEmojiId = exports.notExsitFeed = exports.notAuthorized = exports.feedLengthCheck = exports.notExistFeedContent = exports.notExistProgressCourse = exports.notExistCourseId = exports.notMatchSignIn = exports.expiredToken = exports.notGetToken = exports.notExistUid = exports.alreadyExistEmail = exports.alreadyExistNickname = exports.sameNickname = exports.nicknameLengthCheck = exports.notExistUser = exports.serverError = void 0;
+exports.notExistCharacter = exports.notExistSkin = exports.notExistEmoji = exports.alreadyExsitEmoji = exports.wrongEmojiId = exports.notExistFeed = exports.notAuthorized = exports.feedLengthCheck = exports.notExistFeedContent = exports.alreadyCompleteChallenge = exports.notExistProgressCourse = exports.notExistChallengeId = exports.notExistCourseId = exports.invalidCourseChallengeId = exports.notMatchSignIn = exports.expiredToken = exports.notGetToken = exports.notExistUid = exports.alreadyExistEmail = exports.alreadyExistNickname = exports.sameNickname = exports.nicknameLengthCheck = exports.notExistUser = exports.serverError = void 0;
 const constant_1 = require("./constant");
 exports.serverError = {
     status: 500,
@@ -12,19 +12,19 @@ exports.notExistUser = {
 };
 exports.nicknameLengthCheck = {
     status: 412,
-    message: "닉네임은 1~6글자 이내로 작성해주세요",
+    message: "닉네임은 1-6글자 이내로 작성해주세요.",
 };
 exports.sameNickname = {
     status: 412,
-    message: "기존 닉네임과 다른 닉네임으로 설정해주세요",
+    message: "기존 닉네임과 다른 닉네임으로 설정해주세요.",
 };
 exports.alreadyExistNickname = {
     status: 412,
-    message: "이미 사용중인 닉네임입니다",
+    message: "이미 사용중인 닉네임입니다.",
 };
 exports.alreadyExistEmail = {
     status: 412,
-    message: "중복된 이메일입니다"
+    message: "이미 사용중인 이메일입니다."
 };
 exports.notExistUid = {
     status: 400,
@@ -40,15 +40,27 @@ exports.expiredToken = {
 };
 exports.notMatchSignIn = {
     status: 401,
-    message: "이메일 계정 또는 비밀번호를 확인해주세요",
+    message: "이메일 계정 또는 비밀번호를 확인해주세요.",
+};
+exports.invalidCourseChallengeId = {
+    status: 400,
+    message: "현재 진행 중인 코스 또는 챌린지가 아닙니다."
 };
 exports.notExistCourseId = {
     status: 404,
     message: "해당 id의 코스가 존재하지 않습니다."
 };
+exports.notExistChallengeId = {
+    status: 404,
+    message: "해당 id의 챌린지가 존재하지 않습니다."
+};
 exports.notExistProgressCourse = {
     status: 404,
     message: "진행 중인 코스가 없습니다."
+};
+exports.alreadyCompleteChallenge = {
+    status: 409,
+    message: "이미 인증이 완료되었습니다."
 };
 exports.notExistFeedContent = {
     status: 412,
@@ -62,7 +74,7 @@ exports.notAuthorized = {
     status: 403,
     message: "작성자만 피드를 삭제할 수 있습니다."
 };
-exports.notExsitFeed = {
+exports.notExistFeed = {
     status: 405,
     message: "피드가 존재하지 않습니다."
 };
@@ -76,6 +88,14 @@ exports.alreadyExsitEmoji = {
 };
 exports.notExistEmoji = {
     status: 404,
-    message: "추가된 이모지가 없습니다."
+    message: "피드에 붙여진 이모지가 아닙니다."
+};
+exports.notExistSkin = {
+    status: 405,
+    message: "유저가 갖고 있는 스킨이 아닙니다."
+};
+exports.notExistCharacter = {
+    status: 405,
+    message: "유저가 갖고 있는 캐릭터가 아닙니다."
 };
 //# sourceMappingURL=errors.js.map

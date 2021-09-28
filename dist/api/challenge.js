@@ -11,5 +11,9 @@ router.get("/", auth_1.default, async (req, res) => {
     const result = await challengeService_1.default.today(req.body.user.id);
     res.status(result.status).json(result);
 });
+router.put("/:courseId/:challengeId", auth_1.default, async (req, res) => {
+    const result = await challengeService_1.default.certification(req.body.user.id, req.params.courseId, req.params.challengeId);
+    res.status(result.status).json(result);
+});
 module.exports = router;
 //# sourceMappingURL=challenge.js.map
