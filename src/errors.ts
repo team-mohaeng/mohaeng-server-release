@@ -92,7 +92,7 @@ export const notAuthorized: IFail = {
 }
 
 export const notExistFeed: IFail = {
-  status: 405,
+  status: 404,
   message: "피드가 존재하지 않습니다."
 }
 
@@ -112,12 +112,12 @@ export const notExistEmoji: IFail = {
 }
 
 export const notExistSkin: IFail = {
-  status: 405,
+  status: 404,
   message: "유저가 갖고 있는 스킨이 아닙니다."
 }
 
 export const notExistCharacter: IFail = {
-  status: 405,
+  status: 404,
   message: "유저가 갖고 있는 캐릭터가 아닙니다."
 }
 
