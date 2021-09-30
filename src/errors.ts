@@ -48,7 +48,7 @@ export const expiredToken: IFail = {
 
 export const notMatchSignIn: IFail = {
   status: 401,
-  message: "이메일 계정 또는 비밀번호를 확인해주세요",
+  message: "이메일 계정 또는 비밀번호를 확인해주세요.",
 };
 
 export const invalidCourseChallengeId: IFail = {
@@ -91,8 +91,8 @@ export const notAuthorized: IFail = {
   message: "작성자만 피드를 삭제할 수 있습니다."
 }
 
-export const notExsitFeed: IFail = {
-  status: 410,
+export const notExistFeed: IFail = {
+  status: 405,
   message: "피드가 존재하지 않습니다."
 }
 
@@ -108,7 +108,17 @@ export const alreadyExsitEmoji: IFail = {
 
 export const notExistEmoji: IFail = {
   status: 404,
-  message: "추가된 이모지가 없습니다."
+  message: "피드에 붙여진 이모지가 아닙니다."
+}
+
+export const notExistSkin: IFail = {
+  status: 405,
+  message: "유저가 갖고 있는 스킨이 아닙니다."
+}
+
+export const notExistCharacter: IFail = {
+  status: 405,
+  message: "유저가 갖고 있는 캐릭터가 아닙니다."
 }
 
 export const alreadyReported: IFail = {

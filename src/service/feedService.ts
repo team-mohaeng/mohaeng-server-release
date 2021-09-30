@@ -7,16 +7,16 @@ import { AddEmojiRequestDTO } from "../dto/Feed/Emoji/request/AddEmojiRequestDTO
 import { AddEmojiResponseDTO } from "../dto/Feed/Emoji/response/AddEmojiResponseDTO";
 import { DeleteEmojiRequestDTO } from "../dto/Feed/Emoji/request/DeleteEmojiRequestDTO";
 import { DeleteEmojiResponseDTO } from "../dto/Feed/Emoji/response/DeleteEmojiResponseDTO";
+import { ReportFeedResponseDTO } from "../dto/Feed/Report/ReportFeedResponseDTO";
 import { User } from "../models/User";
 import { Feed } from "../models/Feed";
 import { Badge } from "../models/Badge";
 import { Emoji } from "../models/Emoji";
+import { Report } from "../models/Report";
 import { levels }  from "../dummy/Level"
 import { courses } from '../dummy/Course';
 import { getYear, getMonth, getYesterday, getDay } from "../formatter/mohaengDateFormatter";
-import { alreadyExsitEmoji, feedLengthCheck, notAuthorized, notExistFeedContent, notExistUser, notExistEmoji, notExsitFeed, serverError, wrongEmojiId, alreadyReported, invalidReport } from "../errors";
-import { ReportFeedResponseDTO } from "../dto/Feed/Report/ReportFeedResponseDTO";
-import { Report } from "../models/Report";
+import { alreadyExsitEmoji, feedLengthCheck, notAuthorized, notExistFeedContent, notExistUser, notExistEmoji, notExistFeed, serverError, wrongEmojiId, alreadyReported, invalidReport } from "../errors";
 const sequelize = require("sequelize");
 const Op = sequelize.Op;
 
@@ -211,7 +211,7 @@ export default {
       }
       const feed = await Feed.findOne({ attributes: ["id", "user_id", "create_time"], where: { id: id }}); 
       if(!feed) {
-        return notExsitFeed;
+        return notExistFeed;
       }
 
       const todayFeed = `${getYear(feed.create_time)}`==`${getYear(new Date())}` && `${getMonth(feed.create_time)}`==`${getMonth(new Date())}` && `${getDay(feed.create_time)}`==`${getDay(new Date())}`;
@@ -285,7 +285,7 @@ export default {
 
       const feed = await Feed.findOne({ attributes: ["id"], where: { id: feedId }});
       if (!feed) {
-        return notExsitFeed;
+        return notExistFeed;
       }
 
       const emoji = await Emoji.findOne({ where: { user_id: userId, feed_id: feedId }});
