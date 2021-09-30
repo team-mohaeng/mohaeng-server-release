@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const User_1 = require("../models/User");
 const errors_1 = require("../errors");
 exports.default = {
-    changeNickname: async (id, dto) => {
+    nickname: async (id, dto) => {
         try {
             const { nickname } = dto;
             const user = await User_1.User.findOne({ attributes: ['nickname'], where: { id: id } });

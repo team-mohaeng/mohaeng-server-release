@@ -114,7 +114,7 @@ User.init({
     },
     feed_success_count: {
         type: sequelize_1.DataTypes.INTEGER.UNSIGNED,
-        defaultValue: 0,
+        defaultValue: 1,
     },
 }, {
     modelName: 'User',
