@@ -10,7 +10,7 @@ router.put("/", auth, async (req, res) => {
   const requestDTO: ChangeNicknameRequestDTO = {
     nickname: nickname
   };
-  const result = await profileService.changeNickname(req.body.user.id, requestDTO);
+  const result = await profileService.nickname(req.body.user.id, requestDTO);
   res.status(result.status).json(result);
 })
 
