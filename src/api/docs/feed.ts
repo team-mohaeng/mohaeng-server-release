@@ -51,21 +51,21 @@
  *  "message": "유저가 존재하지 않습니다."
  * }
  * 
- * 412 닉네임 글자 제한
+ * 404 닉네임 글자 제한
  * {
- *  "status": 412,
+ *  "status": 404,
  *  "message": "닉네임은 1-6글자 이내로 작성해주세요"
  * }
  * 
- * 412 닉네임 중복
+ * 404 닉네임 중복
  * {
- *  "status": 412,
+ *  "status": 404,
  *  "message": "이미 사용 중인 닉네임입니다."
  * }
  * 
- * 412 이전과 같은 닉네임
+ * 404 이전과 같은 닉네임
  * {
- *  "status": 412,
+ *  "status": 404,
  *  "message": "기존 닉네임과 다른 닉네임으로 설정해주세요."
  * }
  * 
@@ -105,9 +105,9 @@
  *  "message": "유저가 존재하지 않습니다."
  * }
  * 
- * 405 존재하지 않는 피드
+ * 404 존재하지 않는 피드
  * {
- *  "status": 405,
+ *  "status": 404,
  *  "message": "피드가 존재하지 않습니다."
  * }
  * 
@@ -170,9 +170,9 @@
  *  "message": "이미 추가된 이모지입니다."
  * }
  * 
- * 405 존재하지 않는 피드
+ * 404 존재하지 않는 피드
  * {
- *  "status": 405,
+ *  "status": 404,
  *  "message": "피드가 존재하지 않습니다."
  * }
  * 
@@ -424,3 +424,58 @@
  *  "message": "서버 에러입니다. 서버 파트에게 문의해주세요 *^^*"
  * }
  */
+
+/**
+ * @api {post} /api/feed/:id 안부 신고
+ * 
+ * @apiVersion 1.0.0
+ * @apiName reportFeed
+ * @apiGroup 안부
+ * 
+ * @apiHeaderExample {json} Header-Example:
+ * {
+ *  "Content-Type": "application/json"
+ *  "Bearer": "jwt"
+ * }
+ * 
+ * @apiSuccess {String} message
+ * 
+ * @apiSuccessExample {json} Success-Response:
+ * 200 OK 안부 신고
+ * {
+ *  "status": 200,
+ *  "message": "안부를 신고하였습니다."
+ * }
+ * 
+ * @apiErrorExample Error-Response:
+ * 401 유효하지 않은 유저
+ * {
+ *  "status": 401,
+ *  "message": "유저가 존재하지 않습니다."
+ * }
+ * 
+ * 404 이미 신고한 안부
+ * {
+ *  "status": 404,
+ *  "message": "이미 신고한 안부입니다."
+ * }
+ * 
+ * 404 본인이 작성한 안부
+ * {
+ *  "status": 404,
+ *  "message": "본인이 작성한 안부는 신고할 수 없습니다."
+ * }
+ * 
+ * 404 존재하지 않는 피드
+ * {
+ *  "status": 404,
+ *  "message": "피드가 존재하지 않습니다."
+ * }
+ * 
+ * 500 서버 에러
+ * {
+ *  "status": 500,
+ *  "message": "서버 에러입니다. 서버 파트에게 문의해주세요 *^^*"
+ * }
+ */
+
