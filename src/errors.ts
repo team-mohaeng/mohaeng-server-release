@@ -7,27 +7,27 @@ export const serverError: IFail = {
 }
 
 export const notExistUser: IFail = {
-  status: 401,
+  status: 404,
   message: "유저가 존재하지 않습니다.",
 };
 
 export const nicknameLengthCheck: IFail = {
-  status: 412,
+  status: 404,
   message: "닉네임은 1~6글자 이내로 작성해주세요",
 };
 
 export const sameNickname: IFail = {
-  status: 412,
+  status: 404,
   message: "기존 닉네임과 다른 닉네임으로 설정해주세요",
 };
 
 export const alreadyExistNickname: IFail = {
-  status: 412,
+  status: 404,
   message: "이미 사용중인 닉네임입니다",
 };
 
 export const alreadyExistEmail: IFail = {
-  status: 412,
+  status: 404,
   message: "중복된 이메일입니다"
 }
 
@@ -77,12 +77,12 @@ export const alreadyCompleteChallenge: IFail = {
 };
 
 export const notExistFeedContent: IFail = {
-  status: 412,
+  status: 404,
   message: "안부 내용을 작성해주세요."
 }
 
 export const feedLengthCheck: IFail = {
-  status: 412,
+  status: 404,
   message: "피드 내용은 40자 이하로 작성해주세요."
 }
 
@@ -92,7 +92,7 @@ export const notAuthorized: IFail = {
 }
 
 export const notExsitFeed: IFail = {
-  status: 405,
+  status: 410,
   message: "피드가 존재하지 않습니다."
 }
 
@@ -109,5 +109,15 @@ export const alreadyExsitEmoji: IFail = {
 export const notExistEmoji: IFail = {
   status: 404,
   message: "추가된 이모지가 없습니다."
+}
+
+export const alreadyReported: IFail = {
+  status: 404,
+  message: "이미 신고한 안부입니다."
+}
+
+export const invalidReport: IFail = {
+  status: 404,
+  message: "본인이 작성한 안부는 신고할 수 없습니다."
 }
 
