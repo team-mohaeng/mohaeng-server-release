@@ -588,7 +588,7 @@ export default {
 
       const feed = await Feed.findOne({ attributes: ["user_id", "create_time"], where: { id: postId }});
       if (!feed) {
-        return notExsitFeed;
+        return notExistFeed;
       }
       
       if (feed.user_id == userId) {
