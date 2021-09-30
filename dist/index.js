@@ -51,6 +51,7 @@ app.use("/api/courses", require("./api/course"));
 app.use("/api", require("./api/auth"));
 app.use("/api/today", require("./api/challenge"));
 app.use("/api/character", require("./api/character"));
+app.use("/api/badge", require("./api/badge"));
 // error handler
 app.use(function (err, req, res, next) {
     // set locals, only providing error in development

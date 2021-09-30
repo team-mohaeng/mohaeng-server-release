@@ -1,30 +1,30 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.notExistCharacter = exports.notExistSkin = exports.notExistEmoji = exports.alreadyExsitEmoji = exports.wrongEmojiId = exports.notExistFeed = exports.notAuthorized = exports.feedLengthCheck = exports.notExistFeedContent = exports.alreadyCompleteChallenge = exports.notExistProgressCourse = exports.notExistChallengeId = exports.notExistCourseId = exports.invalidCourseChallengeId = exports.notMatchSignIn = exports.expiredToken = exports.notGetToken = exports.notExistUid = exports.alreadyExistEmail = exports.alreadyExistNickname = exports.sameNickname = exports.nicknameLengthCheck = exports.notExistUser = exports.serverError = void 0;
+exports.invalidReport = exports.alreadyReported = exports.notExistCharacter = exports.notExistSkin = exports.notExistEmoji = exports.alreadyExsitEmoji = exports.wrongEmojiId = exports.notExistFeed = exports.notAuthorized = exports.feedLengthCheck = exports.notExistFeedContent = exports.alreadyCompleteChallenge = exports.notExistProgressCourse = exports.notExistChallengeId = exports.notExistCourseId = exports.invalidCourseChallengeId = exports.notMatchSignIn = exports.expiredToken = exports.notGetToken = exports.notExistUid = exports.alreadyExistEmail = exports.alreadyExistNickname = exports.sameNickname = exports.nicknameLengthCheck = exports.notExistUser = exports.serverError = void 0;
 const constant_1 = require("./constant");
 exports.serverError = {
     status: 500,
     message: constant_1.SERVER_ERROR_MESSAGE
 };
 exports.notExistUser = {
-    status: 401,
+    status: 404,
     message: "유저가 존재하지 않습니다.",
 };
 exports.nicknameLengthCheck = {
-    status: 412,
-    message: "닉네임은 1-6글자 이내로 작성해주세요.",
+    status: 404,
+    message: "닉네임은 1~6글자 이내로 작성해주세요",
 };
 exports.sameNickname = {
-    status: 412,
-    message: "기존 닉네임과 다른 닉네임으로 설정해주세요.",
+    status: 404,
+    message: "기존 닉네임과 다른 닉네임으로 설정해주세요",
 };
 exports.alreadyExistNickname = {
-    status: 412,
-    message: "이미 사용중인 닉네임입니다.",
+    status: 404,
+    message: "이미 사용중인 닉네임입니다",
 };
 exports.alreadyExistEmail = {
-    status: 412,
-    message: "이미 사용중인 이메일입니다."
+    status: 404,
+    message: "중복된 이메일입니다"
 };
 exports.notExistUid = {
     status: 400,
@@ -63,11 +63,11 @@ exports.alreadyCompleteChallenge = {
     message: "이미 인증이 완료되었습니다."
 };
 exports.notExistFeedContent = {
-    status: 412,
+    status: 404,
     message: "안부 내용을 작성해주세요."
 };
 exports.feedLengthCheck = {
-    status: 412,
+    status: 404,
     message: "피드 내용은 40자 이하로 작성해주세요."
 };
 exports.notAuthorized = {
@@ -75,7 +75,7 @@ exports.notAuthorized = {
     message: "작성자만 피드를 삭제할 수 있습니다."
 };
 exports.notExistFeed = {
-    status: 405,
+    status: 404,
     message: "피드가 존재하지 않습니다."
 };
 exports.wrongEmojiId = {
@@ -91,11 +91,19 @@ exports.notExistEmoji = {
     message: "피드에 붙여진 이모지가 아닙니다."
 };
 exports.notExistSkin = {
-    status: 405,
+    status: 404,
     message: "유저가 갖고 있는 스킨이 아닙니다."
 };
 exports.notExistCharacter = {
-    status: 405,
+    status: 404,
     message: "유저가 갖고 있는 캐릭터가 아닙니다."
+};
+exports.alreadyReported = {
+    status: 404,
+    message: "이미 신고한 안부입니다."
+};
+exports.invalidReport = {
+    status: 404,
+    message: "본인이 작성한 안부는 신고할 수 없습니다."
 };
 //# sourceMappingURL=errors.js.map
