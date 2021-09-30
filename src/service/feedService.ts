@@ -14,8 +14,9 @@ import { Emoji } from "../models/Emoji";
 import { levels }  from "../dummy/Level"
 import { courses } from '../dummy/Course';
 import { getYear, getMonth, getYesterday, getDay } from "../formatter/mohaengDateFormatter";
-import { alreadyExsitEmoji, feedLengthCheck, notAuthorized, notExistFeedContent, notExistUser, notExistEmoji, notExsitFeed, serverError, wrongEmojiId } from "../errors";
-import { ReportFeedRequestDTO } from "../dto/Feed/Report/request/ReportFeedRequestDTO";
+import { alreadyExsitEmoji, feedLengthCheck, notAuthorized, notExistFeedContent, notExistUser, notExistEmoji, notExsitFeed, serverError, wrongEmojiId, alreadyReported, invalidReport } from "../errors";
+import { ReportFeedResponseDTO } from "../dto/Feed/Report/ReportFeedResponseDTO";
+import { Report } from "../models/Report";
 const sequelize = require("sequelize");
 const Op = sequelize.Op;
 
@@ -565,67 +566,82 @@ export default {
         userCount: userCount,
         data: feedResponse
       }
-      
       return responseDTO;
+
     } catch(err) {
         console.error(err);
         return serverError;
     }
   },
 
-  report: async(userId: string, dto: ReportFeedRequestDTO) => {
+  report: async(userId: string, postId: string) => {
     try {
-      const { postId } = dto;
-      const user = await User.findOne({ where: { id: userId }});
+      const user = await User.findOne({ attributes: ["id"], where: { id: userId }});
       if (!user) {
         return notExistUser;
       }
+      
+      const report = await Report.findOne({ where: { user_id: userId, post_id: postId }});
+      if (report) {
+        return alreadyReported;
+      }
 
-      const feed = await Feed.findOne({ attributes: ["user_id", "report"], where: { id: postId }});
-      if (feed.report == 2) {
+      const feed = await Feed.findOne({ attributes: ["user_id", "create_time"], where: { id: postId }});
+      if (!feed) {
+        return notExsitFeed;
+      }
+      
+      if (feed.user_id == userId) {
+        return invalidReport;
+      }
+
+      const reportCount = await Report.count({ where: { post_id: postId }});
+      if (reportCount == 2) {
         Feed.destroy({ where: { id: postId }});
+
+        const reportedUser = await User.findOne({ attributes: ["feed_count"], where: { id: feed.user_id }});
+        if (!reportedUser) {
+          return notExistUser;
+        }
+
+        const todayFeed = `${getYear(feed.create_time)}`==`${getYear(new Date())}` && `${getMonth(feed.create_time)}`==`${getMonth(new Date())}` && `${getDay(feed.create_time)}`==`${getDay(new Date())}`;
+        const yesterdayFeed = await Feed.findOne({
+          attributes: ["id"],
+          where: { user_id: feed.user_id, 
+          create_time: {[Op.between]:
+          [`${getYear(feed.create_time)}-${getMonth(feed.create_time)}-${getYesterday(feed.create_time)}`, `${getYear(feed.create_time)}-${getMonth(feed.create_time)}-${getYesterday(feed.create_time)} 23:59:59`]}}
+        })
+
+        //전날 피드가 있는 오늘 피드가 삭제될 경우 -> 피드 재작성 가능, 연속 피드 작성 실패
+        if (todayFeed && yesterdayFeed) {
+          User.update({ is_feed_new: false, feed_count: reportedUser.feed_count-1, feed_success_count: 1 }, { where: { id: feed.user_id }});
+        }
+
+        //전날 피드가 있는 피드가 삭제될 경우 -> 연속 피드 작성 실패
+        else if (yesterdayFeed) {
+          User.update({ feed_count: reportedUser.feed_count-1, feed_success_count: 1 }, { where: { id: feed.user_id }});
+        }
+
+        //전날 피드가 없는 피드가 삭제될 경우
+        else {
+          User.update({ feed_count: reportedUser.feed_count-1 }, { where: { id: feed.user_id }});
+        }
       }
 
-      //에러처리
-
-      //밑에 수정
-      const todayFeed = `${getYear(feed.create_time)}`==`${getYear(new Date())}` && `${getMonth(feed.create_time)}`==`${getMonth(new Date())}` && `${getDay(feed.create_time)}`==`${getDay(new Date())}`;
-      const yesterdayFeed = await Feed.findOne({
-        attributes: ["id"],
-        where: { user_id: userId, 
-        create_time: {[Op.between]:
-        [`${getYear(feed.create_time)}-${getMonth(feed.create_time)}-${getYesterday(feed.create_time)}`, `${getYear(feed.create_time)}-${getMonth(feed.create_time)}-${getYesterday(feed.create_time)} 23:59:59`]}}
-      })
-
-        //전날 피드가 있고 오늘 작성한 피드가 삭제될 경우 -> 피드 패널티, 연속 피드 작성 실패
-      if (todayFeed && yesterdayFeed) {
-        console.log(user.feed_count);
-        User.update({ is_feed_new: false, feed_count: user.feed_count-1, feed_penalty: true, feed_success_count: 1 }, { where: { id: userId }});
-      }
-
-      //전날 피드가 없고 오늘 작성한 피드를 삭제할 경우 -> 피드 패널티
-      else if (userId == feed.user_id && todayFeed) {
-        User.update({ is_feed_new: false, feed_count: user.feed_count-1, feed_penalty: true }, { where: { id: userId }});
-      }
-      
-      //전날 피드가 있고 오늘 이전의 피드를 삭제할 경우 -> 피드 연속 작성 실패
-      else if (userId == feed.user_id && yesterdayFeed) { 
-        User.update({ feed_count: user.feed_count-1, feed_success_count: 1 }, { where: { id: userId }});
-      }
-
-      //오늘 이전의 피드를 삭제할 경우
-      else if (userId = feed.user_id) {
-        User.update({ feed_count: user.feed_count-1 }, { where: { id: userId }});
-      }
-      
       else {
-        Feed.update({ report: feed.report+1 }, { where: { id: postId }});
+        Report.create({ user_id: +userId, post_id: +postId });
       }
-      
-      //responseDTO return
-    }
-    catch  {
 
+      const responseDTO: ReportFeedResponseDTO = {
+        status: 200,
+        message: "안부를 신고하였습니다."
+      }
+      return responseDTO
+    }
+    
+    catch(err) {
+      console.error(err);
+      return serverError;
     }
   }
 }
