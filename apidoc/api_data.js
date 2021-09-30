@@ -1,6 +1,89 @@
 define({ "api": [
   {
     "type": "put",
+    "url": "/api/badge",
+    "title": "달성한 뱃지 조회",
+    "version": "1.0.0",
+    "name": "getBadge",
+    "group": "뱃지",
+    "header": {
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\"\n \"Bearer\": \"jwt\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Object[]",
+            "optional": false,
+            "field": "badges",
+            "description": "<p>하단부터 Object 정보</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "number",
+            "optional": false,
+            "field": "id",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": false,
+            "field": "name",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": false,
+            "field": "info",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": false,
+            "field": "image",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "boolean",
+            "optional": false,
+            "field": "hasBadge",
+            "description": ""
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "200 OK 달성한 뱃지 조회 성공\n{\n \"status\": 200,\n \"badges\": [\n   {\n     \"id\": 1,\n     \"name\": \"내 건강 챙기미\",\n     \"info\": \"건강 코스 3개\",\n     \"image\": \"imageUrl\",\n     \"hasBadge\": false\n   },\n   {\n     \"id\": 2,\n     \"name\": \"아이마이미마인\",\n     \"info\": \"\",\n     \"image\": \"imageUrl\",\n     \"hasBadge\": true\n   },\n   {\n     \"id\": 3,\n     \"name\": \"바른생활 모범생\",\n     \"info\": \"생활습관 코스 3개\",\n     \"image\": \"imageUrl\",\n     \"hasBadge\": false\n   }\n  ...\n ]\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "401 유효하지 않은 유저\n{\n \"status\": 401,\n \"message\": \"유저가 존재하지 않습니다.\"\n}\n\n500 서버 에러\n{\n \"status\": 500,\n \"message\": \"서버 에러입니다. 서버 파트에게 문의해주세요 *^^*\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/api/docs/badge.ts",
+    "groupTitle": "뱃지"
+  },
+  {
+    "type": "put",
     "url": "/api/feed/emoji/:id",
     "title": "이모지 추가",
     "version": "1.0.0",
