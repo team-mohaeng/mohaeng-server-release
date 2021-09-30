@@ -61,4 +61,9 @@ router.get("/", auth, async (req, res) => {
   res.status(result.status).json(result);
 })
 
+router.post("/:id", auth, async (req, res) => {
+  const result = await feedService.report(req.body.user.id, req.params.id);
+  res.status(result.status).json(result);
+})
+
 module.exports = router;

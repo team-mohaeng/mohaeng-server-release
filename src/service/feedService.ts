@@ -7,14 +7,16 @@ import { AddEmojiRequestDTO } from "../dto/Feed/Emoji/request/AddEmojiRequestDTO
 import { AddEmojiResponseDTO } from "../dto/Feed/Emoji/response/AddEmojiResponseDTO";
 import { DeleteEmojiRequestDTO } from "../dto/Feed/Emoji/request/DeleteEmojiRequestDTO";
 import { DeleteEmojiResponseDTO } from "../dto/Feed/Emoji/response/DeleteEmojiResponseDTO";
+import { ReportFeedResponseDTO } from "../dto/Feed/Report/ReportFeedResponseDTO";
 import { User } from "../models/User";
 import { Feed } from "../models/Feed";
 import { Badge } from "../models/Badge";
 import { Emoji } from "../models/Emoji";
+import { Report } from "../models/Report";
 import { levels }  from "../dummy/Level"
 import { courses } from '../dummy/Course';
 import { getYear, getMonth, getYesterday, getDay } from "../formatter/mohaengDateFormatter";
-import { alreadyExsitEmoji, feedLengthCheck, notAuthorized, notExistFeedContent, notExistUser, notExistEmoji, notExistFeed, serverError, wrongEmojiId } from "../errors";
+import { alreadyExsitEmoji, feedLengthCheck, notAuthorized, notExistFeedContent, notExistUser, notExistEmoji, notExistFeed, serverError, wrongEmojiId, alreadyReported, invalidReport } from "../errors";
 const sequelize = require("sequelize");
 const Op = sequelize.Op;
 
@@ -564,11 +566,82 @@ export default {
         userCount: userCount,
         data: feedResponse
       }
-      
       return responseDTO;
+
     } catch(err) {
         console.error(err);
         return serverError;
+    }
+  },
+
+  report: async(userId: string, postId: string) => {
+    try {
+      const user = await User.findOne({ attributes: ["id"], where: { id: userId }});
+      if (!user) {
+        return notExistUser;
+      }
+      
+      const report = await Report.findOne({ where: { user_id: userId, post_id: postId }});
+      if (report) {
+        return alreadyReported;
+      }
+
+      const feed = await Feed.findOne({ attributes: ["user_id", "create_time"], where: { id: postId }});
+      if (!feed) {
+        return notExistFeed;
+      }
+      
+      if (feed.user_id == userId) {
+        return invalidReport;
+      }
+
+      const reportCount = await Report.count({ where: { post_id: postId }});
+      if (reportCount == 2) {
+        Feed.destroy({ where: { id: postId }});
+
+        const reportedUser = await User.findOne({ attributes: ["feed_count"], where: { id: feed.user_id }});
+        if (!reportedUser) {
+          return notExistUser;
+        }
+
+        const todayFeed = `${getYear(feed.create_time)}`==`${getYear(new Date())}` && `${getMonth(feed.create_time)}`==`${getMonth(new Date())}` && `${getDay(feed.create_time)}`==`${getDay(new Date())}`;
+        const yesterdayFeed = await Feed.findOne({
+          attributes: ["id"],
+          where: { user_id: feed.user_id, 
+          create_time: {[Op.between]:
+          [`${getYear(feed.create_time)}-${getMonth(feed.create_time)}-${getYesterday(feed.create_time)}`, `${getYear(feed.create_time)}-${getMonth(feed.create_time)}-${getYesterday(feed.create_time)} 23:59:59`]}}
+        })
+
+        //전날 피드가 있는 오늘 피드가 삭제될 경우 -> 피드 재작성 가능, 연속 피드 작성 실패
+        if (todayFeed && yesterdayFeed) {
+          User.update({ is_feed_new: false, feed_count: reportedUser.feed_count-1, feed_success_count: 1 }, { where: { id: feed.user_id }});
+        }
+
+        //전날 피드가 있는 피드가 삭제될 경우 -> 연속 피드 작성 실패
+        else if (yesterdayFeed) {
+          User.update({ feed_count: reportedUser.feed_count-1, feed_success_count: 1 }, { where: { id: feed.user_id }});
+        }
+
+        //전날 피드가 없는 피드가 삭제될 경우
+        else {
+          User.update({ feed_count: reportedUser.feed_count-1 }, { where: { id: feed.user_id }});
+        }
+      }
+
+      else {
+        Report.create({ user_id: +userId, post_id: +postId });
+      }
+
+      const responseDTO: ReportFeedResponseDTO = {
+        status: 200,
+        message: "안부를 신고하였습니다."
+      }
+      return responseDTO
+    }
+    
+    catch(err) {
+      console.error(err);
+      return serverError;
     }
   }
 }

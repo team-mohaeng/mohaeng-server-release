@@ -169,7 +169,7 @@ User.init(
     },
     feed_success_count: {
       type: DataTypes.INTEGER.UNSIGNED,
-      defaultValue: 0,
+      defaultValue: 1,
     },
   },
   {
