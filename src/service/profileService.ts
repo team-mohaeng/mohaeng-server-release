@@ -7,10 +7,10 @@ import { MyPageResponseDTO, MyPageDTO, CalendarDTO } from "../dto/Profile/MyPage
 import { courses } from "../dummy/Course";
 
 export default {
-  changeNickname: async (id: string, dto: ChangeNicknameRequestDTO) => {
+  nickname: async (id: string, dto: ChangeNicknameRequestDTO) => {
     try{
       const { nickname } = dto;
-      const user = await User.findOne({ attributes: ['nickname'], where: {id: id} });
+      const user = await User.findOne({ attributes: ['nickname'], where: { id: id }});
       
       if (!user) {
         return notExistUser;
@@ -24,7 +24,7 @@ export default {
         return sameNickname;
       }
       
-      const hasNickname = await User.findOne({ attributes: ['nickname'], where: {nickname: nickname } });
+      const hasNickname = await User.findOne({ attributes: ['nickname'], where: { nickname: nickname } });
       if (hasNickname) {
         return alreadyExistNickname;
       }
