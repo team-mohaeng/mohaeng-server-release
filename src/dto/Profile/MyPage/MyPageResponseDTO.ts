@@ -15,5 +15,5 @@ export interface MyPageDTO {
 
 export interface CalendarDTO {
   property: number;
-  date: string;
+  date: string[];
 }
