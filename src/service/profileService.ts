@@ -59,9 +59,10 @@ export default {
 
       for (let i=0; i<completeChallenge.length; i++) {
         let courseId = completeChallenge[i].course_id - 1 //index 때문에 -1
+        let dateArray = completeChallenge[i].challenge_dates.split(",");
         let calendar: CalendarDTO = {
           property: courses[courseId].getProperty(),
-          date: completeChallenge[i].challenge_dates
+          date: dateArray
         }
         calendarArray.push(calendar);
       }
