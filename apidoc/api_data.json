@@ -1512,5 +1512,109 @@
     },
     "filename": "src/api/docs/profile.ts",
     "groupTitle": "프로필"
+  },
+  {
+    "type": "get",
+    "url": "/api/profile",
+    "title": "마이페이지 조회",
+    "version": "1.0.0",
+    "name": "myPage",
+    "group": "프로필",
+    "header": {
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\"\n \"Bearer\": \"jwt\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "nickname",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "email",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "completeCourseCount",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "completeChallengeCount",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "feedCount",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "badgeCount",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "Object[]",
+            "optional": false,
+            "field": "calendar",
+            "description": "<p>//하단부터 Object 속성</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "property",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "String[]",
+            "optional": false,
+            "field": "date",
+            "description": ""
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "200 OK\n{\n \"status\": 200,\n \"data\": {\n   \"nickname\": \"모행\",\n   \"email\": \"mohaeng@gmail.com\",\n   \"completeCourseCount\": 2,\n   \"completeChallengeCount\": 31,\n   \"feedCount\": 0,\n   \"badgeCount\": 2,\n   \"calendar\": [\n     {\n       \"property\": 1,\n       \"date\": [\n         \"2021-09-14\",\n         \"2021-09-16\",\n         \"2021-09-17\"\n       ]\n     },\n     {\n       \"property\": 1,\n       \"date\": [\n         \"2021-09-23\",\n         \"2021-09-25\",\n         \"2021-09-30\"\n       ]\n     },\n   ]\n }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "401 유효하지 않은 유저\n{\n \"status\": 401,\n \"message\": \"유저가 존재하지 않습니다.\"\n}\n\n500 서버 에러\n{\n \"status\": 500,\n \"message\": \"서버 에러입니다. 서버 파트에게 문의해주세요 *^^*\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/api/docs/profile.ts",
+    "groupTitle": "프로필"
   }
 ]
