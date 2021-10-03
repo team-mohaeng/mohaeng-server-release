@@ -14,4 +14,9 @@ router.put("/", auth, async (req, res) => {
   res.status(result.status).json(result);
 })
 
+router.get("/", auth, async (req, res) => {
+  const result = await profileService.myPage(req.body.user.id);
+  res.status(result.status).json(result);
+})
+
 module.exports = router;
