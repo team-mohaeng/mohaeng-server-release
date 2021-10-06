@@ -96,7 +96,6 @@ router.get("/kakao/callback", async (req, res) => {
   res.status(result.status).json(result);
 })
 
-
 router.post("/nickname", async (req, res) => {
   try{
     const nickname = req.body.nickname;
