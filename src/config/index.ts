@@ -1,4 +1,5 @@
 import dotenv from "dotenv";
+import nodemailer from "nodemailer";
 
 // Set the NODE_ENV to 'development' by default
 process.env.NODE_ENV = process.env.NODE_ENV || "development";
@@ -41,4 +42,17 @@ export default {
    */
   firebaseID: process.env.FIREBASE_ID,
   firebaseDB: process.env.FIREBASE_DB
+
 };
+
+export const smtpTransport = nodemailer.createTransport({
+  service: "naver",
+  host: "smtp.naver.com",
+  auth: {
+    user: process.env.EMAIL_ID,
+    pass: process.env.EMAIL_PW,
+  },
+  tls: {
+    rejectUnauthorized: false
+  }
+});
