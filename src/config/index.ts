@@ -40,5 +40,11 @@ export default {
    * Your secret sauce
    */
   firebaseID: process.env.FIREBASE_ID,
-  firebaseDB: process.env.FIREBASE_DB
+  firebaseDB: process.env.FIREBASE_DB,
+
+  /**
+   * Your secret sauce
+   */
+  kakaoRestAPIKey: process.env.REST_API_KEY,
+  redirectUri: process.env.REDIRECT_URI,
 };
