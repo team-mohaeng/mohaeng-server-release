@@ -7,7 +7,9 @@ import { SignUpRequestDTO } from "../dto/Auth/SignUp/request/SignUpRequestDTO";
 import { SignUpResponseDTO } from "../dto/Auth/SignUp/response/SignUpResponseDTO";
 import { SignInRequestDTO } from '../dto/Auth/SignIn/request/SignInRequestDTO';
 import { SignInResponseDTO } from '../dto/Auth/SignIn/response/SignInResponseDTO';
-import { serverError, notExistUid, alreadyExistEmail, alreadyExistNickname, notMatchSignIn } from "../errors";
+import { serverError, notExistUid, alreadyExistEmail, nicknameLengthCheck, alreadyExistNickname, notMatchSignIn } from "../errors";
+import { KakaoResponseDTO } from '../dto/Auth/Kakao/response/KakaoResponseDTO';
+import { KakaoRequestDTO } from '../dto/Auth/Kakao/request/KakaoRequestDTO';
 
 export default {
   signUp: async (dto: SignUpRequestDTO) => {
@@ -116,6 +118,62 @@ export default {
 
       return responseDTO;
     } catch(err) {
+      console.error(err);
+      return serverError;
+    }
+  },
+
+  kakao: async () => {
+    try{
+      const responseDTO: KakaoResponseDTO = {
+        status: 200,
+        message: "토큰 인증이 완료되었습니다."
+      }
+      return responseDTO;
+    } catch (err) {
+      console.error(err);
+      return serverError;
+    }
+  },
+
+  nickname: async (dto: KakaoRequestDTO) => {
+    try{
+      const { nickname } = dto;
+
+      if ( nickname.length > 6 || nickname.length == 0 ) {
+        return nicknameLengthCheck;
+      }
+      
+      const hasNickname = await User.findOne({ attributes: ['nickname'], where: { nickname: nickname } });
+      if (hasNickname) {
+        return alreadyExistNickname;
+      }
+      
+      const user = await User.create({
+        nickname: nickname
+      });
+
+      const payload = {
+        user: {
+          id: user.id,
+        },
+      };
+
+      const jwtToken = jwt.sign(
+        payload,
+        config.jwtSecret,
+      );
+
+      const responseDTO: SignUpResponseDTO = {
+        status: 200,
+        data: {
+          jwt: jwtToken,
+        }
+      }
+      
+      return responseDTO;
+
+    } catch (err) {
       console.error(err);
       return serverError;
     }
