@@ -2,12 +2,17 @@ import * as admin from 'firebase-admin';
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import config from "../config"
+import password from '../controller/password';
 import { User } from "../models/User";
 import { SignUpRequestDTO } from "../dto/Auth/SignUp/request/SignUpRequestDTO";
 import { SignUpResponseDTO } from "../dto/Auth/SignUp/response/SignUpResponseDTO";
 import { SignInRequestDTO } from '../dto/Auth/SignIn/request/SignInRequestDTO';
 import { SignInResponseDTO } from '../dto/Auth/SignIn/response/SignInResponseDTO';
-import { serverError, notExistUid, alreadyExistEmail, alreadyExistNickname, notMatchSignIn } from "../errors";
+import { serverError, notExistUid, alreadyExistEmail, alreadyExistNickname, notMatchSignIn, notExistUser, invalidEmail } from "../errors";
+import { ChangePasswordRequestDTO } from '../dto/Auth/Password/request/ChangePasswordRequestDTO';
+import { ChangePasswordResponseDTO } from '../dto/Auth/Password/response/ChangePasswordResponseDTO';
+import { CheckEmailRequestDTO } from '../dto/Auth/Password/request/CheckEmailRequestDTO';
+import { CheckEmailResponseDTO } from '../dto/Auth/Password/response/CheckEmailResponseDTO';
 
 export default {
   signUp: async (dto: SignUpRequestDTO) => {
@@ -117,6 +122,59 @@ export default {
       return responseDTO;
     } catch(err) {
       console.error(err);
+      return serverError;
+    }
+  },
+
+  forgetPassword: async (dto: CheckEmailRequestDTO) => {
+    try{
+      const { email } = dto;
+      const user = await User.findOne({ where: { email: email }})
+      if (!user) {
+        return notExistUser;
+      }
+
+      const number = await password.email(email);
+      if (!number) {
+        return invalidEmail;
+      }
+
+      const responseDTO: CheckEmailResponseDTO = {
+        status: 200,
+        data: {
+          number: number,
+        }
+      };
+
+      return responseDTO;
+
+    } catch (err) {
+      console.error(err);
+      return serverError;
+    }
+  },
+  change: async (dto: ChangePasswordRequestDTO) => {
+    try {
+      const { email, password } = dto;
+
+      const user = await User.findOne({ where: { email: email } });
+      if (!user) {
+        return notExistUser;
+      }
+
+      const salt = await bcrypt.genSalt(10);
+      user.password = await bcrypt.hash(password, salt);
+
+      User.update({
+        password: user.password
+      },{
+        where: { email: email }
+      });
+
+
+      return responseDTO;
+    } catch (err) {
+      console.log(err);
       return serverError;
     }
   }
