@@ -4,6 +4,8 @@ import { SignUpRequestDTO } from "../dto/Auth/SignUp/request/SignUpRequestDTO";
 import { SignInRequestDTO } from "../dto/Auth/SignIn/request/SignInRequestDTO";
 import authService from "../service/authService";
 import verifyFCM from "../middleware/verifyToken";
+import { CheckEmailRequestDTO } from "../dto/Auth/Password/request/CheckEmailRequestDTO";
+import { ChangePasswordRequestDTO } from "../dto/Auth/Password/request/ChangePasswordRequestDTO";
 
 const router = express.Router();
 
@@ -54,6 +56,40 @@ router.post("/signin", async (req, res) => {
   res.status(result.status).json(result);
 })
 
+router.get("/password", async (req, res) => {
+  const requestDTO: CheckEmailRequestDTO = {
+    email: req.body.email
+  }
+  const result = await authService.forgetPassword(requestDTO);
+  res.status(result.status).json(result);
+});
+
+router.put(
+  "/password", 
+  [
+    check("email", "이메일 형식이 올바르지 않습니다").trim().isEmail(),
+    check("password", "영문, 숫자를 모두 포함하여 입력해주세요").trim().not().isAlpha(),
+    check("password", "영문, 숫자를 모두 포함하여 입력해주세요").trim().not().isNumeric(),
+    check("password", "영문, 숫자를 모두 포함하여 입력해주세요").trim().isAlphanumeric(),
+    check("password", "8-16자의 비밀번호를 입력해주세요").trim().isLength({ min: 8, max: 16 }),
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(412).json({ 
+        status: 412,
+        message: errors.array()[0].msg
+      });
+    }
+
+    const requestDTO: ChangePasswordRequestDTO = {
+      email: req.body.email,
+      password: req.body.password
+    };
+
+    const result = await authService.change(requestDTO);
+    res.status(result.status).json(result);
+  });
 
 module.exports = router;
 
