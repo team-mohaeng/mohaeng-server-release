@@ -116,6 +116,51 @@ exports.default = {
             console.error(err);
             return errors_1.serverError;
         }
+    },
+    kakao: async () => {
+        try {
+            const responseDTO = {
+                status: 200,
+                message: "토큰 인증이 완료되었습니다."
+            };
+            return responseDTO;
+        }
+        catch (err) {
+            console.error(err);
+            return errors_1.serverError;
+        }
+    },
+    nickname: async (dto) => {
+        try {
+            const { nickname } = dto;
+            if (nickname.length > 6 || nickname.length == 0) {
+                return errors_1.nicknameLengthCheck;
+            }
+            const hasNickname = await User_1.User.findOne({ attributes: ['nickname'], where: { nickname: nickname } });
+            if (hasNickname) {
+                return errors_1.alreadyExistNickname;
+            }
+            const user = await User_1.User.create({
+                nickname: nickname
+            });
+            const payload = {
+                user: {
+                    id: user.id,
+                },
+            };
+            const jwtToken = jsonwebtoken_1.default.sign(payload, config_1.default.jwtSecret);
+            const responseDTO = {
+                status: 200,
+                data: {
+                    jwt: jwtToken,
+                }
+            };
+            return responseDTO;
+        }
+        catch (err) {
+            console.error(err);
+            return errors_1.serverError;
+        }
     }
 };
 //# sourceMappingURL=authService.js.map
