@@ -263,7 +263,8 @@
  * 200 OK 내 서랍장 조회
  * {
  *  "status": 200,
- *  "data": [
+ *  "data": {
+ *    "feeds": [
  *    {
  *      "postId": 131,
  *      "course": "초보 사진가",
@@ -308,6 +309,7 @@
  *      "isDelete": true
  *    }
  *   ]
+ *  }
  * }
  * 
  * @apiErrorExample Error-Response:
