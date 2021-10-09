@@ -2,7 +2,7 @@ import { CreateFeedRequestDTO } from "../dto/Feed/Create/request/CreateFeedReque
 import { CreateFeedResponseDTO, FeedResponseDTO, LevelUpResponseDTO } from "../dto/Feed/Create/response/CreateFeedResponseDTO";
 import { DeleteFeedResponseDTO } from "../dto/Feed/Delete/DeleteFeedResponseDTO";
 import { MyFeedResponseDTO, FeedDTO, EmojiDTO } from "../dto/Feed/MyFeed/response/MyFeedResponseDTO";
-import { CommunityResponseDTO } from "../dto/Feed/Community/CommunityResponseDTO";
+import { CommunityDTO, CommunityResponseDTO } from "../dto/Feed/Community/CommunityResponseDTO";
 import { AddEmojiRequestDTO } from "../dto/Feed/Emoji/request/AddEmojiRequestDTO";
 import { AddEmojiResponseDTO } from "../dto/Feed/Emoji/response/AddEmojiResponseDTO";
 import { DeleteEmojiRequestDTO } from "../dto/Feed/Emoji/request/DeleteEmojiRequestDTO";
@@ -559,12 +559,16 @@ export default {
         feedResponse.push(myFeed);
       }
 
-      const responseDTO: CommunityResponseDTO = {
-        status: 200,
+      const community: CommunityDTO = {
         isNew: user.is_feed_new,
         hasFeed: hasFeed,
         userCount: userCount,
-        data: feedResponse
+        feeds: feedResponse
+      }
+
+      const responseDTO: CommunityResponseDTO = {
+        status: 200,
+        data: community
       }
       return responseDTO;
 
