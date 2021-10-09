@@ -1,6 +1,10 @@
 export interface MyFeedResponseDTO {
   status: number;
-  data: FeedDTO[];
+  data: MyFeedDTO;
+}
+
+export interface MyFeedDTO {
+  feeds: FeedDTO[];
 }
 
 export interface FeedDTO {

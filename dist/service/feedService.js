@@ -385,9 +385,12 @@ exports.default = {
                 };
                 feedResponse.push(myFeed);
             }
+            const myFeedDTO = {
+                feeds: feedResponse
+            };
             const responseDTO = {
                 status: 200,
-                data: feedResponse
+                data: myFeedDTO
             };
             return responseDTO;
         }
@@ -472,7 +475,7 @@ exports.default = {
                 const myFeed = {
                     postId: feeds[i].id,
                     course: Course_1.courses[feeds[i].current_course_id - 1].getTitle(),
-                    challenge: user.current_challenge_id,
+                    challenge: feeds[i].current_challenge_id,
                     image: feeds[i].image,
                     mood: feeds[i].mood,
                     content: feeds[i].content,
@@ -488,12 +491,15 @@ exports.default = {
                 };
                 feedResponse.push(myFeed);
             }
-            const responseDTO = {
-                status: 200,
+            const community = {
                 isNew: user.is_feed_new,
                 hasFeed: hasFeed,
                 userCount: userCount,
-                data: feedResponse
+                feeds: feedResponse
+            };
+            const responseDTO = {
+                status: 200,
+                data: community
             };
             return responseDTO;
         }
