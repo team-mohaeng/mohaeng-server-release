@@ -2,7 +2,7 @@ import { User } from "../models/User";
 import { Badge } from "../models/Badge";
 import { notExistUser, serverError } from "../errors";
 import { courseBadges, challengeBadges, challengeCountBadges, feedBadges, stickerBadges } from "../dummy/Badge";
-import { BadgeResponseDTO, GetBadgeResponseDTO } from "../dto/Badge/getBadgeResponseDTO";
+import { GetBadgeResponseDTO, BadgeResponseDTO, BadgeDTO } from "../dto/Badge/getBadgeResponseDTO";
 
 export default {
   badge: async (userId: string) => {
@@ -15,7 +15,7 @@ export default {
       //뱃지 하나로 합치기
       const badges = courseBadges.concat(challengeBadges, challengeCountBadges, feedBadges, stickerBadges)
 
-      const badgeResponse: Array<BadgeResponseDTO> = new Array<BadgeResponseDTO>();
+      const badgeArray: Array<BadgeDTO> = new Array<BadgeDTO>();
       const userBadges = await Badge.findAll({ attributes: ["id"], where: { user_id: userId }});
 
       //뱃지 id만 담는 배열
@@ -26,48 +26,52 @@ export default {
 
       if(!userBadges) {
         badges.forEach(badge => {
-          let badgeInfo: BadgeResponseDTO = {
+          let badgeInfo: BadgeDTO = {
             id: badge.getId(),
             name: badge.getName(),
             info: badge.getHowObtain(),
             image: badge.getImageURL(),
             hasBadge: false
           }
-          badgeResponse.push(badgeInfo);
+          badgeArray.push(badgeInfo);
         });
       }
 
       else {
         badges.forEach(badge => {
           if (badgeIdArray.includes(badge.getId())) {
-            let badgeInfo: BadgeResponseDTO = {
+            let badgeInfo: BadgeDTO = {
               id: badge.getId(),
               name: badge.getName(),
               info: "",
               image: badge.getImageURL(),
               hasBadge: true
             }
-            badgeResponse.push(badgeInfo);
+            badgeArray.push(badgeInfo);
           }
 
           else {
-            let badgeInfo: BadgeResponseDTO = {
+            let badgeInfo: BadgeDTO = {
               id: badge.getId(),
               name: badge.getName(),
               info: badge.getHowObtain(),
               image: badge.getImageURL(),
               hasBadge: false
             }
-            badgeResponse.push(badgeInfo);
+            badgeArray.push(badgeInfo);
           }
         });
       }
 
       User.update({ is_badge_new: false}, { where: { id: userId }});
 
+      const badgeResponse: BadgeResponseDTO = {
+        badges: badgeArray
+      }
+
       const responseDTO: GetBadgeResponseDTO = {
         status: 200,
-        badges: badgeResponse
+        data: badgeResponse
       }
       return responseDTO;
     }
