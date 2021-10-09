@@ -1,9 +1,14 @@
 import express from "express";
+import axios from "axios";
+import qs from "qs";
 import { check, validationResult } from "express-validator";
+import config from "../config";
 import { SignUpRequestDTO } from "../dto/Auth/SignUp/request/SignUpRequestDTO";
 import { SignInRequestDTO } from "../dto/Auth/SignIn/request/SignInRequestDTO";
+import { KakaoRequestDTO } from "../dto/Auth/Kakao/request/KakaoRequestDTO";
 import authService from "../service/authService";
 import verifyFCM from "../middleware/verifyToken";
+import { serverError } from "../errors";
 
 const router = express.Router();
 
@@ -54,6 +59,56 @@ router.post("/signin", async (req, res) => {
   res.status(result.status).json(result);
 })
 
+router.get("/kakao", async (req, res) => {
+  try{
+  const REST_API_KEY = config.kakaoRestAPIKey;
+  const REDIRECT_URI = config.redirectUri;
+  const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}`;
+  res.redirect(kakaoAuthUrl);
+  } catch (err) {
+    console.log(err);
+    return serverError;
+  }
+})
+
+router.get("/kakao/callback", async (req, res) => {
+  try{
+    //토큰 유효성 검사
+    const token = await axios({
+      method: "POST",
+      url: "https://kauth.kakao.com/oauth/token",
+      headers:{
+        'content-type':'application/x-www-form-urlencoded'
+      },
+      data:qs.stringify({
+        grant_type: 'authorization_code',
+        client_id: config.kakaoRestAPIKey,
+        redirectUri: config.redirectUri,
+        code: req.query.code,
+      })
+    });
+
+  } catch (err) {
+    console.log(err);
+    return serverError;
+  }
+  const result = await authService.kakao();
+  res.status(result.status).json(result);
+})
+
+router.post("/nickname", async (req, res) => {
+  try{
+    const nickname = req.body.nickname;
+    const requestDTO: KakaoRequestDTO = {
+      nickname: nickname
+    };
+    const result = await authService.nickname(requestDTO);
+    res.status(result.status).json(result);
+  } catch (err) {
+    console.log(err);
+    return serverError;
+  }
+})
 
 module.exports = router;
 

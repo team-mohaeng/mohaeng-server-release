@@ -10,7 +10,6 @@
 
 # production
 /build
-/src/dummy
 
 # misc
 .DS_Store

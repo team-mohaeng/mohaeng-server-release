@@ -13,23 +13,18 @@ exports.User = User;
 User.init({
     uid: {
         type: sequelize_1.DataTypes.STRING(100),
-        allowNull: false,
-        unique: true,
     },
     token: {
         type: sequelize_1.DataTypes.STRING(100),
     },
     email: {
         type: sequelize_1.DataTypes.STRING(30),
-        allowNull: false,
-        unique: true,
         validate: {
             isEmail: true,
         }
     },
     password: {
         type: sequelize_1.DataTypes.STRING(20),
-        allowNull: false,
     },
     nickname: {
         type: sequelize_1.DataTypes.STRING(10),
@@ -114,7 +109,7 @@ User.init({
     },
     feed_success_count: {
         type: sequelize_1.DataTypes.INTEGER.UNSIGNED,
-        defaultValue: 0,
+        defaultValue: 1,
     },
 }, {
     modelName: 'User',

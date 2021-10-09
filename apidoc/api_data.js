@@ -1,5 +1,774 @@
 define({ "api": [
   {
+    "type": "post",
+    "url": "/api/nickname",
+    "title": "소셜로그인 회원가입",
+    "version": "1.0.0",
+    "name": "createUser",
+    "group": "로그인/회원가입",
+    "parameter": {
+      "examples": [
+        {
+          "title": "Request-Example:",
+          "content": "{\n \"nickname\": \"시원뿡\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": false,
+            "field": "jwt",
+            "description": ""
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "200 OK\n{\n \"status\": 200,\n \"data\": {\n   \"jwt\": \"jwt 토큰\"\n }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "\n404 닉네임 글자 제한\n{\n \"status\": 404,\n \"message\": \"닉네임은 1-6글자 이내로 작성해주세요\"\n}\n\n404 닉네임 중복\n{\n \"status\": 404,\n \"message\": \"이미 사용 중인 닉네임입니다.\"\n}\n\n500 서버 에러\n{\n \"status\": 500,\n \"message\": \"서버 에러입니다. 서버 파트에게 문의해주세요 *^^*\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/api/docs/auth.ts",
+    "groupTitle": "로그인/회원가입"
+  },
+  {
+    "type": "get",
+    "url": "/api/kakao",
+    "title": "카카오 로그인",
+    "version": "1.0.0",
+    "name": "kakaoLogin",
+    "group": "로그인/회원가입",
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": ""
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "200 OK\n{\n \"status\": 200,\n \"message\": \"토큰 인증을 완료하였습니다.\"\n}\n\n500 서버 에러\n{\n \"status\": 500,\n \"message\": \"서버 에러입니다. 서버 파트에게 문의해주세요 *^^*\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/api/docs/auth.ts",
+    "groupTitle": "로그인/회원가입"
+  },
+  {
+    "type": "put",
+    "url": "/api/badge",
+    "title": "달성한 뱃지 조회",
+    "version": "1.0.0",
+    "name": "getBadge",
+    "group": "뱃지",
+    "header": {
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\"\n \"Bearer\": \"jwt\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Object[]",
+            "optional": false,
+            "field": "badges",
+            "description": "<p>하단부터 Object 정보</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "number",
+            "optional": false,
+            "field": "id",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": false,
+            "field": "name",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": false,
+            "field": "info",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": false,
+            "field": "image",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "boolean",
+            "optional": false,
+            "field": "hasBadge",
+            "description": ""
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "200 OK 달성한 뱃지 조회 성공\n{\n \"status\": 200,\n \"badges\": [\n   {\n     \"id\": 1,\n     \"name\": \"내 건강 챙기미\",\n     \"info\": \"건강 코스 3개\",\n     \"image\": \"imageUrl\",\n     \"hasBadge\": false\n   },\n   {\n     \"id\": 2,\n     \"name\": \"아이마이미마인\",\n     \"info\": \"\",\n     \"image\": \"imageUrl\",\n     \"hasBadge\": true\n   },\n   {\n     \"id\": 3,\n     \"name\": \"바른생활 모범생\",\n     \"info\": \"생활습관 코스 3개\",\n     \"image\": \"imageUrl\",\n     \"hasBadge\": false\n   }\n  ...\n ]\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "401 유효하지 않은 유저\n{\n \"status\": 401,\n \"message\": \"유저가 존재하지 않습니다.\"\n}\n\n500 서버 에러\n{\n \"status\": 500,\n \"message\": \"서버 에러입니다. 서버 파트에게 문의해주세요 *^^*\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/api/docs/badge.ts",
+    "groupTitle": "뱃지"
+  },
+  {
+    "type": "put",
+    "url": "/api/feed/emoji/:id",
+    "title": "이모지 추가",
+    "version": "1.0.0",
+    "name": "addEmoji",
+    "group": "안부",
+    "header": {
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\"\n \"Bearer\": \"jwt\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "parameter": {
+      "examples": [
+        {
+          "title": "Request-Example:",
+          "content": "{\n \"emojiId\": 4\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": ""
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "200 OK 이모지 추가 성공\n{\n \"status\": 200,\n \"message\": \"이모지를 추가하였습니다.\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "401 유효하지 않은 유저\n{\n \"status\": 401,\n \"message\": \"유저가 존재하지 않습니다.\"\n}\n\n404 잘못된 이모지 번호\n{\n \"status\": 404,\n \"message\": \"잘못된 이모지 id입니다.\"\n}\n\n404 이미 피드에 붙여져 있는 이모지\n{\n \"status\": 404,\n \"message\": \"이미 추가된 이모지입니다.\"\n}\n\n404 존재하지 않는 피드\n{\n \"status\": 404,\n \"message\": \"피드가 존재하지 않습니다.\"\n}\n\n500 서버 에러\n{\n \"status\": 500,\n \"message\": \"서버 에러입니다. 서버 파트에게 문의해주세요 *^^*\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/api/docs/feed.ts",
+    "groupTitle": "안부"
+  },
+  {
+    "type": "get",
+    "url": "/api/feed",
+    "title": "커뮤니티 조회",
+    "version": "1.0.0",
+    "name": "community",
+    "group": "안부",
+    "header": {
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\"\n \"Bearer\": \"jwt\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Boolean",
+            "optional": false,
+            "field": "isNew",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "hasFeed",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "userCount",
+            "description": "<p>하단부터 feed 정보, 내 서랍장 response와 같음</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "postId",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "course",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "challenge",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "image",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "mood",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "content",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "nickname",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "year",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "month",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "date",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "day",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "Object[]",
+            "optional": false,
+            "field": "emoji",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "myEmoji",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "Boolean",
+            "optional": false,
+            "field": "isReport",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "Boolean",
+            "optional": false,
+            "field": "isDelete",
+            "description": ""
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "200 OK 커뮤니티 조회\n{\n \"status\": 200,\n \"isNew\": false,\n \"hasFeed\": 2,\n \"userCount\": 0,\n \"data\": [\n   {\n     \"postId\": 135,\n     \"course\": \"중급 사진가\",\n     \"challenge\": 3,\n     \"image\": \"https://mohaeng.s3.ap-northeast-2.amazonaws.com/images/origin/1632731373241.jpg\",\n     \"mood\": 2,\n     \"content\": \"엄마 나 모행 다녀올게\",\n     \"nickname\": \"모행일\",\n     \"year\": \"2021\",\n     \"month\": \"09\",\n     \"date\": \"27\",\n     \"day\": \"월\",\n     \"emoji\": [],\n     \"myEmoji\": 0,\n     \"isReport\": true,\n     \"isDelete\": false\n   },\n   {\n     \"postId\": 118,\n     \"course\": \"초보 사진가\",\n     \"challenge\": 2,\n     \"image\": \"https://mohaeng.s3.ap-northeast-2.amazonaws.com/images/origin/1632731373241.jpg\",\n     \"mood\": 2,\n     \"content\": \"엄마 나 모행 다녀올게\",\n     \"nickname\": \"모행삼\",\n     \"year\": \"2021\",\n     \"month\": \"09\",\n     \"date\": \"22\",\n     \"day\": \"수\",\n     \"emoji\": [\n       {\n         \"id\": 4,\n         \"count\": 1\n       },\n       {\n         \"id\": 6,\n         \"count\": 3\n       }\n     ],\n     \"myEmoji\": 4,\n     \"isReport\": false,\n     \"isDelete\": true\n   }\n  ]\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "401 유효하지 않은 유저\n{\n \"status\": 401,\n \"message\": \"유저가 존재하지 않습니다.\"\n}\n\n500 서버 에러\n{\n \"status\": 500,\n \"message\": \"서버 에러입니다. 서버 파트에게 문의해주세요 *^^*\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/api/docs/feed.ts",
+    "groupTitle": "안부"
+  },
+  {
+    "type": "post",
+    "url": "/api/feed",
+    "title": "안부 작성",
+    "version": "1.0.0",
+    "name": "createFeed",
+    "group": "안부",
+    "header": {
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\"\n \"Bearer\": \"jwt\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "parameter": {
+      "examples": [
+        {
+          "title": "Request-Example:",
+          "content": "KEY, VALUE, CONTENT TYPE\nfeed(Text), {\"content\": \"엄마 나 모행 다녀올게\", \"mood\": 2, \"isPrivate\": false}, application/json\n\nKEY, VALUE\nimage(File), \"imageURL\"\n\n사진참고\nhttps://mohaeng.s3.ap-northeast-2.amazonaws.com/%EC%A0%9C%EB%AA%A9+%EC%97%86%EC%9D%8C.png",
+          "type": "form-data"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "happy",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "userHappy",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "totalHappy",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "Boolean",
+            "optional": false,
+            "field": "isPenalty",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "levelUp",
+            "description": "<p>포함 속성은 오른쪽 Success-Response 참고</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "200 OK 안부 작성 성공\n{\n \"status\": 200,\n \"data\": {\n   \"happy\": 15, \n   \"userHappy\": 15,\n   \"totalHappy\": 65,\n   \"isPenalty\": false\n   \"levelUp\": { //레벨업 하지 않을 경우에는 null\n     \"level\": 10,\n     \"styleImg\": \"img\"\n    }\n  }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "401 유효하지 않은 유저\n{\n \"status\": 401,\n \"message\": \"유저가 존재하지 않습니다.\"\n}\n\n404 닉네임 글자 제한\n{\n \"status\": 404,\n \"message\": \"닉네임은 1-6글자 이내로 작성해주세요\"\n}\n\n404 닉네임 중복\n{\n \"status\": 404,\n \"message\": \"이미 사용 중인 닉네임입니다.\"\n}\n\n404 이전과 같은 닉네임\n{\n \"status\": 404,\n \"message\": \"기존 닉네임과 다른 닉네임으로 설정해주세요.\"\n}\n\n500 서버 에러\n{\n \"status\": 500,\n \"message\": \"서버 에러입니다. 서버 파트에게 문의해주세요 *^^*\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/api/docs/feed.ts",
+    "groupTitle": "안부"
+  },
+  {
+    "type": "delete",
+    "url": "/api/feed/emoji/:id",
+    "title": "이모지 삭제",
+    "version": "1.0.0",
+    "name": "deleteEmoji",
+    "group": "안부",
+    "header": {
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\"\n \"Bearer\": \"jwt\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "parameter": {
+      "examples": [
+        {
+          "title": "Request-Example:",
+          "content": "{\n \"emojiId\": 2\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": ""
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "200 OK 이모지 삭제 성공\n{\n \"status\": 200,\n \"message\": \"이모지를 삭제하였습니다.\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "401 유효하지 않은 유저\n{\n \"status\": 401,\n \"message\": \"유저가 존재하지 않습니다.\"\n}\n\n404 피드에 붙여져 있지 않는 이모지\n{\n \"status\": 404,\n \"message\": \"피드에 붙여진 이모지가 아닙니다.\"\n}\n\n500 서버 에러\n{\n \"status\": 500,\n \"message\": \"서버 에러입니다. 서버 파트에게 문의해주세요 *^^*\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/api/docs/feed.ts",
+    "groupTitle": "안부"
+  },
+  {
+    "type": "delete",
+    "url": "/api/feed/:id",
+    "title": "안부 삭제",
+    "version": "1.0.0",
+    "name": "deleteFeed",
+    "group": "안부",
+    "header": {
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\"\n \"Bearer\": \"jwt\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": ""
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "200 OK\n{\n \"status\": 200,\n \"message\": \"피드를 삭제했습니다.\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "401 유효하지 않은 유저\n{\n \"status\": 401,\n \"message\": \"유저가 존재하지 않습니다.\"\n}\n\n404 존재하지 않는 피드\n{\n \"status\": 404,\n \"message\": \"피드가 존재하지 않습니다.\"\n}\n\n403 작성자만 피드 삭제 가능\n{\n \"status\": 403,\n \"message\": \"작성자만 피드를 삭제할 수 있습니다.\"\n}\n\n500 서버 에러\n{\n \"status\": 500,\n \"message\": \"서버 에러입니다. 서버 파트에게 문의해주세요 *^^*\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/api/docs/feed.ts",
+    "groupTitle": "안부"
+  },
+  {
+    "type": "get",
+    "url": "/api/feed/:year/:month",
+    "title": "내 서랍장 조회",
+    "version": "1.0.0",
+    "name": "myFeed",
+    "group": "안부",
+    "header": {
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\"\n \"Bearer\": \"jwt\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "postId",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "course",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "challenge",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "image",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "mood",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "content",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "nickname",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "year",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "month",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "date",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "day",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "Object[]",
+            "optional": false,
+            "field": "emoji",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "myEmoji",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "Boolean",
+            "optional": false,
+            "field": "isReport",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "Boolean",
+            "optional": false,
+            "field": "isDelete",
+            "description": ""
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "200 OK 내 서랍장 조회\n{\n \"status\": 200,\n \"data\": [\n   {\n     \"postId\": 131,\n     \"course\": \"초보 사진가\",\n     \"challenge\": 3,\n     \"image\": \"https://mohaeng.s3.ap-northeast-2.amazonaws.com/images/origin/1632731373241.jpg\",\n     \"mood\": 2,\n     \"content\": \"엄마 나 모행 다녀올게\",\n     \"nickname\": \"모행삼\",\n     \"year\": \"2021\",\n     \"month\": \"09\",\n     \"date\": \"27\",\n     \"day\": \"월\",\n     \"emoji\": [],\n     \"myEmoji\": 0,\n     \"isReport\": false,\n     \"isDelete\": true\n   },\n   {\n     \"postId\": 118,\n     \"course\": \"초보 사진가\",\n     \"challenge\": 2,\n     \"image\": \"https://mohaeng.s3.ap-northeast-2.amazonaws.com/images/origin/1632731373241.jpg\",\n     \"mood\": 2,\n     \"content\": \"엄마 나 모행 다녀올게\",\n     \"nickname\": \"모행삼\",\n     \"year\": \"2021\",\n     \"month\": \"09\",\n     \"date\": \"22\",\n     \"day\": \"수\",\n     \"emoji\": [\n       {\n         \"id\": 4,\n         \"count\": 1\n       },\n       {\n         \"id\": 6,\n         \"count\": 3\n       }\n     ],\n     \"myEmoji\": 4,\n     \"isReport\": false,\n     \"isDelete\": true\n   }\n  ]\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "401 유효하지 않은 유저\n{\n \"status\": 401,\n \"message\": \"유저가 존재하지 않습니다.\"\n}\n\n500 서버 에러\n{\n \"status\": 500,\n \"message\": \"서버 에러입니다. 서버 파트에게 문의해주세요 *^^*\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/api/docs/feed.ts",
+    "groupTitle": "안부"
+  },
+  {
+    "type": "post",
+    "url": "/api/feed/:id",
+    "title": "안부 신고",
+    "version": "1.0.0",
+    "name": "reportFeed",
+    "group": "안부",
+    "header": {
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\"\n \"Bearer\": \"jwt\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": ""
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "200 OK 안부 신고\n{\n \"status\": 200,\n \"message\": \"안부를 신고하였습니다.\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "401 유효하지 않은 유저\n{\n \"status\": 401,\n \"message\": \"유저가 존재하지 않습니다.\"\n}\n\n404 이미 신고한 안부\n{\n \"status\": 404,\n \"message\": \"이미 신고한 안부입니다.\"\n}\n\n404 본인이 작성한 안부\n{\n \"status\": 404,\n \"message\": \"본인이 작성한 안부는 신고할 수 없습니다.\"\n}\n\n404 존재하지 않는 피드\n{\n \"status\": 404,\n \"message\": \"피드가 존재하지 않습니다.\"\n}\n\n500 서버 에러\n{\n \"status\": 500,\n \"message\": \"서버 에러입니다. 서버 파트에게 문의해주세요 *^^*\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/api/docs/feed.ts",
+    "groupTitle": "안부"
+  },
+  {
     "type": "put",
     "url": "/api/today/:courseId/:challengeId",
     "title": "챌린지 인증하기",
@@ -304,6 +1073,63 @@ define({ "api": [
     },
     "filename": "src/api/docs/challenge.ts",
     "groupTitle": "챌린지"
+  },
+  {
+    "type": "put",
+    "url": "/api/character",
+    "title": "캐릭터 변경",
+    "version": "1.0.0",
+    "name": "setCharacter",
+    "group": "캐릭터",
+    "header": {
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\",\n \"Bearer\": \"{jwt}\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "parameter": {
+      "examples": [
+        {
+          "title": "Request-Example:",
+          "content": "{\n \"characterSkin\": 3,\n \"characterType\": 1,\n \"characterCard\": 2\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": ""
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "200 OK 캐릭터 변경\n{\n \"status\": 200,\n \"message\": \"캐릭터를 변경하였습니다.\" \n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "401 존재하지 않는 유저\n{\n \"status\": 401,\n \"message\": \"유저가 존재하지 않습니다.\"\n}\n\n404 유저가 갖고 있지 않은 스킨인 경우\n{\n \"status\": 404,\n \"message\": \"유저가 갖고 있는 스킨이 아닙니다.\"\n}\n\n404 유저가 갖고 있지 않은 캐릭터인 경우\n{\n \"status\": 404,\n \"message\": \"유저가 갖고 있는 캐릭터가 아닙니다.\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/api/docs/character.ts",
+    "groupTitle": "캐릭터"
   },
   {
     "type": "get",
@@ -707,5 +1533,166 @@ define({ "api": [
     },
     "filename": "src/api/docs/course.ts",
     "groupTitle": "코스"
+  },
+  {
+    "type": "put",
+    "url": "/api/profile",
+    "title": "닉네임 변경",
+    "version": "1.0.0",
+    "name": "changeNickname",
+    "group": "프로필",
+    "header": {
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\"\n \"Bearer\": \"jwt\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "parameter": {
+      "examples": [
+        {
+          "title": "Request-Example:",
+          "content": "{\n \"nickname\": \"시원뿡\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": ""
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "200 OK\n{\n \"status\": 200,\n \"message\": \"닉네임을 변경했습니다.\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "401 유효하지 않은 유저\n{\n \"status\": 401,\n \"message\": \"유저가 존재하지 않습니다.\"\n}\n\n404 닉네임 글자 제한\n{\n \"status\": 404,\n \"message\": \"닉네임은 1-6글자 이내로 작성해주세요\"\n}\n\n404 닉네임 중복\n{\n \"status\": 404,\n \"message\": \"이미 사용 중인 닉네임입니다.\"\n}\n\n404 이전과 같은 닉네임\n{\n \"status\": 404,\n \"message\": \"기존 닉네임과 다른 닉네임으로 설정해주세요.\"\n}\n\n500 서버 에러\n{\n \"status\": 500,\n \"message\": \"서버 에러입니다. 서버 파트에게 문의해주세요 *^^*\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/api/docs/profile.ts",
+    "groupTitle": "프로필"
+  },
+  {
+    "type": "get",
+    "url": "/api/profile",
+    "title": "마이페이지 조회",
+    "version": "1.0.0",
+    "name": "myPage",
+    "group": "프로필",
+    "header": {
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\"\n \"Bearer\": \"jwt\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "nickname",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "email",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "completeCourseCount",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "completeChallengeCount",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "feedCount",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "badgeCount",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "Object[]",
+            "optional": false,
+            "field": "calendar",
+            "description": "<p>//하단부터 Object 속성</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "property",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "String[]",
+            "optional": false,
+            "field": "date",
+            "description": ""
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "200 OK\n{\n \"status\": 200,\n \"data\": {\n   \"nickname\": \"모행\",\n   \"email\": \"mohaeng@gmail.com\",\n   \"completeCourseCount\": 2,\n   \"completeChallengeCount\": 31,\n   \"feedCount\": 0,\n   \"badgeCount\": 2,\n   \"calendar\": [\n     {\n       \"property\": 1,\n       \"date\": [\n         \"2021-09-14\",\n         \"2021-09-16\",\n         \"2021-09-17\"\n       ]\n     },\n     {\n       \"property\": 1,\n       \"date\": [\n         \"2021-09-23\",\n         \"2021-09-25\",\n         \"2021-09-30\"\n       ]\n     },\n   ]\n }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "401 유효하지 않은 유저\n{\n \"status\": 401,\n \"message\": \"유저가 존재하지 않습니다.\"\n}\n\n500 서버 에러\n{\n \"status\": 500,\n \"message\": \"서버 에러입니다. 서버 파트에게 문의해주세요 *^^*\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/api/docs/profile.ts",
+    "groupTitle": "프로필"
   }
 ] });

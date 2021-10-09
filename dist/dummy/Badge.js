@@ -3,9 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.stickerBadges = exports.feedBadges = exports.challengeCountBadges = exports.challengeBadges = exports.courseBadges = void 0;
 const Badge_1 = require("../class/Badge");
 exports.courseBadges = [
-    new Badge_1.Badge(1, "내 건강 챙기미", "건강 코스 3개", ""),
-    new Badge_1.Badge(2, "아이마이미마인", "나돌봄 코스 3개", ""),
-    new Badge_1.Badge(3, "바른생활 모범생", "생활습관 코스 3개", ""),
+    new Badge_1.Badge(1, "내 건강 챙기미", "건강 코스 3개", "https://mohaeng.s3.ap-northeast-2.amazonaws.com/KakaoTalk_20210831_225938643.jpg"),
+    new Badge_1.Badge(2, "아이마이미마인", "나돌봄 코스 3개", "https://mohaeng.s3.ap-northeast-2.amazonaws.com/KakaoTalk_20210831_225938643.jpg"),
+    new Badge_1.Badge(3, "바른생활 모범생", "생활습관 코스 3개", "https://mohaeng.s3.ap-northeast-2.amazonaws.com/KakaoTalk_20210831_225938643.jpg"),
     new Badge_1.Badge(4, "대담한 일상탈출", "일탈 코스 3개", ""),
     new Badge_1.Badge(5, "추억은 방울방울", "추억 코스 3개", ""),
     new Badge_1.Badge(6, "진정한 사랑꾼", "사랑 코스 3개", ""),

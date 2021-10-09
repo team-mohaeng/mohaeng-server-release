@@ -55,5 +55,9 @@ router.get("/", auth_1.default, async (req, res) => {
     const result = await feedService_1.default.feed(req.body.user.id);
     res.status(result.status).json(result);
 });
+router.post("/:id", auth_1.default, async (req, res) => {
+    const result = await feedService_1.default.report(req.body.user.id, req.params.id);
+    res.status(result.status).json(result);
+});
 module.exports = router;
 //# sourceMappingURL=feed.js.map

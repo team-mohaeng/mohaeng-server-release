@@ -3,10 +3,10 @@ import sequelize from './index';
 
 interface UserAttributes {
   id?: number; //not null, auto increment
-  uid: string;
+  uid?: string;
   token?: string;
-  email : string;
-  password: string;
+  email?: string;
+  password?: string;
   nickname: string;
   affinity?: number;
   level?: number;
@@ -33,10 +33,10 @@ interface UserAttributes {
 
 export class User extends Model<UserAttributes>{
   public readonly id!: number;
-  public uid!: string;
+  public uid: string;
   public token: string;
-  public email!: string;
-  public password!: string;
+  public email: string;
+  public password: string;
   public nickname!: string;
   public affinity: number;
   public level: number;
@@ -68,23 +68,18 @@ User.init(
   {
     uid: {
       type: DataTypes.STRING(100),
-        allowNull: false,
-        unique: true,
     },
     token: {
       type: DataTypes.STRING(100),
     },
     email: {
       type: DataTypes.STRING(30),
-      allowNull: false,
-      unique:true,
       validate: {
         isEmail: true,
       }
     },
     password: {
       type: DataTypes.STRING(20),
-      allowNull: false,
     },
     nickname: {
       type: DataTypes.STRING(10),
@@ -169,7 +164,7 @@ User.init(
     },
     feed_success_count: {
       type: DataTypes.INTEGER.UNSIGNED,
-      defaultValue: 0,
+      defaultValue: 1,
     },
   },
   {

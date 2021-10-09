@@ -27,6 +27,9 @@ const path_1 = __importDefault(require("path"));
 const models_1 = __importDefault(require("./models"));
 const admin = __importStar(require("firebase-admin"));
 const config_1 = __importDefault(require("./config"));
+const node_schedule_1 = __importDefault(require("node-schedule"));
+const dayjs_1 = __importDefault(require("dayjs"));
+const courseInit_1 = __importDefault(require("./controller/courseInit"));
 const app = (0, express_1.default)();
 const apidocPath = path_1.default.join(__dirname, "../apidoc");
 var serviceAccount = require("../mohaeng.json");
@@ -43,6 +46,15 @@ admin.initializeApp({
     projectId: config_1.default.firebaseID,
     databaseURL: config_1.default.firebaseDB
 });
+// 초기화 부분
+const init = node_schedule_1.default.scheduleJob('0 0 5 * * *', async function () {
+    let date = new Date();
+    console.log(`시작 시각 ${(0, dayjs_1.default)(date.toLocaleString('en', { timeZone: 'Asia/Seoul' })).format('YYYY-MM-DD hh:mm:ss')} 입니다.`);
+    // 코스 초기화
+    await courseInit_1.default.init();
+    // 피드 초기화
+    console.log(`종료 시각 ${(0, dayjs_1.default)(date.toLocaleString('en', { timeZone: 'Asia/Seoul' })).format('YYYY-MM-DD hh:mm:ss')} 입니다.`);
+});
 app.use(express_1.default.json());
 app.use("/apidoc", express_1.default.static(apidocPath));
 app.use("/api/profile", require("./api/profile"));
@@ -50,6 +62,8 @@ app.use("/api/feed", require("./api/feed"));
 app.use("/api/courses", require("./api/course"));
 app.use("/api", require("./api/auth"));
 app.use("/api/today", require("./api/challenge"));
+app.use("/api/character", require("./api/character"));
+app.use("/api/badge", require("./api/badge"));
 // error handler
 app.use(function (err, req, res, next) {
     // set locals, only providing error in development

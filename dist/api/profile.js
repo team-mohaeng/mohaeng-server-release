@@ -12,7 +12,11 @@ router.put("/", auth_1.default, async (req, res) => {
     const requestDTO = {
         nickname: nickname
     };
-    const result = await profileService_1.default.changeNickname(req.body.user.id, requestDTO);
+    const result = await profileService_1.default.nickname(req.body.user.id, requestDTO);
+    res.status(result.status).json(result);
+});
+router.get("/", auth_1.default, async (req, res) => {
+    const result = await profileService_1.default.myPage(req.body.user.id);
     res.status(result.status).json(result);
 });
 module.exports = router;
