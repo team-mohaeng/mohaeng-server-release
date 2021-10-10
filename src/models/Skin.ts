@@ -3,7 +3,7 @@ import sequelize from "./index";
 import { User } from "./User"
 
 interface SkinAttributes {
-  id?: number;
+  id: number;
   user_id: number;
   is_new: boolean;
 };
@@ -23,6 +23,7 @@ Skin.init(
     id: {
       type:DataTypes.INTEGER,
       primaryKey: true,
+      defaultValue: 64
     },
     user_id: {
       type: DataTypes.INTEGER,
