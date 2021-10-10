@@ -16,7 +16,8 @@
  * @apiSuccess {Number} happy 현재 유저 해피 지수
  * @apiSuccess {Number} fullHappy 현재 레벨에서 채워야 할 max 해피지수
  * @apiSuccess {String} characterSkin 유저 캐릭터 스킨 이미지 url
- * @apiSuccess {Boolean} isNew 새로운 스타일을 받았는지 여부
+ * @apiSuccess {Boolean} isStyleNew 새로운 스타일을 받았는지 여부
+ * @apiSuccess {Boolean} isBadgeNew 새로운 뱃지를 받았는지 여부
  * @apiSuccess {String} challengeTitle 현재 진행하고 있는 챌린지 제목
  * @apiSuccess {Number} percent 코스 진행 현황 퍼센트
  * 
@@ -30,7 +31,8 @@
  *    "happy": 24,
  *    "fullHappy": 90,
  *    "characterSkin": "image.url",
- *    "isNew": false,
+ *    "isStyleNew": false,
+ *    "isBadgeNew": false,
  *    course: {},
  *  }
  * }
@@ -44,7 +46,8 @@
  *    "happy": 24,
  *    "fullHappy": 90,
  *    "characterSkin": "image.url",
- *    "isNew": false,
+ *    "isStyleNew": false,
+ *    "isBadgeNew": false,
  *    course: {
  *      "challengeTitle": "하늘 사진 찍기",
  *      "percent": 14,

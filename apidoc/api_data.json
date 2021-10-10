@@ -1753,8 +1753,15 @@
             "group": "Success 200",
             "type": "Boolean",
             "optional": false,
-            "field": "isNew",
+            "field": "isStyleNew",
             "description": "<p>새로운 스타일을 받았는지 여부</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Boolean",
+            "optional": false,
+            "field": "isBadgeNew",
+            "description": "<p>새로운 뱃지를 받았는지 여부</p>"
           },
           {
             "group": "Success 200",
@@ -1775,7 +1782,7 @@
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "200 코스 진행 전\n{\n \"status\": 200,\n \"data\": {\n   \"nicknema\": \"모행\",\n   \"level\": 15,\n   \"happy\": 24,\n   \"fullHappy\": 90,\n   \"characterSkin\": \"image.url\",\n   \"isNew\": false,\n   course: {},\n }\n}\n\n200 코스 진행 중\n{\n \"status\": 200,\n \"data\": {\n   \"nicknema\": \"모행\",\n   \"level\": 15,\n   \"happy\": 24,\n   \"fullHappy\": 90,\n   \"characterSkin\": \"image.url\",\n   \"isNew\": false,\n   course: {\n     \"challengeTitle\": \"하늘 사진 찍기\",\n     \"percent\": 14,\n   },\n }\n}",
+          "content": "200 코스 진행 전\n{\n \"status\": 200,\n \"data\": {\n   \"nicknema\": \"모행\",\n   \"level\": 15,\n   \"happy\": 24,\n   \"fullHappy\": 90,\n   \"characterSkin\": \"image.url\",\n   \"isStyleNew\": false,\n   \"isBadgeNew\": false,\n   course: {},\n }\n}\n\n200 코스 진행 중\n{\n \"status\": 200,\n \"data\": {\n   \"nicknema\": \"모행\",\n   \"level\": 15,\n   \"happy\": 24,\n   \"fullHappy\": 90,\n   \"characterSkin\": \"image.url\",\n   \"isStyleNew\": false,\n   \"isBadgeNew\": false,\n   course: {\n     \"challengeTitle\": \"하늘 사진 찍기\",\n     \"percent\": 14,\n   },\n }\n}",
           "type": "json"
         }
       ]
