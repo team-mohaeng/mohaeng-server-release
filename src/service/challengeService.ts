@@ -282,6 +282,9 @@ export default {
             level: userLevel,
             styleImg: ""
           };
+        } else {
+          userHappy += challenge.getHappy();
+          happy += challenge.getHappy();
         }
       }
 
@@ -321,6 +324,9 @@ export default {
               level: userLevel,
               styleImg: ""
             };
+          } else {
+            userHappy += course.getHappy();
+            happy += course.getHappy();
           }
         }
 
