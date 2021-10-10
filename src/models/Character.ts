@@ -31,11 +31,13 @@ Character.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
+      defaultValue: 1
     },
     character_card: {
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
+      defaultValue: 1
     },
     is_new: {
       type: DataTypes.BOOLEAN,
