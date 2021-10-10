@@ -73,15 +73,10 @@ export default {
 
       Character.create({
         user_id: user.id,
-        character_type: 1,
-        character_card: 1,
-        is_new: true
       });
 
       Skin.create({
-        id: 64,
         user_id: user.id,
-        is_new: true
       })
 
       const responseDTO: SignUpResponseDTO = {
@@ -165,7 +160,7 @@ export default {
       }
       
       const user = await User.create({
-        nickname: nickname
+        nickname: nickname,
       });
 
       const payload = {
@@ -181,15 +176,10 @@ export default {
 
       Character.create({
         user_id: user.id,
-        character_type: 1,
-        character_card: 1,
-        is_new: true
       });
 
       Skin.create({
-        id: 64,
         user_id: user.id,
-        is_new: true
       })
 
       const responseDTO: SignUpResponseDTO = {
