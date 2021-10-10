@@ -69,7 +69,7 @@ export default {
         happy = 0;
       }
       else {
-        happy = 15;
+        happy = 10;
       }
 
       //만렙 달성
@@ -78,7 +78,7 @@ export default {
         user.affinity = 0;
       }
       else {
-        happy = 15;
+        happy = 10;
       }
 
       user.affinity = user.affinity + happy;
