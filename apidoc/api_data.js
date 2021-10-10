@@ -1694,5 +1694,102 @@ define({ "api": [
     },
     "filename": "src/api/docs/profile.ts",
     "groupTitle": "프로필"
+  },
+  {
+    "type": "get",
+    "url": "/api/home",
+    "title": "홈 조회",
+    "version": "1.0.0",
+    "name": "Home",
+    "group": "홈",
+    "header": {
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\",\n \"Bearer\": \"{jwt}\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "nickname",
+            "description": "<p>유저 닉네임</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "level",
+            "description": "<p>유저 레벨</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "happy",
+            "description": "<p>현재 유저 해피 지수</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "fullHappy",
+            "description": "<p>현재 레벨에서 채워야 할 max 해피지수</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "characterSkin",
+            "description": "<p>유저 캐릭터 스킨 이미지 url</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Boolean",
+            "optional": false,
+            "field": "isNew",
+            "description": "<p>새로운 스타일을 받았는지 여부</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "challengeTitle",
+            "description": "<p>현재 진행하고 있는 챌린지 제목</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "percent",
+            "description": "<p>코스 진행 현황 퍼센트</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "200 코스 진행 전\n{\n \"status\": 200,\n \"data\": {\n   \"nicknema\": \"모행\",\n   \"level\": 15,\n   \"happy\": 24,\n   \"fullHappy\": 90,\n   \"characterSkin\": \"image.url\",\n   \"isNew\": false,\n   course: {},\n }\n}\n\n200 코스 진행 중\n{\n \"status\": 200,\n \"data\": {\n   \"nicknema\": \"모행\",\n   \"level\": 15,\n   \"happy\": 24,\n   \"fullHappy\": 90,\n   \"characterSkin\": \"image.url\",\n   \"isNew\": false,\n   course: {\n     \"challengeTitle\": \"하늘 사진 찍기\",\n     \"percent\": 14,\n   },\n }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "401 존재하지 않는 유저\n{\n \"status\": 401,\n \"message\": \"유저가 존재하지 않습니다.\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/api/docs/home.ts",
+    "groupTitle": "홈"
   }
 ] });
