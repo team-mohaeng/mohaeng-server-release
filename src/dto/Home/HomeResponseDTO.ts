@@ -9,7 +9,8 @@ export interface UserResponseDTO {
   happy: number;
   fullHappy: number;
   characterSkin: string;
-  isNew: boolean;
+  isStyleNew: boolean;
+  isBadgeNew: boolean;
   course: UserCourseResponseDTO;
 }
 

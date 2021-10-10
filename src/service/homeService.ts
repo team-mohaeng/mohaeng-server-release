@@ -11,7 +11,7 @@ export default {
     try {
       // 닉네임, 레벨, 해피지수, 현재 코스, 현재 챌린지, 현재 코스 진행률, 캐릭터 스킨, 스타일 업데이트 여부
       const user = await User.findOne({
-        attributes: ['nickname', 'level', 'affinity', 'current_course_id', 'current_challenge_id', 'current_progress_percent', 'character_skin', 'is_style_new'],
+        attributes: ['nickname', 'level', 'affinity', 'current_course_id', 'current_challenge_id', 'current_progress_percent', 'character_skin', 'is_style_new', 'is_badge_new'],
         where: { id: id }
       });
 
@@ -37,7 +37,8 @@ export default {
           happy: user.affinity,
           fullHappy: levels[user.level - 1].getFullHappy(),
           characterSkin: user.character_skin + ".url",
-          isNew: user.is_style_new,
+          isStyleNew: user.is_style_new,
+          isBadgeNew: user.is_badge_new,
           course: courseResponseDTO
         }
       };
