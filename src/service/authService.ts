@@ -3,6 +3,8 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import config from "../config"
 import { User } from "../models/User";
+import { Character } from '../models/Character';
+import { Skin } from '../models/Skin';
 import { SignUpRequestDTO } from "../dto/Auth/SignUp/request/SignUpRequestDTO";
 import { SignUpResponseDTO } from "../dto/Auth/SignUp/response/SignUpResponseDTO";
 import { SignInRequestDTO } from '../dto/Auth/SignIn/request/SignInRequestDTO';
@@ -68,6 +70,14 @@ export default {
         payload,
         config.jwtSecret,
       );
+
+      Character.create({
+        user_id: user.id,
+      });
+
+      Skin.create({
+        user_id: user.id,
+      })
 
       const responseDTO: SignUpResponseDTO = {
         status: 200,
@@ -150,7 +160,7 @@ export default {
       }
       
       const user = await User.create({
-        nickname: nickname
+        nickname: nickname,
       });
 
       const payload = {
@@ -163,6 +173,14 @@ export default {
         payload,
         config.jwtSecret,
       );
+
+      Character.create({
+        user_id: user.id,
+      });
+
+      Skin.create({
+        user_id: user.id,
+      })
 
       const responseDTO: SignUpResponseDTO = {
         status: 200,
