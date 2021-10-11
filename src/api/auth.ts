@@ -9,6 +9,7 @@ import { KakaoRequestDTO } from "../dto/Auth/Kakao/request/KakaoRequestDTO";
 import authService from "../service/authService";
 import verifyFCM from "../middleware/verifyToken";
 import { serverError } from "../errors";
+import { GoogleAuthProvider } from "firebase/auth";
 
 const router = express.Router();
 
@@ -96,11 +97,12 @@ router.get("/kakao/callback", async (req, res) => {
   res.status(result.status).json(result);
 })
 
-router.post("/nickname", async (req, res) => {
+router.post("/nickname", verifyFCM, async (req, res) => {
   try{
-    const nickname = req.body.nickname;
+    const { nickname, token } = req.body;
     const requestDTO: KakaoRequestDTO = {
-      nickname: nickname
+      nickname: nickname,
+      token: token
     };
     const result = await authService.nickname(requestDTO);
     res.status(result.status).json(result);
