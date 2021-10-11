@@ -6,6 +6,15 @@ define({ "api": [
     "version": "1.0.0",
     "name": "createUser",
     "group": "로그인/회원가입",
+    "header": {
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\"\n \"token\": \"FCM token\"\n}",
+          "type": "json"
+        }
+      ]
+    },
     "parameter": {
       "examples": [
         {
