@@ -148,7 +148,7 @@ export default {
 
   nickname: async (dto: KakaoRequestDTO) => {
     try{
-      const { nickname } = dto;
+      const { nickname, token } = dto;
 
       if ( nickname.length > 6 || nickname.length == 0 ) {
         return nicknameLengthCheck;
@@ -161,6 +161,7 @@ export default {
       
       const user = await User.create({
         nickname: nickname,
+        token: token,
       });
 
       const payload = {

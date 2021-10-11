@@ -28,6 +28,12 @@
  * @apiName createUser
  * @apiGroup 로그인/회원가입
  * 
+ * * @apiHeaderExample {json} Header-Example:
+ * {
+ *  "Content-Type": "application/json"
+ *  "token": "FCM token"
+ * }
+ * 
  * @apiParamExample {json} Request-Example:
  * {
  *  "nickname": "시원뿡"
