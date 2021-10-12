@@ -47,7 +47,7 @@ async (req, res) => {
   res.status(result.status).json(result);
 })
 
-router.get("/signin", async (req, res) => {
+router.post("/signin", async (req, res) => {
   const {
     email,
     password,
