@@ -6,14 +6,16 @@ interface MessageAttributes {
   id?: number;
   user_id: number;
   course_id: number;
-  date: Date;
+  date?: Date;
+  is_new?: boolean;
 };
 
 export class Message extends Model<MessageAttributes>{
-  public readonly id!: number;
+  public readonly id: number;
   public user_id!: number;
   public course_id!: number;
-  public date!: Date;
+  public date: Date;
+  public is_new: boolean;
 
   public static associations: {
     user_id: Association<User, Message>;
@@ -38,7 +40,12 @@ Message.init(
     date: {
       type: DataTypes.DATE,
       allowNull: false,
+      defaultValue: DataTypes.NOW,
     },
+    is_new: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
+    }
   },
   {
       modelName: 'Message',
