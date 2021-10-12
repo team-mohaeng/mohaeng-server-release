@@ -5,7 +5,7 @@ import { check, validationResult } from "express-validator";
 import config from "../config";
 import { SignUpRequestDTO } from "../dto/Auth/SignUp/request/SignUpRequestDTO";
 import { SignInRequestDTO } from "../dto/Auth/SignIn/request/SignInRequestDTO";
-import { KakaoRequestDTO } from "../dto/Auth/Kakao/request/KakaoRequestDTO";
+import { SocialLogInRequestDTO } from "../dto/Auth/Social/request/SocialLogInRequestDTO";
 import authService from "../service/authService";
 import verifyFCM from "../middleware/verifyToken";
 import { CheckEmailRequestDTO } from "../dto/Auth/Password/request/CheckEmailRequestDTO";
@@ -110,7 +110,6 @@ router.get("/kakao", async (req, res) => {
 
 router.get("/kakao/callback", async (req, res) => {
   try{
-    //토큰 유효성 검사
     const token = await axios({
       method: "POST",
       url: "https://kauth.kakao.com/oauth/token",
@@ -136,7 +135,7 @@ router.get("/kakao/callback", async (req, res) => {
 router.post("/nickname", verifyFCM, async (req, res) => {
   try{
     const { nickname, token } = req.body;
-    const requestDTO: KakaoRequestDTO = {
+    const requestDTO: SocialLogInRequestDTO = {
       nickname: nickname,
       token: token
     };

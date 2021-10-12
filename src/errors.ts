@@ -36,14 +36,14 @@ export const notExistUid: IFail = {
   message: "계정 생성에 실패하였습니다."
 }
 
-export const notGetToken: IFail = {
+export const notExistToken: IFail = {
   status: 403,
   message: "토큰이 없습니다. 토큰을 함께 보내주세요."
 }
 
-export const expiredToken: IFail = {
+export const invalidToken: IFail = {
   status: 403,
-  message: TOKEN_ERROR_MESSAGE
+  message: "유효성 인증에 실패하였습니다."
 }
 
 export const notMatchSignIn: IFail = {

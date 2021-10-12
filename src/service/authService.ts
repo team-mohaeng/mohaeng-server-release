@@ -14,9 +14,10 @@ import { ChangePasswordRequestDTO } from '../dto/Auth/Password/request/ChangePas
 import { ChangePasswordResponseDTO } from '../dto/Auth/Password/response/ChangePasswordResponseDTO';
 import { CheckEmailRequestDTO } from '../dto/Auth/Password/request/CheckEmailRequestDTO';
 import { CheckEmailResponseDTO } from '../dto/Auth/Password/response/CheckEmailResponseDTO';
-import { KakaoResponseDTO } from '../dto/Auth/Kakao/response/KakaoResponseDTO';
-import { KakaoRequestDTO } from '../dto/Auth/Kakao/request/KakaoRequestDTO';
+import { SocialLogInResponseDTO } from '../dto/Auth/Social/response/SocialLogInResponseDTO';
+import { SocialLogInRequestDTO } from '../dto/Auth/Social/request/SocialLogInRequestDTO';
 import { serverError, notExistUid, alreadyExistEmail, nicknameLengthCheck, alreadyExistNickname, notMatchSignIn, notExistUser, invalidEmail } from "../errors";
+
 
 export default {
   signUp: async (dto: SignUpRequestDTO) => {
@@ -150,7 +151,7 @@ export default {
       if (!number) {
         return invalidEmail;
       }
-
+      
       const responseDTO: CheckEmailResponseDTO = {
         status: 200,
         data: {
@@ -199,10 +200,10 @@ export default {
   
   kakao: async () => {
   try{
-    const responseDTO: KakaoResponseDTO = {
-      status: 200,
-      message: "토큰 인증이 완료되었습니다."
-    }
+    const responseDTO: SocialLogInResponseDTO = {
+        status: 200,
+        message: "토큰 인증이 완료되었습니다."
+      }
     
     return responseDTO;
     
@@ -212,7 +213,7 @@ export default {
     }
   },
 
-  nickname: async (dto: KakaoRequestDTO) => {
+  nickname: async (dto: SocialLogInRequestDTO) => {
     try{
       const { nickname, token } = dto;
 

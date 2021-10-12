@@ -1,5 +1,5 @@
 import * as admin from 'firebase-admin';
-import { notGetToken, expiredToken } from "../errors";
+import { notExistToken, invalidToken } from "../errors";
 
 export default (req, next) => {
   // Get token from header
@@ -7,7 +7,7 @@ export default (req, next) => {
 
   // Check if not token
   if (!token) {
-    return notGetToken
+    return notExistToken;
   }
 
   // Verify token
@@ -20,7 +20,7 @@ export default (req, next) => {
   })
   .catch((error) => {
     console.log(error);
-    return expiredToken
+    return invalidToken;
   });
 
 };
