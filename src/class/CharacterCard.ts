@@ -1,4 +1,4 @@
-class CharacterCard {
+export class CharacterCard {
   private id: number;
   private imageURL: string;
 

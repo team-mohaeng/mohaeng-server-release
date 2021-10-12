@@ -128,12 +128,15 @@ User.init(
     },
     character_type: {
       type: DataTypes.INTEGER.UNSIGNED,
+      defaultValue: 1,
     },
     character_card: {
       type: DataTypes.INTEGER.UNSIGNED,
+      defaultValue: 1,
     },
     character_skin: {
       type: DataTypes.INTEGER.UNSIGNED,
+      defaultValue: 64,
     },
     challenge_penalty: {
       type: DataTypes.BOOLEAN,

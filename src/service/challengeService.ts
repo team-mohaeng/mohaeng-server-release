@@ -2,6 +2,7 @@ import { SERVER_ERROR_MESSAGE } from "../constant";
 import { courses } from '../dummy/Course';
 import { challengeBadges, challengeCountBadges, courseBadges } from '../dummy/Badge';
 import { levels } from '../dummy/Level';
+import { skins } from '../dummy/Skin';
 import { invalidCourseChallengeId, alreadyCompleteChallenge, notExistChallengeId, notExistCourseId, notExistProgressCourse, notExistUser } from "../errors";
 import { getDay, getMonth, getYear } from '../formatter/mohaengDateFormatter';
 import { IFail } from "../interfaces/IFail";
@@ -13,6 +14,10 @@ import { ProgressChallenge } from '../models/ProgressChallenge';
 import { BeforeChallenge } from '../models/BeforeChallenge';
 import { CompleteCourse } from '../models/CompleteCourse';
 import { Badge } from '../models/Badge';
+import { characterCards } from '../dummy/CharacterCard';
+import { Skin } from '../models/Skin';
+import { Character } from '../models/Character';
+import { images } from '../dummy/Image';
 
 export default {
   today: async (id: string) => {
@@ -185,13 +190,14 @@ export default {
         challenges: todayChallenges
       };
 
+      const imageURLs = images[user.character_card - 1].getImageURLs();
       const responseDTO: TodayChallengeResponseDTO = {
         status: 200,
         data: {
           isComplete: user.is_completed,
           isPenalty: user.challenge_penalty,
-          mainCharacterImg: "",
-          popupCharacterImg: "",
+          mainCharacterImg: imageURLs[0],
+          popupCharacterImg: imageURLs[1],
           course: todayCourse
         }
       };
@@ -266,8 +272,10 @@ export default {
         // 현재 affinity에 userHappy를 더하면 레벨이 올라가는지 확인
         // 레벨업시 캐릭터 카드 부여 처리
         if (userHappy + challenge.getHappy() > levels[userLevel - 1].getFullHappy()) {
+          const cardId = levels[userLevel - 1].getCardId();
+          const characterId = Number((cardId - 1) / 9);
           levelUp = true;
-          if (userLevel + 1 == 40) {  // 만렙이면
+          if (userLevel + 1 == 68) {  // 만렙이면
             happy = levels[userLevel - 1].getFullHappy() - userHappy; // 레벨업으로 받는 해피지수가 달라짐
             userHappy = 0;
           }
@@ -277,11 +285,29 @@ export default {
           }
           userLevel++;
 
+          let styleImg = "";
+          if (cardId > 63) {
+            Skin.create({
+              id: cardId,
+              user_id: user_id
+            });
+            styleImg = skins[cardId - 64].getImageURL();
+          } else {
+            Character.create({
+              user_id: user_id,
+              character_type: characterId,
+              character_card: cardId
+            });
+            styleImg = characterCards[cardId - 1].getImageURL();
+          }
           // 레벨업 response
           levelUpDTO = {
             level: userLevel,
-            styleImg: ""
+            styleImg: styleImg
           };
+        } else {
+          userHappy += challenge.getHappy();
+          happy += challenge.getHappy();
         }
       }
 
@@ -299,14 +325,16 @@ export default {
         completeCourseCount++;  // 완료 코스 개수 +1
       
         // 챌린지 점수를 받아서 만렙으로 레벨업했을 경우
-        if (levelUp && userLevel == 40) canGetHappy = false;
+        if (levelUp && userLevel == 68) canGetHappy = false;
 
         if (canGetHappy) {
           // 현재 affinity에 userHappy를 더하면 레벨이 올라가는지 확인
           // 레벨업시 캐릭터 카드 부여 처리
           if (userHappy + course.getHappy() > levels[userLevel - 1].getFullHappy()) {
+            const cardId = levels[userLevel - 1].getCardId();
+            const characterId = Number((cardId - 1) / 9);
             levelUp = true;
-            if (userLevel + 1 == 40) {
+            if (userLevel + 1 == 68) {
               happy = levels[userLevel - 1].getFullHappy() - userHappy;
               userHappy = 0;
             }
@@ -316,11 +344,29 @@ export default {
             }
             userLevel++;
   
+            let styleImg = "";
+            if (cardId > 63) {
+              Skin.create({
+                id: cardId,
+                user_id: user_id
+              });
+              styleImg = skins[cardId - 64].getImageURL();
+            } else {
+              Character.create({
+                user_id: user_id,
+                character_type: characterId,
+                character_card: cardId
+              });
+              styleImg = characterCards[cardId - 1].getImageURL();
+            }
             // 레벨업 response
             levelUpDTO = {
               level: userLevel,
-              styleImg: ""
+              styleImg: styleImg
             };
+          } else {
+            userHappy += course.getHappy();
+            happy += course.getHappy();
           }
         }
 
@@ -369,7 +415,6 @@ export default {
         course_id: Number(courseId),
         challenge_id: Number(challengeId)
       });
-
       
       const today = new Date(); // 오늘
       let recentChallengeDate = new Date(); // DB에 저장된 최근 챌린지 완료 날짜 다음날

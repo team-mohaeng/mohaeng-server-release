@@ -1,4 +1,4 @@
-class Skin {
+export class Skin {
   private id: number;
   private imageURL: string;
 

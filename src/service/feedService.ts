@@ -69,7 +69,7 @@ export default {
         happy = 0;
       }
       else {
-        happy = 15;
+        happy = 10;
       }
 
       //만렙 달성
@@ -78,7 +78,7 @@ export default {
         user.affinity = 0;
       }
       else {
-        happy = 15;
+        happy = 10;
       }
 
       user.affinity = user.affinity + happy;
@@ -425,7 +425,7 @@ export default {
         const myFeed: FeedDTO = {
           postId: myFeeds[i].id,
           course: courses[myFeeds[i].current_course_id-1].getTitle(), //인덱스 때문에 -1
-          challenge: user.current_challenge_id,
+          challenge: myFeeds[i].current_challenge_id,
           image: myFeeds[i].image,
           mood: myFeeds[i].mood,
           content: myFeeds[i].content,
