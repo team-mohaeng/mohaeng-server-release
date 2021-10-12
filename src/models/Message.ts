@@ -5,7 +5,7 @@ import { User } from "./User"
 interface MessageAttributes {
   id?: number;
   user_id: number;
-  course_id: number;
+  ment: string;
   date?: Date;
   is_new?: boolean;
 };
@@ -13,7 +13,7 @@ interface MessageAttributes {
 export class Message extends Model<MessageAttributes>{
   public readonly id: number;
   public user_id!: number;
-  public course_id!: number;
+  public ment!: string;
   public date: Date;
   public is_new: boolean;
 
@@ -33,8 +33,8 @@ Message.init(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    course_id: {
-      type: DataTypes.INTEGER,
+    ment: {
+      type: DataTypes.STRING,
       allowNull: false,
     },
     date: {
