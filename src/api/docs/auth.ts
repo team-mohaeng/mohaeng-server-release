@@ -72,7 +72,7 @@
  */
 
 /**
- * @api {post} /api/password 인증코드 보내기
+ * @api {get} /api/password/:email 인증코드 보내기
  * 
  * @apiVersion 1.0.0
  * @apiName sendCode
@@ -81,11 +81,6 @@
  * * @apiHeaderExample {json} Header-Example:
  * {
  *  "Content-Type": "application/json"
- * }
- * 
- * @apiParamExample {json} Request-Example:
- * {
- *  "email": "mohaeng@naver.com"
  * }
  *
  * @apiSuccess {number} number

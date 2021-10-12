@@ -144,8 +144,8 @@
     "groupTitle": "로그인/회원가입"
   },
   {
-    "type": "post",
-    "url": "/api/password",
+    "type": "get",
+    "url": "/api/password/:email",
     "title": "인증코드 보내기",
     "version": "1.0.0",
     "name": "sendCode",
@@ -155,15 +155,6 @@
         {
           "title": "Header-Example:",
           "content": "{\n \"Content-Type\": \"application/json\"\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "parameter": {
-      "examples": [
-        {
-          "title": "Request-Example:",
-          "content": "{\n \"email\": \"mohaeng@naver.com\"\n}",
           "type": "json"
         }
       ]
