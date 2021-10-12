@@ -425,7 +425,7 @@ export default {
         const myFeed: FeedDTO = {
           postId: myFeeds[i].id,
           course: courses[myFeeds[i].current_course_id-1].getTitle(), //인덱스 때문에 -1
-          challenge: user.current_challenge_id,
+          challenge: myFeeds[i].current_challenge_id,
           image: myFeeds[i].image,
           mood: myFeeds[i].mood,
           content: myFeeds[i].content,
