@@ -8,6 +8,7 @@ export interface UserResponseDTO {
   level: number;
   happy: number;
   fullHappy: number;
+  characterLottie: string;
   characterSkin: string;
   isStyleNew: boolean;
   isBadgeNew: boolean;
