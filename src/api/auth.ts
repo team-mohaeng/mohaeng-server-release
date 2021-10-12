@@ -47,7 +47,7 @@ async (req, res) => {
   res.status(result.status).json(result);
 })
 
-router.post("/signin", async (req, res) => {
+router.get("/signin", async (req, res) => {
   const {
     email,
     password,
@@ -61,9 +61,9 @@ router.post("/signin", async (req, res) => {
   res.status(result.status).json(result);
 })
 
-router.post("/password", async (req, res) => {
+router.get("/password/:email", async (req, res) => {
   const requestDTO: CheckEmailRequestDTO = {
-    email: req.body.email
+    email: req.params.email
   }
   const result = await authService.forgetPassword(requestDTO);
   res.status(result.status).json(result);
