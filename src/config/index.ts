@@ -46,7 +46,7 @@ export default {
 };
 
 export const smtpTransport = nodemailer.createTransport({
-  service: "naver",
+  service: "Naver",
   host: "smtp.naver.com",
   auth: {
     user: process.env.EMAIL_ID,
