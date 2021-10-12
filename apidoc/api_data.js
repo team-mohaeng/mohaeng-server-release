@@ -1755,6 +1755,13 @@ define({ "api": [
             "group": "Success 200",
             "type": "String",
             "optional": false,
+            "field": "characterLottie",
+            "description": "<p>유저 캐릭터/카드에 맞는 로티 url</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
             "field": "characterSkin",
             "description": "<p>유저 캐릭터 스킨 이미지 url</p>"
           },
@@ -1791,7 +1798,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "200 코스 진행 전\n{\n \"status\": 200,\n \"data\": {\n   \"nicknema\": \"모행\",\n   \"level\": 15,\n   \"happy\": 24,\n   \"fullHappy\": 90,\n   \"characterSkin\": \"image.url\",\n   \"isStyleNew\": false,\n   \"isBadgeNew\": false,\n   course: {},\n }\n}\n\n200 코스 진행 중\n{\n \"status\": 200,\n \"data\": {\n   \"nicknema\": \"모행\",\n   \"level\": 15,\n   \"happy\": 24,\n   \"fullHappy\": 90,\n   \"characterSkin\": \"image.url\",\n   \"isStyleNew\": false,\n   \"isBadgeNew\": false,\n   course: {\n     \"challengeTitle\": \"하늘 사진 찍기\",\n     \"percent\": 14,\n   },\n }\n}",
+          "content": "200 코스 진행 전\n{\n \"status\": 200,\n \"data\": {\n   \"nicknema\": \"모행\",\n   \"level\": 15,\n   \"happy\": 24,\n   \"fullHappy\": 90,\n   \"characterLottie\": \"bear.url\",\n   \"characterSkin\": \"image.url\",\n   \"isStyleNew\": false,\n   \"isBadgeNew\": false,\n   course: {},\n }\n}\n\n200 코스 진행 중\n{\n \"status\": 200,\n \"data\": {\n   \"nicknema\": \"모행\",\n   \"level\": 15,\n   \"happy\": 24,\n   \"fullHappy\": 90,\n   \"characterLottie\": \"bear.url\",\n   \"characterSkin\": \"image.url\",\n   \"isStyleNew\": false,\n   \"isBadgeNew\": false,\n   course: {\n     \"challengeTitle\": \"하늘 사진 찍기\",\n     \"percent\": 14,\n   },\n }\n}",
           "type": "json"
         }
       ]
