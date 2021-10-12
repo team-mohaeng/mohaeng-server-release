@@ -1,11 +1,77 @@
 define({ "api": [
   {
+    "type": "put",
+    "url": "/api/password",
+    "title": "비밀번호 변경",
+    "version": "1.0.0",
+    "name": "changePassword",
+    "group": "로그인/회원가입",
+    "header": {
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "parameter": {
+      "examples": [
+        {
+          "title": "Request-Example:",
+          "content": "{\n \"email\": \"mohaeng@naver.com\"\n \"password\": \"mohaeng1234\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": false,
+            "field": "message",
+            "description": ""
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "200 OK\n{\n \"status\": 200,\n \"message\": \"비밀번호 바꾸기를 성공하였습니다.\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "401 유효하지 않은 유저\n{\n \"status\": 401,\n \"message\": \"유저가 존재하지 않습니다.\"\n}\n\n404 잘못된 이메일 형식\n{\n \"status\": 404,\n \"message\": \"이메일 형식이 올바르지 않습니다.\"\n}\n\n404 비밀번호 영문, 숫자 미포함\n{\n \"status\": 404,\n \"message\": \"영문, 숫자를 모두 포함하여 입력해주세요.\"\n}\n\n404 비밀번호 글자수 제한\n{\n \"status\": 404,\n \"message\": \"8-16자의 비밀번호를 입력해주세요.\"\n}\n\n500 서버 에러\n{\n \"status\": 500,\n \"message\": \"서버 에러입니다. 서버 파트에게 문의해주세요 *^^*\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/api/docs/auth.ts",
+    "groupTitle": "로그인/회원가입"
+  },
+  {
     "type": "post",
     "url": "/api/nickname",
     "title": "소셜로그인 회원가입",
     "version": "1.0.0",
     "name": "createUser",
     "group": "로그인/회원가입",
+    "header": {
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\"\n \"token\": \"token\"\n}",
+          "type": "json"
+        }
+      ]
+    },
     "parameter": {
       "examples": [
         {
@@ -39,7 +105,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Error-Response:",
-          "content": "\n404 닉네임 글자 제한\n{\n \"status\": 404,\n \"message\": \"닉네임은 1-6글자 이내로 작성해주세요\"\n}\n\n404 닉네임 중복\n{\n \"status\": 404,\n \"message\": \"이미 사용 중인 닉네임입니다.\"\n}\n\n500 서버 에러\n{\n \"status\": 500,\n \"message\": \"서버 에러입니다. 서버 파트에게 문의해주세요 *^^*\"\n}",
+          "content": "\n404 닉네임 글자 제한\n{\n \"status\": 404,\n \"message\": \"닉네임은 1-6글자 이내로 작성해주세요\"\n}\n\n404 닉네임 중복\n{\n \"status\": 404,\n \"message\": \"이미 사용 중인 닉네임입니다.\"\n}\n\n403 토큰 누락\n{\n \"status\": 403,\n \"message\": \"토큰이 없습니다. 토큰을 함께 보내주세요.\"\n}\n\n403 토큰 유효성 검증 실패\n{\n \"status\": 403,\n \"message\": \"유효성 인증에 실패하였습니다.\"\n}\n\n500 서버 에러\n{\n \"status\": 500,\n \"message\": \"서버 에러입니다. 서버 파트에게 문의해주세요 *^^*\"\n}",
           "type": "json"
         }
       ]
@@ -70,6 +136,54 @@ define({ "api": [
         {
           "title": "Success-Response:",
           "content": "200 OK\n{\n \"status\": 200,\n \"message\": \"토큰 인증을 완료하였습니다.\"\n}\n\n500 서버 에러\n{\n \"status\": 500,\n \"message\": \"서버 에러입니다. 서버 파트에게 문의해주세요 *^^*\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/api/docs/auth.ts",
+    "groupTitle": "로그인/회원가입"
+  },
+  {
+    "type": "get",
+    "url": "/api/password/:email",
+    "title": "인증코드 보내기",
+    "version": "1.0.0",
+    "name": "sendCode",
+    "group": "로그인/회원가입",
+    "header": {
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "number",
+            "optional": false,
+            "field": "number",
+            "description": ""
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "200 OK\n{\n \"status\": 200,\n \"data\": {\n   \"number\": \"인증코드숫자\"\n }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "401 유효하지 않은 유저\n{\n \"status\": 401,\n \"message\": \"유저가 존재하지 않습니다.\"\n}\n\n500 서버 에러\n{\n \"status\": 500,\n \"message\": \"서버 에러입니다. 서버 파트에게 문의해주세요 *^^*\"\n}",
           "type": "json"
         }
       ]
@@ -1746,6 +1860,13 @@ define({ "api": [
             "group": "Success 200",
             "type": "String",
             "optional": false,
+            "field": "characterLottie",
+            "description": "<p>유저 캐릭터/카드에 맞는 로티 url</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
             "field": "characterSkin",
             "description": "<p>유저 캐릭터 스킨 이미지 url</p>"
           },
@@ -1782,7 +1903,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "200 코스 진행 전\n{\n \"status\": 200,\n \"data\": {\n   \"nicknema\": \"모행\",\n   \"level\": 15,\n   \"happy\": 24,\n   \"fullHappy\": 90,\n   \"characterSkin\": \"image.url\",\n   \"isStyleNew\": false,\n   \"isBadgeNew\": false,\n   course: {},\n }\n}\n\n200 코스 진행 중\n{\n \"status\": 200,\n \"data\": {\n   \"nicknema\": \"모행\",\n   \"level\": 15,\n   \"happy\": 24,\n   \"fullHappy\": 90,\n   \"characterSkin\": \"image.url\",\n   \"isStyleNew\": false,\n   \"isBadgeNew\": false,\n   course: {\n     \"challengeTitle\": \"하늘 사진 찍기\",\n     \"percent\": 14,\n   },\n }\n}",
+          "content": "200 코스 진행 전\n{\n \"status\": 200,\n \"data\": {\n   \"nicknema\": \"모행\",\n   \"level\": 15,\n   \"happy\": 24,\n   \"fullHappy\": 90,\n   \"characterLottie\": \"bear.url\",\n   \"characterSkin\": \"image.url\",\n   \"isStyleNew\": false,\n   \"isBadgeNew\": false,\n   course: {},\n }\n}\n\n200 코스 진행 중\n{\n \"status\": 200,\n \"data\": {\n   \"nicknema\": \"모행\",\n   \"level\": 15,\n   \"happy\": 24,\n   \"fullHappy\": 90,\n   \"characterLottie\": \"bear.url\",\n   \"characterSkin\": \"image.url\",\n   \"isStyleNew\": false,\n   \"isBadgeNew\": false,\n   course: {\n     \"challengeTitle\": \"하늘 사진 찍기\",\n     \"percent\": 14,\n   },\n }\n}",
           "type": "json"
         }
       ]
