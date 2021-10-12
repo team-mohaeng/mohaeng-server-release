@@ -9,7 +9,7 @@ import { SignUpRequestDTO } from "../dto/Auth/SignUp/request/SignUpRequestDTO";
 import { SignUpResponseDTO } from "../dto/Auth/SignUp/response/SignUpResponseDTO";
 import { SignInRequestDTO } from '../dto/Auth/SignIn/request/SignInRequestDTO';
 import { SignInResponseDTO } from '../dto/Auth/SignIn/response/SignInResponseDTO';
-import { SocialLogInResponseDTO } from '../dto/Auth/Social/response/SocialLoginResponseDTO'; //I로 바꾸기
+import { SocialLogInResponseDTO } from '../dto/Auth/Social/response/SocialLogInResponseDTO';
 import { SocialLogInRequestDTO } from '../dto/Auth/Social/request/SocialLogInRequestDTO';
 import { serverError, notExistUid, alreadyExistEmail, nicknameLengthCheck, alreadyExistNickname, notMatchSignIn } from "../errors";
 
