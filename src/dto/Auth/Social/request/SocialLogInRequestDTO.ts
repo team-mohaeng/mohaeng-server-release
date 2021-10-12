@@ -1,4 +1,4 @@
-export interface SocialLoginRequestDTO {
+export interface SocialLogInRequestDTO {
 	nickname: string;
 	token: string;
 }
