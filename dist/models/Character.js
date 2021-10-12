@@ -21,11 +21,13 @@ Character.init({
         type: sequelize_1.DataTypes.INTEGER,
         allowNull: false,
         primaryKey: true,
+        defaultValue: 1
     },
     character_card: {
         type: sequelize_1.DataTypes.INTEGER,
         allowNull: false,
         primaryKey: true,
+        defaultValue: 1
     },
     is_new: {
         type: sequelize_1.DataTypes.BOOLEAN,

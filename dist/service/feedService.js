@@ -53,7 +53,7 @@ exports.default = {
                 happy = 0;
             }
             else {
-                happy = 15;
+                happy = 10;
             }
             //만렙 달성
             if (user.level == 40) {
@@ -61,7 +61,7 @@ exports.default = {
                 user.affinity = 0;
             }
             else {
-                happy = 15;
+                happy = 10;
             }
             user.affinity = user.affinity + happy;
             //level의 happy지수보다 user의 해피지수가 높다면 levelup
@@ -369,7 +369,7 @@ exports.default = {
                 const myFeed = {
                     postId: myFeeds[i].id,
                     course: Course_1.courses[myFeeds[i].current_course_id - 1].getTitle(),
-                    challenge: user.current_challenge_id,
+                    challenge: myFeeds[i].current_challenge_id,
                     image: myFeeds[i].image,
                     mood: myFeeds[i].mood,
                     content: myFeeds[i].content,

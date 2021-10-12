@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.invalidReport = exports.alreadyReported = exports.notExistCharacter = exports.notExistSkin = exports.notExistEmoji = exports.alreadyExsitEmoji = exports.wrongEmojiId = exports.notExistFeed = exports.notAuthorized = exports.feedLengthCheck = exports.notExistFeedContent = exports.alreadyCompleteChallenge = exports.notExistProgressCourse = exports.notExistChallengeId = exports.notExistCourseId = exports.invalidCourseChallengeId = exports.notMatchSignIn = exports.expiredToken = exports.notGetToken = exports.notExistUid = exports.alreadyExistEmail = exports.alreadyExistNickname = exports.sameNickname = exports.nicknameLengthCheck = exports.notExistUser = exports.serverError = void 0;
+exports.invalidEmail = exports.invalidReport = exports.alreadyReported = exports.notExistCharacter = exports.notExistSkin = exports.notExistEmoji = exports.alreadyExsitEmoji = exports.wrongEmojiId = exports.notExistFeed = exports.notAuthorized = exports.feedLengthCheck = exports.notExistFeedContent = exports.alreadyCompleteChallenge = exports.notExistProgressCourse = exports.notExistChallengeId = exports.notExistCourseId = exports.invalidCourseChallengeId = exports.notMatchSignIn = exports.invalidToken = exports.notExistToken = exports.notExistUid = exports.alreadyExistEmail = exports.alreadyExistNickname = exports.sameNickname = exports.nicknameLengthCheck = exports.notExistUser = exports.serverError = void 0;
 const constant_1 = require("./constant");
 exports.serverError = {
     status: 500,
@@ -30,13 +30,13 @@ exports.notExistUid = {
     status: 400,
     message: "계정 생성에 실패하였습니다."
 };
-exports.notGetToken = {
+exports.notExistToken = {
     status: 403,
     message: "토큰이 없습니다. 토큰을 함께 보내주세요."
 };
-exports.expiredToken = {
+exports.invalidToken = {
     status: 403,
-    message: constant_1.TOKEN_ERROR_MESSAGE
+    message: "유효성 인증에 실패하였습니다."
 };
 exports.notMatchSignIn = {
     status: 401,
@@ -105,5 +105,9 @@ exports.alreadyReported = {
 exports.invalidReport = {
     status: 404,
     message: "본인이 작성한 안부는 신고할 수 없습니다."
+};
+exports.invalidEmail = {
+    status: 404,
+    message: "유효하지 않은 이메일입니다."
 };
 //# sourceMappingURL=errors.js.map

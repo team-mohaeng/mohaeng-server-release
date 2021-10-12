@@ -15,6 +15,7 @@ Skin.init({
     id: {
         type: sequelize_1.DataTypes.INTEGER,
         primaryKey: true,
+        defaultValue: 64
     },
     user_id: {
         type: sequelize_1.DataTypes.INTEGER,

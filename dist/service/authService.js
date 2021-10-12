@@ -26,7 +26,10 @@ const admin = __importStar(require("firebase-admin"));
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const config_1 = __importDefault(require("../config"));
+const password_1 = __importDefault(require("../controller/password"));
 const User_1 = require("../models/User");
+const Character_1 = require("../models/Character");
+const Skin_1 = require("../models/Skin");
 const errors_1 = require("../errors");
 exports.default = {
     signUp: async (dto) => {
@@ -73,6 +76,12 @@ exports.default = {
                 },
             };
             const jwtToken = jsonwebtoken_1.default.sign(payload, config_1.default.jwtSecret);
+            Character_1.Character.create({
+                user_id: user.id,
+            });
+            Skin_1.Skin.create({
+                user_id: user.id,
+            });
             const responseDTO = {
                 status: 200,
                 data: {
@@ -117,6 +126,55 @@ exports.default = {
             return errors_1.serverError;
         }
     },
+    forgetPassword: async (dto) => {
+        try {
+            const { email } = dto;
+            const user = await User_1.User.findOne({ where: { email: email } });
+            if (!user) {
+                return errors_1.notExistUser;
+            }
+            const number = await password_1.default.email(email);
+            if (!number) {
+                return errors_1.invalidEmail;
+            }
+            const responseDTO = {
+                status: 200,
+                data: {
+                    number: number,
+                }
+            };
+            return responseDTO;
+        }
+        catch (err) {
+            console.error(err);
+            return errors_1.serverError;
+        }
+    },
+    change: async (dto) => {
+        try {
+            const { email, password } = dto;
+            const user = await User_1.User.findOne({ where: { email: email } });
+            if (!user) {
+                return errors_1.notExistUser;
+            }
+            const salt = await bcryptjs_1.default.genSalt(10);
+            user.password = await bcryptjs_1.default.hash(password, salt);
+            User_1.User.update({
+                password: user.password
+            }, {
+                where: { email: email }
+            });
+            const responseDTO = {
+                status: 200,
+                message: "비밀번호 바꾸기를 성공하였습니다."
+            };
+            return responseDTO;
+        }
+        catch (err) {
+            console.log(err);
+            return errors_1.serverError;
+        }
+    },
     kakao: async () => {
         try {
             const responseDTO = {
@@ -126,13 +184,13 @@ exports.default = {
             return responseDTO;
         }
         catch (err) {
-            console.error(err);
+            console.log(err);
             return errors_1.serverError;
         }
     },
     nickname: async (dto) => {
         try {
-            const { nickname } = dto;
+            const { nickname, token } = dto;
             if (nickname.length > 6 || nickname.length == 0) {
                 return errors_1.nicknameLengthCheck;
             }
@@ -141,7 +199,8 @@ exports.default = {
                 return errors_1.alreadyExistNickname;
             }
             const user = await User_1.User.create({
-                nickname: nickname
+                nickname: nickname,
+                token: token,
             });
             const payload = {
                 user: {
@@ -149,6 +208,12 @@ exports.default = {
                 },
             };
             const jwtToken = jsonwebtoken_1.default.sign(payload, config_1.default.jwtSecret);
+            Character_1.Character.create({
+                user_id: user.id,
+            });
+            Skin_1.Skin.create({
+                user_id: user.id,
+            });
             const responseDTO = {
                 status: 200,
                 data: {

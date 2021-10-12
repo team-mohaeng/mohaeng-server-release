@@ -4,6 +4,7 @@ const constant_1 = require("../constant");
 const Course_1 = require("../dummy/Course");
 const Badge_1 = require("../dummy/Badge");
 const Level_1 = require("../dummy/Level");
+const Skin_1 = require("../dummy/Skin");
 const errors_1 = require("../errors");
 const mohaengDateFormatter_1 = require("../formatter/mohaengDateFormatter");
 const User_1 = require("../models/User");
@@ -12,6 +13,10 @@ const ProgressChallenge_1 = require("../models/ProgressChallenge");
 const BeforeChallenge_1 = require("../models/BeforeChallenge");
 const CompleteCourse_1 = require("../models/CompleteCourse");
 const Badge_2 = require("../models/Badge");
+const CharacterCard_1 = require("../dummy/CharacterCard");
+const Skin_2 = require("../models/Skin");
+const Character_1 = require("../models/Character");
+const Image_1 = require("../dummy/Image");
 exports.default = {
     today: async (id) => {
         try {
@@ -168,13 +173,14 @@ exports.default = {
                 date: date,
                 challenges: todayChallenges
             };
+            const imageURLs = Image_1.images[user.character_card - 1].getImageURLs();
             const responseDTO = {
                 status: 200,
                 data: {
                     isComplete: user.is_completed,
                     isPenalty: user.challenge_penalty,
-                    mainCharacterImg: "",
-                    popupCharacterImg: "",
+                    mainCharacterImg: imageURLs[0],
+                    popupCharacterImg: imageURLs[1],
                     course: todayCourse
                 }
             };
@@ -241,8 +247,10 @@ exports.default = {
                 // 현재 affinity에 userHappy를 더하면 레벨이 올라가는지 확인
                 // 레벨업시 캐릭터 카드 부여 처리
                 if (userHappy + challenge.getHappy() > Level_1.levels[userLevel - 1].getFullHappy()) {
+                    const cardId = Level_1.levels[userLevel - 1].getCardId();
+                    const characterId = Number((cardId - 1) / 9);
                     levelUp = true;
-                    if (userLevel + 1 == 40) { // 만렙이면
+                    if (userLevel + 1 == 68) { // 만렙이면
                         happy = Level_1.levels[userLevel - 1].getFullHappy() - userHappy; // 레벨업으로 받는 해피지수가 달라짐
                         userHappy = 0;
                     }
@@ -251,11 +259,31 @@ exports.default = {
                         happy = challenge.getHappy();
                     }
                     userLevel++;
+                    let styleImg = "";
+                    if (cardId > 63) {
+                        Skin_2.Skin.create({
+                            id: cardId,
+                            user_id: user_id
+                        });
+                        styleImg = Skin_1.skins[cardId - 64].getImageURL();
+                    }
+                    else {
+                        Character_1.Character.create({
+                            user_id: user_id,
+                            character_type: characterId,
+                            character_card: cardId
+                        });
+                        styleImg = CharacterCard_1.characterCards[cardId - 1].getImageURL();
+                    }
                     // 레벨업 response
                     levelUpDTO = {
                         level: userLevel,
-                        styleImg: ""
+                        styleImg: styleImg
                     };
+                }
+                else {
+                    userHappy += challenge.getHappy();
+                    happy += challenge.getHappy();
                 }
             }
             // 챌린지 response
@@ -270,14 +298,16 @@ exports.default = {
                 completeCourse = true; // 코스 완료 여부 true
                 completeCourseCount++; // 완료 코스 개수 +1
                 // 챌린지 점수를 받아서 만렙으로 레벨업했을 경우
-                if (levelUp && userLevel == 40)
+                if (levelUp && userLevel == 68)
                     canGetHappy = false;
                 if (canGetHappy) {
                     // 현재 affinity에 userHappy를 더하면 레벨이 올라가는지 확인
                     // 레벨업시 캐릭터 카드 부여 처리
                     if (userHappy + course.getHappy() > Level_1.levels[userLevel - 1].getFullHappy()) {
+                        const cardId = Level_1.levels[userLevel - 1].getCardId();
+                        const characterId = Number((cardId - 1) / 9);
                         levelUp = true;
-                        if (userLevel + 1 == 40) {
+                        if (userLevel + 1 == 68) {
                             happy = Level_1.levels[userLevel - 1].getFullHappy() - userHappy;
                             userHappy = 0;
                         }
@@ -286,11 +316,31 @@ exports.default = {
                             happy = course.getHappy();
                         }
                         userLevel++;
+                        let styleImg = "";
+                        if (cardId > 63) {
+                            Skin_2.Skin.create({
+                                id: cardId,
+                                user_id: user_id
+                            });
+                            styleImg = Skin_1.skins[cardId - 64].getImageURL();
+                        }
+                        else {
+                            Character_1.Character.create({
+                                user_id: user_id,
+                                character_type: characterId,
+                                character_card: cardId
+                            });
+                            styleImg = CharacterCard_1.characterCards[cardId - 1].getImageURL();
+                        }
                         // 레벨업 response
                         levelUpDTO = {
                             level: userLevel,
-                            styleImg: ""
+                            styleImg: styleImg
                         };
+                    }
+                    else {
+                        userHappy += course.getHappy();
+                        happy += course.getHappy();
                     }
                 }
                 // 코스 완료 response

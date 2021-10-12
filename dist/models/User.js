@@ -73,12 +73,15 @@ User.init({
     },
     character_type: {
         type: sequelize_1.DataTypes.INTEGER.UNSIGNED,
+        defaultValue: 1,
     },
     character_card: {
         type: sequelize_1.DataTypes.INTEGER.UNSIGNED,
+        defaultValue: 1,
     },
     character_skin: {
         type: sequelize_1.DataTypes.INTEGER.UNSIGNED,
+        defaultValue: 64,
     },
     challenge_penalty: {
         type: sequelize_1.DataTypes.BOOLEAN,

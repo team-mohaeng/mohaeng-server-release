@@ -2,12 +2,12 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Level = void 0;
 class Level {
-    constructor(level, fullHappy) {
+    constructor(level, fullHappy, cardId) {
         this.level = level;
         this.fullHappy = fullHappy;
+        this.cardId = cardId;
     }
-    setCharacterType(type) { this.characterType = type; }
-    getCharacterType() { return this.characterType; }
+    getCardId() { return this.cardId; }
     getLevel() { return this.level; }
     getFullHappy() { return this.fullHappy; }
 }

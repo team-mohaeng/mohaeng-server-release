@@ -9,6 +9,7 @@ const qs_1 = __importDefault(require("qs"));
 const express_validator_1 = require("express-validator");
 const config_1 = __importDefault(require("../config"));
 const authService_1 = __importDefault(require("../service/authService"));
+const verifyToken_1 = __importDefault(require("../middleware/verifyToken"));
 const errors_1 = require("../errors");
 const router = express_1.default.Router();
 router.post("/signup", [
@@ -44,6 +45,34 @@ router.post("/signin", async (req, res) => {
     const result = await authService_1.default.signIn(requestDTO);
     res.status(result.status).json(result);
 });
+router.get("/password/:email", async (req, res) => {
+    const requestDTO = {
+        email: req.params.email
+    };
+    const result = await authService_1.default.forgetPassword(requestDTO);
+    res.status(result.status).json(result);
+});
+router.put("/password", [
+    (0, express_validator_1.check)("email", "이메일 형식이 올바르지 않습니다").trim().isEmail(),
+    (0, express_validator_1.check)("password", "영문, 숫자를 모두 포함하여 입력해주세요").trim().not().isAlpha(),
+    (0, express_validator_1.check)("password", "영문, 숫자를 모두 포함하여 입력해주세요").trim().not().isNumeric(),
+    (0, express_validator_1.check)("password", "영문, 숫자를 모두 포함하여 입력해주세요").trim().isAlphanumeric(),
+    (0, express_validator_1.check)("password", "8-16자의 비밀번호를 입력해주세요").trim().isLength({ min: 8, max: 16 }),
+], async (req, res) => {
+    const errors = (0, express_validator_1.validationResult)(req);
+    if (!errors.isEmpty()) {
+        return res.status(412).json({
+            status: 412,
+            message: errors.array()[0].msg
+        });
+    }
+    const requestDTO = {
+        email: req.body.email,
+        password: req.body.password
+    };
+    const result = await authService_1.default.change(requestDTO);
+    res.status(result.status).json(result);
+});
 router.get("/kakao", async (req, res) => {
     try {
         const REST_API_KEY = config_1.default.kakaoRestAPIKey;
@@ -58,7 +87,6 @@ router.get("/kakao", async (req, res) => {
 });
 router.get("/kakao/callback", async (req, res) => {
     try {
-        //토큰 유효성 검사
         const token = await (0, axios_1.default)({
             method: "POST",
             url: "https://kauth.kakao.com/oauth/token",
@@ -80,11 +108,12 @@ router.get("/kakao/callback", async (req, res) => {
     const result = await authService_1.default.kakao();
     res.status(result.status).json(result);
 });
-router.post("/nickname", async (req, res) => {
+router.post("/nickname", verifyToken_1.default, async (req, res) => {
     try {
-        const nickname = req.body.nickname;
+        const { nickname, token } = req.body;
         const requestDTO = {
-            nickname: nickname
+            nickname: nickname,
+            token: token
         };
         const result = await authService_1.default.nickname(requestDTO);
         res.status(result.status).json(result);
