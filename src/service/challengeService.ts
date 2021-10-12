@@ -13,6 +13,7 @@ import { ProgressChallenge } from '../models/ProgressChallenge';
 import { BeforeChallenge } from '../models/BeforeChallenge';
 import { CompleteCourse } from '../models/CompleteCourse';
 import { Badge } from '../models/Badge';
+import { images } from '../dummy/Image';
 
 export default {
   today: async (id: string) => {
@@ -185,13 +186,14 @@ export default {
         challenges: todayChallenges
       };
 
+      const imageURLs = images[user.character_card - 1].getImageURLs();
       const responseDTO: TodayChallengeResponseDTO = {
         status: 200,
         data: {
           isComplete: user.is_completed,
           isPenalty: user.challenge_penalty,
-          mainCharacterImg: "",
-          popupCharacterImg: "",
+          mainCharacterImg: imageURLs[0],
+          popupCharacterImg: imageURLs[1],
           course: todayCourse
         }
       };
