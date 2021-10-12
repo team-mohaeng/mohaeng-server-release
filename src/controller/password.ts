@@ -26,7 +26,7 @@ export default {
     const result = await smtpTransport.sendMail(mailOptions, (err, res) => {
       if (err) {
         number = null;
-        console.error(err.message);
+        console.error(err);
       }
       smtpTransport.close();
     });
