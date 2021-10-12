@@ -1,10 +1,10 @@
-class Image {
+export class Image {
   private characterType: number;
   private cardId: number;
   private lottieURL: string;
-  private imageURLs: [string];
+  private imageURLs: string[];
 
-  constructor(characterType: number, cardId: number, lottieURL: string, imageURLs: [string])  {
+  constructor(characterType: number, cardId: number, lottieURL: string, imageURLs: string[])  {
     this.characterType = characterType;
     this.cardId = cardId;
     this.lottieURL = lottieURL;
@@ -13,6 +13,6 @@ class Image {
 
   getCharacterType(): number {return this.characterType;}
   getCardId(): number { return this.cardId; }
-  getLottieURL(): string { return this.lottieURL; }
-  getImageURLs(): [string] {return this.imageURLs;}
+  getLottieURL(): string { return this.lottieURL }
+  getImageURLs(): string[] {return this.imageURLs;}
 }
