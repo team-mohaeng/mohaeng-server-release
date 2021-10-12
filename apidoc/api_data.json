@@ -1,5 +1,62 @@
 [
   {
+    "type": "put",
+    "url": "/api/password",
+    "title": "비밀번호 변경",
+    "version": "1.0.0",
+    "name": "changePassword",
+    "group": "로그인/회원가입",
+    "header": {
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "parameter": {
+      "examples": [
+        {
+          "title": "Request-Example:",
+          "content": "{\n \"email\": \"mohaeng@naver.com\"\n \"password\": \"mohaeng1234\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": false,
+            "field": "message",
+            "description": ""
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "200 OK\n{\n \"status\": 200,\n \"message\": \"비밀번호 바꾸기를 성공하였습니다.\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "401 유효하지 않은 유저\n{\n \"status\": 401,\n \"message\": \"유저가 존재하지 않습니다.\"\n}\n\n404 잘못된 이메일 형식\n{\n \"status\": 404,\n \"message\": \"이메일 형식이 올바르지 않습니다.\"\n}\n\n404 비밀번호 영문, 숫자 미포함\n{\n \"status\": 404,\n \"message\": \"영문, 숫자를 모두 포함하여 입력해주세요.\"\n}\n\n404 비밀번호 글자수 제한\n{\n \"status\": 404,\n \"message\": \"8-16자의 비밀번호를 입력해주세요.\"\n}\n\n500 서버 에러\n{\n \"status\": 500,\n \"message\": \"서버 에러입니다. 서버 파트에게 문의해주세요 *^^*\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/api/docs/auth.ts",
+    "groupTitle": "로그인/회원가입"
+  },
+  {
     "type": "post",
     "url": "/api/nickname",
     "title": "소셜로그인 회원가입",
@@ -79,6 +136,54 @@
         {
           "title": "Success-Response:",
           "content": "200 OK\n{\n \"status\": 200,\n \"message\": \"토큰 인증을 완료하였습니다.\"\n}\n\n500 서버 에러\n{\n \"status\": 500,\n \"message\": \"서버 에러입니다. 서버 파트에게 문의해주세요 *^^*\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/api/docs/auth.ts",
+    "groupTitle": "로그인/회원가입"
+  },
+  {
+    "type": "get",
+    "url": "/api/password/:email",
+    "title": "인증코드 보내기",
+    "version": "1.0.0",
+    "name": "sendCode",
+    "group": "로그인/회원가입",
+    "header": {
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "number",
+            "optional": false,
+            "field": "number",
+            "description": ""
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "200 OK\n{\n \"status\": 200,\n \"data\": {\n   \"number\": \"인증코드숫자\"\n }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "401 유효하지 않은 유저\n{\n \"status\": 401,\n \"message\": \"유저가 존재하지 않습니다.\"\n}\n\n500 서버 에러\n{\n \"status\": 500,\n \"message\": \"서버 에러입니다. 서버 파트에게 문의해주세요 *^^*\"\n}",
           "type": "json"
         }
       ]
