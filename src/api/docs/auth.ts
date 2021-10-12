@@ -75,7 +75,7 @@
  * @api {post} /api/password 인증코드 보내기
  * 
  * @apiVersion 1.0.0
- * @apiName password
+ * @apiName sendCode
  * @apiGroup 로그인/회원가입
  * 
  * * @apiHeaderExample {json} Header-Example:
@@ -117,7 +117,7 @@
  * @api {put} /api/password 비밀번호 변경
  * 
  * @apiVersion 1.0.0
- * @apiName password
+ * @apiName changePassword
  * @apiGroup 로그인/회원가입
  * 
  * * @apiHeaderExample {json} Header-Example:
