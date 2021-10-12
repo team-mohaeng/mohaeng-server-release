@@ -10,7 +10,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Header-Example:",
-          "content": "{\n \"Content-Type\": \"application/json\"\n \"token\": \"FCM token\"\n}",
+          "content": "{\n \"Content-Type\": \"application/json\"\n \"token\": \"token\"\n}",
           "type": "json"
         }
       ]
@@ -48,7 +48,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Error-Response:",
-          "content": "\n404 닉네임 글자 제한\n{\n \"status\": 404,\n \"message\": \"닉네임은 1-6글자 이내로 작성해주세요\"\n}\n\n404 닉네임 중복\n{\n \"status\": 404,\n \"message\": \"이미 사용 중인 닉네임입니다.\"\n}\n\n500 서버 에러\n{\n \"status\": 500,\n \"message\": \"서버 에러입니다. 서버 파트에게 문의해주세요 *^^*\"\n}",
+          "content": "\n404 닉네임 글자 제한\n{\n \"status\": 404,\n \"message\": \"닉네임은 1-6글자 이내로 작성해주세요\"\n}\n\n404 닉네임 중복\n{\n \"status\": 404,\n \"message\": \"이미 사용 중인 닉네임입니다.\"\n}\n\n403 토큰 누락\n{\n \"status\": 403,\n \"message\": \"토큰이 없습니다. 토큰을 함께 보내주세요.\"\n}\n\n403 토큰 유효성 검증 실패\n{\n \"status\": 403,\n \"message\": \"유효성 인증에 실패하였습니다.\"\n}\n\n500 서버 에러\n{\n \"status\": 500,\n \"message\": \"서버 에러입니다. 서버 파트에게 문의해주세요 *^^*\"\n}",
           "type": "json"
         }
       ]
