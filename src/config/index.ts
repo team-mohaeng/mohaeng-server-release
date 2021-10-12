@@ -40,7 +40,7 @@ export default {
    * Your secret sauce
    */
   firebaseID: process.env.FIREBASE_ID,
-  firebaseDB: process.env.FIREBASE_DB
+  firebaseDB: process.env.FIREBASE_DB,
   
   /**
    * Your secret sauce
