@@ -273,7 +273,7 @@ export default {
           const cardId = levels[userLevel - 1].getCardId();
           const characterId = Number((cardId - 1) / 9);
           levelUp = true;
-          if (userLevel + 1 == 40) {  // 만렙이면
+          if (userLevel + 1 == 68) {  // 만렙이면
             happy = levels[userLevel - 1].getFullHappy() - userHappy; // 레벨업으로 받는 해피지수가 달라짐
             userHappy = 0;
           }
@@ -323,7 +323,7 @@ export default {
         completeCourseCount++;  // 완료 코스 개수 +1
       
         // 챌린지 점수를 받아서 만렙으로 레벨업했을 경우
-        if (levelUp && userLevel == 40) canGetHappy = false;
+        if (levelUp && userLevel == 68) canGetHappy = false;
 
         if (canGetHappy) {
           // 현재 affinity에 userHappy를 더하면 레벨이 올라가는지 확인
@@ -332,7 +332,7 @@ export default {
             const cardId = levels[userLevel - 1].getCardId();
             const characterId = Number((cardId - 1) / 9);
             levelUp = true;
-            if (userLevel + 1 == 40) {
+            if (userLevel + 1 == 68) {
               happy = levels[userLevel - 1].getFullHappy() - userHappy;
               userHappy = 0;
             }
