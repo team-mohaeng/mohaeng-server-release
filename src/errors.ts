@@ -131,3 +131,8 @@ export const invalidReport: IFail = {
   message: "본인이 작성한 안부는 신고할 수 없습니다."
 }
 
+export const invalidEmail: IFail = {
+  status: 404,
+  message: "유효하지 않은 이메일입니다."
+}
+
