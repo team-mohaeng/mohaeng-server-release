@@ -1,5 +1,92 @@
 define({ "api": [
   {
+    "type": "post",
+    "url": "/api/nickname",
+    "title": "소셜로그인 회원가입",
+    "version": "1.0.0",
+    "name": "createUser",
+    "group": "로그인/회원가입",
+    "header": {
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\"\n \"token\": \"FCM token\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "parameter": {
+      "examples": [
+        {
+          "title": "Request-Example:",
+          "content": "{\n \"nickname\": \"시원뿡\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": false,
+            "field": "jwt",
+            "description": ""
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "200 OK\n{\n \"status\": 200,\n \"data\": {\n   \"jwt\": \"jwt 토큰\"\n }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "\n404 닉네임 글자 제한\n{\n \"status\": 404,\n \"message\": \"닉네임은 1-6글자 이내로 작성해주세요\"\n}\n\n404 닉네임 중복\n{\n \"status\": 404,\n \"message\": \"이미 사용 중인 닉네임입니다.\"\n}\n\n500 서버 에러\n{\n \"status\": 500,\n \"message\": \"서버 에러입니다. 서버 파트에게 문의해주세요 *^^*\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/api/docs/auth.ts",
+    "groupTitle": "로그인/회원가입"
+  },
+  {
+    "type": "get",
+    "url": "/api/kakao",
+    "title": "카카오 로그인",
+    "version": "1.0.0",
+    "name": "kakaoLogin",
+    "group": "로그인/회원가입",
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": ""
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "200 OK\n{\n \"status\": 200,\n \"message\": \"토큰 인증을 완료하였습니다.\"\n}\n\n500 서버 에러\n{\n \"status\": 500,\n \"message\": \"서버 에러입니다. 서버 파트에게 문의해주세요 *^^*\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/api/docs/auth.ts",
+    "groupTitle": "로그인/회원가입"
+  },
+  {
     "type": "put",
     "url": "/api/badge",
     "title": "달성한 뱃지 조회",
@@ -65,7 +152,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "200 OK 달성한 뱃지 조회 성공\n{\n \"status\": 200,\n \"badges\": [\n   {\n     \"id\": 1,\n     \"name\": \"내 건강 챙기미\",\n     \"info\": \"건강 코스 3개\",\n     \"image\": \"imageUrl\",\n     \"hasBadge\": false\n   },\n   {\n     \"id\": 2,\n     \"name\": \"아이마이미마인\",\n     \"info\": \"\",\n     \"image\": \"imageUrl\",\n     \"hasBadge\": true\n   },\n   {\n     \"id\": 3,\n     \"name\": \"바른생활 모범생\",\n     \"info\": \"생활습관 코스 3개\",\n     \"image\": \"imageUrl\",\n     \"hasBadge\": false\n   }\n  ...\n ]\n}",
+          "content": "200 OK 달성한 뱃지 조회 성공\n{\n \"status\": 200,\n \"data\": {\n   \"badges\": [\n   {\n     \"id\": 1,\n     \"name\": \"내 건강 챙기미\",\n     \"info\": \"건강 코스 3개\",\n     \"image\": \"imageUrl\",\n     \"hasBadge\": false\n   },\n   {\n     \"id\": 2,\n     \"name\": \"아이마이미마인\",\n     \"info\": \"\",\n     \"image\": \"imageUrl\",\n     \"hasBadge\": true\n   },\n   {\n     \"id\": 3,\n     \"name\": \"바른생활 모범생\",\n     \"info\": \"생활습관 코스 3개\",\n     \"image\": \"imageUrl\",\n     \"hasBadge\": false\n   }\n  ...\n   ]\n }\n}",
           "type": "json"
         }
       ]
@@ -289,7 +376,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "200 OK 커뮤니티 조회\n{\n \"status\": 200,\n \"isNew\": false,\n \"hasFeed\": 2,\n \"userCount\": 0,\n \"data\": [\n   {\n     \"postId\": 135,\n     \"course\": \"중급 사진가\",\n     \"challenge\": 3,\n     \"image\": \"https://mohaeng.s3.ap-northeast-2.amazonaws.com/images/origin/1632731373241.jpg\",\n     \"mood\": 2,\n     \"content\": \"엄마 나 모행 다녀올게\",\n     \"nickname\": \"모행일\",\n     \"year\": \"2021\",\n     \"month\": \"09\",\n     \"date\": \"27\",\n     \"day\": \"월\",\n     \"emoji\": [],\n     \"myEmoji\": 0,\n     \"isReport\": true,\n     \"isDelete\": false\n   },\n   {\n     \"postId\": 118,\n     \"course\": \"초보 사진가\",\n     \"challenge\": 2,\n     \"image\": \"https://mohaeng.s3.ap-northeast-2.amazonaws.com/images/origin/1632731373241.jpg\",\n     \"mood\": 2,\n     \"content\": \"엄마 나 모행 다녀올게\",\n     \"nickname\": \"모행삼\",\n     \"year\": \"2021\",\n     \"month\": \"09\",\n     \"date\": \"22\",\n     \"day\": \"수\",\n     \"emoji\": [\n       {\n         \"id\": 4,\n         \"count\": 1\n       },\n       {\n         \"id\": 6,\n         \"count\": 3\n       }\n     ],\n     \"myEmoji\": 4,\n     \"isReport\": false,\n     \"isDelete\": true\n   }\n  ]\n}",
+          "content": "200 OK 커뮤니티 조회\n{\n \"status\": 200,\n \"data\": {\n   \"isNew\": false,\n   \"hasFeed\": 2,\n   \"userCount\": 0,\n   \"feeds\": [\n   {\n     \"postId\": 135,\n     \"course\": \"중급 사진가\",\n     \"challenge\": 3,\n     \"image\": \"https://mohaeng.s3.ap-northeast-2.amazonaws.com/images/origin/1632731373241.jpg\",\n     \"mood\": 2,\n     \"content\": \"엄마 나 모행 다녀올게\",\n     \"nickname\": \"모행일\",\n     \"year\": \"2021\",\n     \"month\": \"09\",\n     \"date\": \"27\",\n     \"day\": \"월\",\n     \"emoji\": [],\n     \"myEmoji\": 0,\n     \"isReport\": true,\n     \"isDelete\": false\n   },\n   {\n     \"postId\": 118,\n     \"course\": \"초보 사진가\",\n     \"challenge\": 2,\n     \"image\": \"https://mohaeng.s3.ap-northeast-2.amazonaws.com/images/origin/1632731373241.jpg\",\n     \"mood\": 2,\n     \"content\": \"엄마 나 모행 다녀올게\",\n     \"nickname\": \"모행삼\",\n     \"year\": \"2021\",\n     \"month\": \"09\",\n     \"date\": \"22\",\n     \"day\": \"수\",\n     \"emoji\": [\n       {\n         \"id\": 4,\n         \"count\": 1\n       },\n       {\n         \"id\": 6,\n         \"count\": 3\n       }\n     ],\n     \"myEmoji\": 4,\n     \"isReport\": false,\n     \"isDelete\": true\n   }\n  ]\n }\n}",
           "type": "json"
         }
       ]
@@ -625,7 +712,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "200 OK 내 서랍장 조회\n{\n \"status\": 200,\n \"data\": [\n   {\n     \"postId\": 131,\n     \"course\": \"초보 사진가\",\n     \"challenge\": 3,\n     \"image\": \"https://mohaeng.s3.ap-northeast-2.amazonaws.com/images/origin/1632731373241.jpg\",\n     \"mood\": 2,\n     \"content\": \"엄마 나 모행 다녀올게\",\n     \"nickname\": \"모행삼\",\n     \"year\": \"2021\",\n     \"month\": \"09\",\n     \"date\": \"27\",\n     \"day\": \"월\",\n     \"emoji\": [],\n     \"myEmoji\": 0,\n     \"isReport\": false,\n     \"isDelete\": true\n   },\n   {\n     \"postId\": 118,\n     \"course\": \"초보 사진가\",\n     \"challenge\": 2,\n     \"image\": \"https://mohaeng.s3.ap-northeast-2.amazonaws.com/images/origin/1632731373241.jpg\",\n     \"mood\": 2,\n     \"content\": \"엄마 나 모행 다녀올게\",\n     \"nickname\": \"모행삼\",\n     \"year\": \"2021\",\n     \"month\": \"09\",\n     \"date\": \"22\",\n     \"day\": \"수\",\n     \"emoji\": [\n       {\n         \"id\": 4,\n         \"count\": 1\n       },\n       {\n         \"id\": 6,\n         \"count\": 3\n       }\n     ],\n     \"myEmoji\": 4,\n     \"isReport\": false,\n     \"isDelete\": true\n   }\n  ]\n}",
+          "content": "200 OK 내 서랍장 조회\n{\n \"status\": 200,\n \"data\": {\n   \"feeds\": [\n   {\n     \"postId\": 131,\n     \"course\": \"초보 사진가\",\n     \"challenge\": 3,\n     \"image\": \"https://mohaeng.s3.ap-northeast-2.amazonaws.com/images/origin/1632731373241.jpg\",\n     \"mood\": 2,\n     \"content\": \"엄마 나 모행 다녀올게\",\n     \"nickname\": \"모행삼\",\n     \"year\": \"2021\",\n     \"month\": \"09\",\n     \"date\": \"27\",\n     \"day\": \"월\",\n     \"emoji\": [],\n     \"myEmoji\": 0,\n     \"isReport\": false,\n     \"isDelete\": true\n   },\n   {\n     \"postId\": 118,\n     \"course\": \"초보 사진가\",\n     \"challenge\": 2,\n     \"image\": \"https://mohaeng.s3.ap-northeast-2.amazonaws.com/images/origin/1632731373241.jpg\",\n     \"mood\": 2,\n     \"content\": \"엄마 나 모행 다녀올게\",\n     \"nickname\": \"모행삼\",\n     \"year\": \"2021\",\n     \"month\": \"09\",\n     \"date\": \"22\",\n     \"day\": \"수\",\n     \"emoji\": [\n       {\n         \"id\": 4,\n         \"count\": 1\n       },\n       {\n         \"id\": 6,\n         \"count\": 3\n       }\n     ],\n     \"myEmoji\": 4,\n     \"isReport\": false,\n     \"isDelete\": true\n   }\n  ]\n }\n}",
           "type": "json"
         }
       ]
@@ -1616,5 +1703,109 @@ define({ "api": [
     },
     "filename": "src/api/docs/profile.ts",
     "groupTitle": "프로필"
+  },
+  {
+    "type": "get",
+    "url": "/api/home",
+    "title": "홈 조회",
+    "version": "1.0.0",
+    "name": "Home",
+    "group": "홈",
+    "header": {
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\",\n \"Bearer\": \"{jwt}\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "nickname",
+            "description": "<p>유저 닉네임</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "level",
+            "description": "<p>유저 레벨</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "happy",
+            "description": "<p>현재 유저 해피 지수</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "fullHappy",
+            "description": "<p>현재 레벨에서 채워야 할 max 해피지수</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "characterSkin",
+            "description": "<p>유저 캐릭터 스킨 이미지 url</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Boolean",
+            "optional": false,
+            "field": "isStyleNew",
+            "description": "<p>새로운 스타일을 받았는지 여부</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Boolean",
+            "optional": false,
+            "field": "isBadgeNew",
+            "description": "<p>새로운 뱃지를 받았는지 여부</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "challengeTitle",
+            "description": "<p>현재 진행하고 있는 챌린지 제목</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "percent",
+            "description": "<p>코스 진행 현황 퍼센트</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "200 코스 진행 전\n{\n \"status\": 200,\n \"data\": {\n   \"nicknema\": \"모행\",\n   \"level\": 15,\n   \"happy\": 24,\n   \"fullHappy\": 90,\n   \"characterSkin\": \"image.url\",\n   \"isStyleNew\": false,\n   \"isBadgeNew\": false,\n   course: {},\n }\n}\n\n200 코스 진행 중\n{\n \"status\": 200,\n \"data\": {\n   \"nicknema\": \"모행\",\n   \"level\": 15,\n   \"happy\": 24,\n   \"fullHappy\": 90,\n   \"characterSkin\": \"image.url\",\n   \"isStyleNew\": false,\n   \"isBadgeNew\": false,\n   course: {\n     \"challengeTitle\": \"하늘 사진 찍기\",\n     \"percent\": 14,\n   },\n }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "401 존재하지 않는 유저\n{\n \"status\": 401,\n \"message\": \"유저가 존재하지 않습니다.\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/api/docs/home.ts",
+    "groupTitle": "홈"
   }
 ] });

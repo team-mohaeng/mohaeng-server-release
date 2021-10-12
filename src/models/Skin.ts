@@ -5,13 +5,13 @@ import { User } from "./User"
 interface SkinAttributes {
   id?: number;
   user_id: number;
-  is_new: boolean;
+  is_new?: boolean;
 };
 
 export class Skin extends Model<SkinAttributes>{
-  public readonly id!: number;
+  public readonly id: number;
   public user_id!: number;
-  public is_new!: boolean;
+  public is_new: boolean;
 
   public static associations: {
     user_id: Association<User, Skin>;
@@ -23,6 +23,7 @@ Skin.init(
     id: {
       type:DataTypes.INTEGER,
       primaryKey: true,
+      defaultValue: 64
     },
     user_id: {
       type: DataTypes.INTEGER,

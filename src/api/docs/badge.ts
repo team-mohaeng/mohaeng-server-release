@@ -23,7 +23,8 @@
  * 200 OK 달성한 뱃지 조회 성공
  * {
  *  "status": 200,
- *  "badges": [
+ *  "data": {
+ *    "badges": [
  *    {
  *      "id": 1,
  *      "name": "내 건강 챙기미",
@@ -46,7 +47,8 @@
  *      "hasBadge": false
  *    }
  *   ...
- *  ]
+ *    ]
+ *  }
  * }
  * 
  * @apiErrorExample Error-Response:

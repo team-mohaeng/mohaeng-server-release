@@ -4,15 +4,19 @@ import jwt from "jsonwebtoken";
 import config from "../config"
 import password from '../controller/password';
 import { User } from "../models/User";
+import { Character } from '../models/Character';
+import { Skin } from '../models/Skin';
 import { SignUpRequestDTO } from "../dto/Auth/SignUp/request/SignUpRequestDTO";
 import { SignUpResponseDTO } from "../dto/Auth/SignUp/response/SignUpResponseDTO";
 import { SignInRequestDTO } from '../dto/Auth/SignIn/request/SignInRequestDTO';
 import { SignInResponseDTO } from '../dto/Auth/SignIn/response/SignInResponseDTO';
-import { serverError, notExistUid, alreadyExistEmail, alreadyExistNickname, notMatchSignIn, notExistUser, invalidEmail } from "../errors";
 import { ChangePasswordRequestDTO } from '../dto/Auth/Password/request/ChangePasswordRequestDTO';
 import { ChangePasswordResponseDTO } from '../dto/Auth/Password/response/ChangePasswordResponseDTO';
 import { CheckEmailRequestDTO } from '../dto/Auth/Password/request/CheckEmailRequestDTO';
 import { CheckEmailResponseDTO } from '../dto/Auth/Password/response/CheckEmailResponseDTO';
+import { KakaoResponseDTO } from '../dto/Auth/Kakao/response/KakaoResponseDTO';
+import { KakaoRequestDTO } from '../dto/Auth/Kakao/request/KakaoRequestDTO';
+import { serverError, notExistUid, alreadyExistEmail, nicknameLengthCheck, alreadyExistNickname, notMatchSignIn, notExistUser, invalidEmail } from "../errors";
 
 export default {
   signUp: async (dto: SignUpRequestDTO) => {
@@ -71,6 +75,14 @@ export default {
         payload,
         config.jwtSecret,
       );
+
+      Character.create({
+        user_id: user.id,
+      });
+
+      Skin.create({
+        user_id: user.id,
+      })
 
       const responseDTO: SignUpResponseDTO = {
         status: 200,
@@ -153,6 +165,7 @@ export default {
       return serverError;
     }
   },
+
   change: async (dto: ChangePasswordRequestDTO) => {
     try {
       const { email, password } = dto;
@@ -175,9 +188,78 @@ export default {
         status: 200,
         message: "비밀번호 바꾸기를 성공하였습니다."
       }
+      
       return responseDTO;
+      
     } catch (err) {
       console.log(err);
+      return serverError;
+    }
+  },
+  
+  kakao: async () => {
+  try{
+    const responseDTO: KakaoResponseDTO = {
+      status: 200,
+      message: "토큰 인증이 완료되었습니다."
+    }
+    
+    return responseDTO;
+    
+  } catch (err) {
+      console.log(err);
+      return serverError;
+    }
+  },
+
+  nickname: async (dto: KakaoRequestDTO) => {
+    try{
+      const { nickname, token } = dto;
+
+      if ( nickname.length > 6 || nickname.length == 0 ) {
+        return nicknameLengthCheck;
+      }
+      
+      const hasNickname = await User.findOne({ attributes: ['nickname'], where: { nickname: nickname } });
+      if (hasNickname) {
+        return alreadyExistNickname;
+      }
+      
+      const user = await User.create({
+        nickname: nickname,
+        token: token,
+      });
+
+      const payload = {
+        user: {
+          id: user.id,
+        },
+      };
+
+      const jwtToken = jwt.sign(
+        payload,
+        config.jwtSecret,
+      );
+
+      Character.create({
+        user_id: user.id,
+      });
+
+      Skin.create({
+        user_id: user.id,
+      })
+
+      const responseDTO: SignUpResponseDTO = {
+        status: 200,
+        data: {
+          jwt: jwtToken,
+        }
+      }
+      
+      return responseDTO;
+
+    } catch (err) {
+      console.error(err);
       return serverError;
     }
   }
