@@ -56,7 +56,7 @@ router.post("/signin", async (req, res) => {
   res.status(result.status).json(result);
 })
 
-router.get("/password", async (req, res) => {
+router.post("/password", async (req, res) => {
   const requestDTO: CheckEmailRequestDTO = {
     email: req.body.email
   }
