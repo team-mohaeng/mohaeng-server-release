@@ -171,7 +171,10 @@ export default {
         where: { email: email }
       });
 
-
+      const responseDTO: ChangePasswordResponseDTO = {
+        status: 200,
+        message: "비밀번호 바꾸기를 성공하였습니다."
+      }
       return responseDTO;
     } catch (err) {
       console.log(err);
