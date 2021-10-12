@@ -17,6 +17,7 @@ import { Badge } from '../models/Badge';
 import { characterCards } from '../dummy/CharacterCard';
 import { Skin } from '../models/Skin';
 import { Character } from '../models/Character';
+import { images } from '../dummy/Image';
 
 export default {
   today: async (id: string) => {
@@ -189,13 +190,14 @@ export default {
         challenges: todayChallenges
       };
 
+      const imageURLs = images[user.character_card - 1].getImageURLs();
       const responseDTO: TodayChallengeResponseDTO = {
         status: 200,
         data: {
           isComplete: user.is_completed,
           isPenalty: user.challenge_penalty,
-          mainCharacterImg: "",
-          popupCharacterImg: "",
+          mainCharacterImg: imageURLs[0],
+          popupCharacterImg: imageURLs[1],
           course: todayCourse
         }
       };
