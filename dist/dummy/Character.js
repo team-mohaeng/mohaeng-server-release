@@ -10,26 +10,26 @@ const elephants = new Array();
 const squirrels = new Array();
 const bears = new Array();
 const hedgehogs = new Array();
-let i = 1;
-for (i; i < 10; i++) {
+let i = 0;
+for (i; i < 9; i++) {
     ducks.push(CharacterCard_1.characterCards[i]);
 }
-for (i; i < 19; i++) {
+for (i; i < 18; i++) {
     rabbits.push(CharacterCard_1.characterCards[i]);
 }
-for (i; i < 28; i++) {
+for (i; i < 27; i++) {
     giraffes.push(CharacterCard_1.characterCards[i]);
 }
-for (i; i < 37; i++) {
+for (i; i < 36; i++) {
     elephants.push(CharacterCard_1.characterCards[i]);
 }
-for (i; i < 46; i++) {
+for (i; i < 45; i++) {
     squirrels.push(CharacterCard_1.characterCards[i]);
 }
-for (i; i < 55; i++) {
+for (i; i < 54; i++) {
     bears.push(CharacterCard_1.characterCards[i]);
 }
-for (i; i < 64; i++) {
+for (i; i < 63; i++) {
     hedgehogs.push(CharacterCard_1.characterCards[i]);
 }
 exports.characters = [

@@ -5,8 +5,12 @@ const Feed_1 = require("../models/Feed");
 const Badge_1 = require("../models/Badge");
 const Emoji_1 = require("../models/Emoji");
 const Report_1 = require("../models/Report");
+const Character_1 = require("../models/Character");
+const Skin_1 = require("../models/Skin");
 const Level_1 = require("../dummy/Level");
 const Course_1 = require("../dummy/Course");
+const CharacterCard_1 = require("../dummy/CharacterCard");
+const Skin_2 = require("../dummy/Skin");
 const mohaengDateFormatter_1 = require("../formatter/mohaengDateFormatter");
 const errors_1 = require("../errors");
 const sequelize = require("sequelize");
@@ -56,7 +60,7 @@ exports.default = {
                 happy = 10;
             }
             //만렙 달성
-            if (user.level == 40) {
+            if (user.level == 68) {
                 happy = 0;
                 user.affinity = 0;
             }
@@ -67,7 +71,7 @@ exports.default = {
             //level의 happy지수보다 user의 해피지수가 높다면 levelup
             let levelUp = false;
             let totalHappy = Level_1.levels[user.level - 1].getFullHappy();
-            if (user.level < 40) {
+            if (user.level < 68) {
                 if (user.affinity >= totalHappy) {
                     levelUp = true;
                     user.affinity = user.affinity - totalHappy;
@@ -77,11 +81,24 @@ exports.default = {
             let levelUpResponse = {};
             //levelUp 했을 때만 아니면 null
             if (levelUp) {
-                User_1.User.update({ is_style_new: true }, { where: { id: id } });
+                let cardId = Level_1.levels[user.level - 2].getCardId();
+                let image;
+                //카드
+                if (cardId < 64) {
+                    image = CharacterCard_1.characterCards[cardId - 1].getImageURL();
+                    const characterType = cardId / 9 + 1;
+                    Character_1.Character.create({ user_id: +id, character_type: characterType, character_card: cardId });
+                }
+                //스킨
+                else {
+                    image = Skin_2.skins[cardId - 64].getImageURL();
+                    Skin_1.Skin.create({ id: cardId, user_id: +id });
+                }
                 levelUpResponse = {
                     level: user.level,
-                    styleImg: ""
+                    styleImg: image
                 };
+                User_1.User.update({ is_style_new: true }, { where: { id: id } });
             }
             let isBadgeNew = false;
             let badgeCount = 0;
@@ -193,7 +210,6 @@ exports.default = {
             });
             //전날 피드가 있고 오늘 작성한 피드를 삭제할 경우 -> 피드 패널티, 연속 피드 작성 실패
             if (userId == feed.user_id && todayFeed && yesterdayFeed) {
-                console.log(user.feed_count);
                 User_1.User.update({ is_feed_new: false, feed_count: user.feed_count - 1, feed_penalty: true, feed_success_count: 1 }, { where: { id: userId } });
                 Feed_1.Feed.destroy({ where: { id: id } });
             }

@@ -3,13 +3,14 @@ import axios from "axios";
 import qs from "qs";
 import { check, validationResult } from "express-validator";
 import config from "../config";
+import authService from "../service/authService";
 import { SignUpRequestDTO } from "../dto/Auth/SignUp/request/SignUpRequestDTO";
 import { SignInRequestDTO } from "../dto/Auth/SignIn/request/SignInRequestDTO";
 import { SocialLogInRequestDTO } from "../dto/Auth/Social/request/SocialLogInRequestDTO";
-import authService from "../service/authService";
-import verifyFCM from "../middleware/verifyToken";
 import { CheckEmailRequestDTO } from "../dto/Auth/Password/request/CheckEmailRequestDTO";
 import { ChangePasswordRequestDTO } from "../dto/Auth/Password/request/ChangePasswordRequestDTO";
+import auth from "../middleware/auth";
+import verifyFCM from "../middleware/verifyToken";
 import { serverError } from "../errors";
 
 const router = express.Router();
@@ -140,6 +141,16 @@ router.post("/nickname", verifyFCM, async (req, res) => {
       token: token
     };
     const result = await authService.nickname(requestDTO);
+    res.status(result.status).json(result);
+  } catch (err) {
+    console.log(err);
+    return serverError;
+  }
+})
+
+router.delete("/delete", auth, async (req, res) => {
+  try{
+    const result = await authService.delete(req.body.user.id);
     res.status(result.status).json(result);
   } catch (err) {
     console.log(err);

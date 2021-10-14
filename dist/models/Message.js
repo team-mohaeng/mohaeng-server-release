@@ -21,14 +21,19 @@ Message.init({
         type: sequelize_1.DataTypes.INTEGER,
         allowNull: false,
     },
-    course_id: {
-        type: sequelize_1.DataTypes.INTEGER,
+    ment: {
+        type: sequelize_1.DataTypes.STRING,
         allowNull: false,
     },
     date: {
         type: sequelize_1.DataTypes.DATE,
         allowNull: false,
+        defaultValue: sequelize_1.DataTypes.NOW,
     },
+    is_new: {
+        type: sequelize_1.DataTypes.BOOLEAN,
+        defaultValue: true,
+    }
 }, {
     modelName: 'Message',
     tableName: 'Message',
