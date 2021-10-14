@@ -13,10 +13,16 @@ import { Feed } from "../models/Feed";
 import { Badge } from "../models/Badge";
 import { Emoji } from "../models/Emoji";
 import { Report } from "../models/Report";
+import { Character } from "../models/Character";
+import { Skin } from "../models/Skin";
 import { levels }  from "../dummy/Level"
 import { courses } from '../dummy/Course';
+import { characterCards } from "../dummy/CharacterCard";
+import { skins } from "../dummy/Skin";
 import { getYear, getMonth, getYesterday, getDay } from "../formatter/mohaengDateFormatter";
 import { alreadyExsitEmoji, feedLengthCheck, notAuthorized, notExistFeedContent, notExistUser, notExistEmoji, notExistFeed, serverError, wrongEmojiId, alreadyReported, invalidReport } from "../errors";
+import { ConfigurationServicePlaceholders } from "aws-sdk/lib/config_service_placeholders";
+
 const sequelize = require("sequelize");
 const Op = sequelize.Op;
 
@@ -73,7 +79,7 @@ export default {
       }
 
       //만렙 달성
-      if (user.level == 40) {
+      if (user.level == 68) {
         happy = 0;
         user.affinity = 0;
       }
@@ -86,7 +92,7 @@ export default {
       //level의 happy지수보다 user의 해피지수가 높다면 levelup
       let levelUp = false;
       let totalHappy = levels[user.level-1].getFullHappy();
-      if (user.level < 40) {
+      if (user.level < 68) {
         if (user.affinity >= totalHappy) {
           levelUp = true;
           user.affinity = user.affinity - totalHappy;
@@ -97,11 +103,24 @@ export default {
       let levelUpResponse: LevelUpResponseDTO = {};
       //levelUp 했을 때만 아니면 null
       if (levelUp) {
-        User.update({ is_style_new: true }, { where: { id: id}})
+        let cardId = levels[user.level-2].getCardId();
+        let image;
+        //카드
+        if (cardId < 64) {
+          image = characterCards[cardId-1].getImageURL();
+          const characterType = cardId/9 + 1;
+          Character.create({ user_id: +id, character_type: characterType, character_card: cardId });
+        }
+        //스킨
+        else {
+          image = skins[cardId-64].getImageURL();
+          Skin.create({ id: cardId, user_id: +id });
+        }
         levelUpResponse = {
           level: user.level,
-          styleImg: ""
+          styleImg: image 
         }
+        User.update({ is_style_new: true }, { where: { id: id }})
       }
 
       let isBadgeNew = false;
@@ -224,7 +243,6 @@ export default {
 
       //전날 피드가 있고 오늘 작성한 피드를 삭제할 경우 -> 피드 패널티, 연속 피드 작성 실패
       if (userId == feed.user_id && todayFeed && yesterdayFeed) {
-        console.log(user.feed_count);
         User.update({ is_feed_new: false, feed_count: user.feed_count-1, feed_penalty: true, feed_success_count: 1 }, { where: { id: userId }});
         Feed.destroy({ where: { id: id }});
       }
