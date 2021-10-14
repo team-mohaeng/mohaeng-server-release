@@ -13,10 +13,16 @@ import { Feed } from "../models/Feed";
 import { Badge } from "../models/Badge";
 import { Emoji } from "../models/Emoji";
 import { Report } from "../models/Report";
+import { Character } from "../models/Character";
+import { Skin } from "../models/Skin";
 import { levels }  from "../dummy/Level"
 import { courses } from '../dummy/Course';
+import { characterCards } from "../dummy/CharacterCard";
+import { skins } from "../dummy/Skin";
 import { getYear, getMonth, getYesterday, getDay } from "../formatter/mohaengDateFormatter";
 import { alreadyExsitEmoji, feedLengthCheck, notAuthorized, notExistFeedContent, notExistUser, notExistEmoji, notExistFeed, serverError, wrongEmojiId, alreadyReported, invalidReport } from "../errors";
+import { ConfigurationServicePlaceholders } from "aws-sdk/lib/config_service_placeholders";
+
 const sequelize = require("sequelize");
 const Op = sequelize.Op;
 
@@ -73,7 +79,7 @@ export default {
       }
 
       //만렙 달성
-      if (user.level == 40) {
+      if (user.level == 68) {
         happy = 0;
         user.affinity = 0;
       }
@@ -86,7 +92,7 @@ export default {
       //level의 happy지수보다 user의 해피지수가 높다면 levelup
       let levelUp = false;
       let totalHappy = levels[user.level-1].getFullHappy();
-      if (user.level < 40) {
+      if (user.level < 68) {
         if (user.affinity >= totalHappy) {
           levelUp = true;
           user.affinity = user.affinity - totalHappy;
@@ -97,11 +103,46 @@ export default {
       let levelUpResponse: LevelUpResponseDTO = {};
       //levelUp 했을 때만 아니면 null
       if (levelUp) {
-        User.update({ is_style_new: true }, { where: { id: id}})
+        let cardId = levels[user.level-2].getCardId();
+        console.log(cardId);
+        let image;
+        //카드
+        if (cardId < 64) {
+          image = characterCards[cardId-1].getImageURL();
+          let characterType;
+          if (cardId<10) {
+            characterType = 1;
+          }
+          else if (cardId>9 && cardId<19) {
+            characterType = 2;
+          }
+          else if (cardId>18 && cardId<28) {
+            characterType = 3;
+          }
+          else if (cardId>27 && cardId<37) {
+            characterType = 4;
+          }
+          else if (cardId>36 && cardId<46) {
+            characterType = 5;
+          }
+          else if (cardId>45 && cardId<55) {
+            characterType = 6;
+          }
+          else if (cardId>54 && cardId<64) {
+            characterType = 7;
+          }
+          Character.create({ user_id: +id, character_type: characterType, character_card: cardId });
+        }
+        //스킨
+        else {
+          image = skins[cardId-64].getImageURL();
+          Skin.create({ id: cardId, user_id: +id });
+        }
         levelUpResponse = {
           level: user.level,
-          styleImg: ""
+          styleImg: image 
         }
+        User.update({ is_style_new: true }, { where: { id: id }})
       }
 
       let isBadgeNew = false;
