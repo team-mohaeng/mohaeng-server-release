@@ -1,5 +1,5 @@
 import express from "express";
-import { SetCharacterRequestDTO } from "../dto/Character/request/SetCharacterRequestDTO";
+import { SetCharacterRequestDTO } from "../dto/Character/Set/request/SetCharacterRequestDTO";
 import characterService from "../service/characterService";
 import auth from "../middleware/auth";
 
@@ -13,6 +13,11 @@ router.put("/", auth, async (req, res) => {
     characterCard: characterCard
   };
   const result = await characterService.setCharacter(req.body.user.id, requestDTO);
+  res.status(result.status).json(result);
+})
+
+router.get("/", auth, async (req, res) => {
+  const result = await characterService.getCharacter(req.body.user.id);
   res.status(result.status).json(result);
 })
 
