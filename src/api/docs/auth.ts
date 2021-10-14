@@ -178,3 +178,39 @@
  *  "message": "서버 에러입니다. 서버 파트에게 문의해주세요 *^^*"
  * }
  */
+
+/**
+ * @api {delete} /api/delete 회원탈퇴
+ * 
+ * @apiVersion 1.0.0
+ * @apiName deleteAccount
+ * @apiGroup 로그인/회원가입
+ * 
+ * * @apiHeaderExample {json} Header-Example:
+ * {
+ *  "Content-Type": "application/json"
+ *  "Bearer": "jwt"
+ * }
+ *
+ * @apiSuccess {string} message
+ * 
+ * @apiSuccessExample {json} Success-Response:
+ * 200 OK
+ * {
+ *  "status": 200,
+ *  "message": "계정을 삭제하였습니다."
+ * }
+ * 
+ * @apiErrorExample Error-Response:
+ * 401 유효하지 않은 유저
+ * {
+ *  "status": 401,
+ *  "message": "유저가 존재하지 않습니다."
+ * }
+ * 
+ * 500 서버 에러
+ * {
+ *  "status": 500,
+ *  "message": "서버 에러입니다. 서버 파트에게 문의해주세요 *^^*"
+ * }
+ */

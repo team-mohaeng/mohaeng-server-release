@@ -114,6 +114,54 @@ define({ "api": [
     "groupTitle": "로그인/회원가입"
   },
   {
+    "type": "delete",
+    "url": "/api/delete",
+    "title": "회원탈퇴",
+    "version": "1.0.0",
+    "name": "deleteAccount",
+    "group": "로그인/회원가입",
+    "header": {
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\"\n \"Bearer\": \"jwt\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": false,
+            "field": "message",
+            "description": ""
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "200 OK\n{\n \"status\": 200,\n \"message\": \"계정을 삭제하였습니다.\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "401 유효하지 않은 유저\n{\n \"status\": 401,\n \"message\": \"유저가 존재하지 않습니다.\"\n}\n\n500 서버 에러\n{\n \"status\": 500,\n \"message\": \"서버 에러입니다. 서버 파트에게 문의해주세요 *^^*\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/api/docs/auth.ts",
+    "groupTitle": "로그인/회원가입"
+  },
+  {
     "type": "get",
     "url": "/api/kakao",
     "title": "카카오 로그인",
@@ -881,6 +929,68 @@ define({ "api": [
     },
     "filename": "src/api/docs/feed.ts",
     "groupTitle": "안부"
+  },
+  {
+    "type": "get",
+    "url": "/api/message",
+    "title": "푸시 알람 조회",
+    "version": "1.0.0",
+    "name": "Chatting",
+    "group": "채팅",
+    "header": {
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\",\n \"Bearer\": \"{jwt}\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "date",
+            "description": "<p>알람 받은 날짜</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String[]",
+            "optional": false,
+            "field": "message",
+            "description": "<p>푸시 알람 멘트 배열</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Boolean",
+            "optional": false,
+            "field": "isNew",
+            "description": "<p>유저가 확인했는지 여부</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "200 알람을 받지 않은 상태\n{\n \"status\": 200,\n \"data\": {\n   \"messages\": {\n     \"date\": \"2021-10-12T15:00:00.000Z\",\n     \"message\" : [],\n     \"isNew\": false\n   }\n }\n}\n\n200 알람을 받은 상태\n{\n \"status\": 200,\n \"data\": {\n   \"messages\": {\n     \"date\": \"2021-10-12T15:00:00.000Z\",\n     \"message\" : [\n       \"모행, 오늘 어땠어?\",\n       \"많이 힘들었구나...ㅜㅜ\",\n       \"챌린지 인증하고 푹 자자!\"\n     ],\n     \"isNew\": false\n   }\n }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "401 존재하지 않는 유저\n{\n \"status\": 401,\n \"message\": \"유저가 존재하지 않습니다.\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/api/docs/message.ts",
+    "groupTitle": "채팅"
   },
   {
     "type": "put",
@@ -1972,7 +2082,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "200 코스 진행 전\n{\n \"status\": 200,\n \"data\": {\n   \"nicknema\": \"모행\",\n   \"level\": 15,\n   \"happy\": 24,\n   \"fullHappy\": 90,\n   \"characterLottie\": \"bear.url\",\n   \"characterSkin\": \"image.url\",\n   \"isStyleNew\": false,\n   \"isBadgeNew\": false,\n   course: {},\n }\n}\n\n200 코스 진행 중\n{\n \"status\": 200,\n \"data\": {\n   \"nicknema\": \"모행\",\n   \"level\": 15,\n   \"happy\": 24,\n   \"fullHappy\": 90,\n   \"characterLottie\": \"bear.url\",\n   \"characterSkin\": \"image.url\",\n   \"isStyleNew\": false,\n   \"isBadgeNew\": false,\n   course: {\n     \"challengeTitle\": \"하늘 사진 찍기\",\n     \"percent\": 14,\n   },\n }\n}",
+          "content": "200 코스 진행 전\n{\n \"status\": 200,\n \"data\": {\n   \"nicknema\": \"모행\",\n   \"level\": 15,\n   \"happy\": 24,\n   \"fullHappy\": 90,\n   \"characterLottie\": \"bear.url\",\n   \"characterSkin\": \"image.url\",\n   \"isStyleNew\": false,\n   \"isBadgeNew\": false,\n   \"course\": {},\n }\n}\n\n200 코스 진행 중\n{\n \"status\": 200,\n \"data\": {\n   \"nicknema\": \"모행\",\n   \"level\": 15,\n   \"happy\": 24,\n   \"fullHappy\": 90,\n   \"characterLottie\": \"bear.url\",\n   \"characterSkin\": \"image.url\",\n   \"isStyleNew\": false,\n   \"isBadgeNew\": false,\n   \"course\": {\n     \"challengeTitle\": \"하늘 사진 찍기\",\n     \"percent\": 14,\n   },\n }\n}",
           "type": "json"
         }
       ]
