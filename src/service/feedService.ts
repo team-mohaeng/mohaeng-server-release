@@ -104,33 +104,11 @@ export default {
       //levelUp 했을 때만 아니면 null
       if (levelUp) {
         let cardId = levels[user.level-2].getCardId();
-        console.log(cardId);
         let image;
         //카드
         if (cardId < 64) {
           image = characterCards[cardId-1].getImageURL();
-          let characterType;
-          if (cardId<10) {
-            characterType = 1;
-          }
-          else if (cardId>9 && cardId<19) {
-            characterType = 2;
-          }
-          else if (cardId>18 && cardId<28) {
-            characterType = 3;
-          }
-          else if (cardId>27 && cardId<37) {
-            characterType = 4;
-          }
-          else if (cardId>36 && cardId<46) {
-            characterType = 5;
-          }
-          else if (cardId>45 && cardId<55) {
-            characterType = 6;
-          }
-          else if (cardId>54 && cardId<64) {
-            characterType = 7;
-          }
+          const characterType = cardId/9 + 1;
           Character.create({ user_id: +id, character_type: characterType, character_card: cardId });
         }
         //스킨
@@ -265,7 +243,6 @@ export default {
 
       //전날 피드가 있고 오늘 작성한 피드를 삭제할 경우 -> 피드 패널티, 연속 피드 작성 실패
       if (userId == feed.user_id && todayFeed && yesterdayFeed) {
-        console.log(user.feed_count);
         User.update({ is_feed_new: false, feed_count: user.feed_count-1, feed_penalty: true, feed_success_count: 1 }, { where: { id: userId }});
         Feed.destroy({ where: { id: id }});
       }
