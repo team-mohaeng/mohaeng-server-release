@@ -1413,6 +1413,75 @@ define({ "api": [
     "groupTitle": "챌린지"
   },
   {
+    "type": "get",
+    "url": "/api/character",
+    "title": "캐릭터 조회",
+    "version": "1.0.0",
+    "name": "getCharacter",
+    "group": "캐릭터",
+    "header": {
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\",\n \"Bearer\": \"{jwt}\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "currentCharacter",
+            "description": "<p>자세한 속성은 Response를 참고해주세요 !</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "currentSkin",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "Object[]",
+            "optional": false,
+            "field": "characters",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "Object[]",
+            "optional": false,
+            "field": "skins",
+            "description": ""
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "200 OK 캐릭터 조회\n{\n \"status\": 200,\n \"data\": {\n   \"currentCharacter\": {\n     \"id\": 1,\n     \"image\": \"image.url\"\n   },\n   \"currentSkin\": {\n     \"id\": 64,\n     \"image\": \"image.url\"\n   },\n   \"characters\": [\n     {\n       \"type\": 1,\n       \"cards\": [\n         {\n           \"id\": 1,\n           \"image\": \"image.url\",\n           \"hasCard\": true,\n           \"isNew\": false\n         },\n         {\n           \"id\": 2,\n           \"image\": \"image.url\",\n           \"hasCard\": true,\n           \"isNew\": false\n         },\n         {\n           \"id\": 3,\n           \"image\": \"\",\n           \"hasCard\": false,\n           \"isNew\": false\n         },\n       ...\n       ]\n     },\n     {\n       \"type\": 2,\n       \"cards\": [\n         {\n           \"id\": 10,\n           \"image\": \"\",\n           \"hasCard\": false,\n           \"isNew\": false\n         },\n         {\n           \"id\": 11,\n           \"image\": \"image.url\",\n           \"hasCard\": true,\n           \"isNew\": false\n         },\n         {\n           \"id\": 12,\n           \"image\": \"\",\n           \"hasCard\": false,\n           \"isNew\": false\n         },\n       ...\n       ]\n     },\n    ...     \n   ],\n   \"skins\": [\n     {\n       \"id\": 64,\n       \"image\": \"image.url\",\n       \"hasSkin\": true\n     },\n     {\n       \"id\": 65,\n       \"image\": \"image.url\",\n       \"hasSkin\": true\n     },\n     {\n       \"id\": 66,\n       \"image\": \"\",\n       \"hasSkin\": false\n     },\n    ...\n   ]\n }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "401 존재하지 않는 유저\n{\n \"status\": 401,\n \"message\": \"유저가 존재하지 않습니다.\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/api/docs/character.ts",
+    "groupTitle": "캐릭터"
+  },
+  {
     "type": "put",
     "url": "/api/character",
     "title": "캐릭터 변경",
