@@ -17,6 +17,7 @@ import { CheckEmailResponseDTO } from '../dto/Auth/Password/response/CheckEmailR
 import { SocialLogInResponseDTO } from '../dto/Auth/Social/response/SocialLogInResponseDTO';
 import { SocialLogInRequestDTO } from '../dto/Auth/Social/request/SocialLogInRequestDTO';
 import { serverError, notExistUid, alreadyExistEmail, nicknameLengthCheck, alreadyExistNickname, notMatchSignIn, notExistUser, invalidEmail } from "../errors";
+import { DeleteAccountResponseDTO } from '../dto/Auth/Delete/DeleteAccountResponse';
 
 
 export default {
@@ -257,6 +258,27 @@ export default {
         }
       }
       
+      return responseDTO;
+
+    } catch (err) {
+      console.error(err);
+      return serverError;
+    }
+  },
+  delete: async (id: string) => {
+    try{
+      const user = await User.findOne({ attributes: ['id'], where: { id: id }});
+      if (!user) {
+        return notExistUser;
+      }
+
+      User.destroy({ where: { id: id }});
+
+      const responseDTO: DeleteAccountResponseDTO = {
+        status: 200,
+        message: "계정을 삭제하였습니다."
+      }
+
       return responseDTO;
 
     } catch (err) {
