@@ -9,6 +9,7 @@ const qs_1 = __importDefault(require("qs"));
 const express_validator_1 = require("express-validator");
 const config_1 = __importDefault(require("../config"));
 const authService_1 = __importDefault(require("../service/authService"));
+const auth_1 = __importDefault(require("../middleware/auth"));
 const verifyToken_1 = __importDefault(require("../middleware/verifyToken"));
 const errors_1 = require("../errors");
 const router = express_1.default.Router();
@@ -116,6 +117,16 @@ router.post("/nickname", verifyToken_1.default, async (req, res) => {
             token: token
         };
         const result = await authService_1.default.nickname(requestDTO);
+        res.status(result.status).json(result);
+    }
+    catch (err) {
+        console.log(err);
+        return errors_1.serverError;
+    }
+});
+router.delete("/delete", auth_1.default, async (req, res) => {
+    try {
+        const result = await authService_1.default.delete(req.body.user.id);
         res.status(result.status).json(result);
     }
     catch (err) {

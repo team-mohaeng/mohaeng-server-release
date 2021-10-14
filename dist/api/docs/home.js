@@ -35,7 +35,7 @@
  *    "characterSkin": "image.url",
  *    "isStyleNew": false,
  *    "isBadgeNew": false,
- *    course: {},
+ *    "course": {},
  *  }
  * }
  *
@@ -51,7 +51,7 @@
  *    "characterSkin": "image.url",
  *    "isStyleNew": false,
  *    "isBadgeNew": false,
- *    course: {
+ *    "course": {
  *      "challengeTitle": "하늘 사진 찍기",
  *      "percent": 14,
  *    },
