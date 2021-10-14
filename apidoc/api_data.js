@@ -240,6 +240,120 @@ define({ "api": [
     "groupTitle": "로그인/회원가입"
   },
   {
+    "type": "post",
+    "url": "/api/signin",
+    "title": "로그인",
+    "version": "1.0.0",
+    "name": "signin",
+    "group": "로그인/회원가입",
+    "header": {
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\"\n \"token\": \"fcm token\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "parameter": {
+      "examples": [
+        {
+          "title": "Request-Example:",
+          "content": "{\n \"email\": \"mohaeng_official@naver.com\"\n \"password\": \"mohaengmohaeng\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": false,
+            "field": "jwt",
+            "description": ""
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "200 OK\n{\n \"status\": 200,\n \"data\": {\n   \"jwt\": \"jwt 토큰\"\n }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "404 잘못된 이메일 형식\n{\n \"status\": 404,\n \"message\": \"이메일 형식이 올바르지 않습니다.\"\n}\n\n403 토큰 누락\n{\n \"status\": 403,\n \"message\": \"토큰이 없습니다. 토큰을 함께 보내주세요.\"\n}\n\n403 토큰 유효성 검증 실패\n{\n \"status\": 403,\n \"message\": \"유효성 인증에 실패하였습니다.\"\n}\n\n500 서버 에러\n{\n \"status\": 500,\n \"message\": \"서버 에러입니다. 서버 파트에게 문의해주세요 *^^*\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/api/docs/auth.ts",
+    "groupTitle": "로그인/회원가입"
+  },
+  {
+    "type": "post",
+    "url": "/api/signup",
+    "title": "회원가입",
+    "version": "1.0.0",
+    "name": "signup",
+    "group": "로그인/회원가입",
+    "header": {
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\"\n \"token\": \"fcm token\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "parameter": {
+      "examples": [
+        {
+          "title": "Request-Example:",
+          "content": "{\n \"email\": \"mohaeng_official@naver.com\"\n \"password\": \"mohaengmohaeng\"\n \"nickname\": \"모행\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": false,
+            "field": "jwt",
+            "description": ""
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "200 OK\n{\n \"status\": 200,\n \"data\": {\n   \"jwt\": \"jwt 토큰\"\n }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "404 잘못된 이메일 형식\n{\n \"status\": 404,\n \"message\": \"이메일 형식이 올바르지 않습니다.\"\n}\n\n404 닉네임 글자 제한\n{\n \"status\": 404,\n \"message\": \"닉네임은 1-6글자 이내로 작성해주세요\"\n}\n\n404 닉네임 중복\n{\n \"status\": 404,\n \"message\": \"이미 사용 중인 닉네임입니다.\"\n}\n\n404 비밀번호 영문, 숫자 미포함\n{\n \"status\": 404,\n \"message\": \"영문, 숫자를 모두 포함하여 입력해주세요.\"\n}\n\n404 비밀번호 글자수 제한\n{\n \"status\": 404,\n \"message\": \"8-16자의 비밀번호를 입력해주세요.\"\n}\n\n403 토큰 누락\n{\n \"status\": 403,\n \"message\": \"토큰이 없습니다. 토큰을 함께 보내주세요.\"\n}\n\n403 토큰 유효성 검증 실패\n{\n \"status\": 403,\n \"message\": \"유효성 인증에 실패하였습니다.\"\n}\n\n500 서버 에러\n{\n \"status\": 500,\n \"message\": \"서버 에러입니다. 서버 파트에게 문의해주세요 *^^*\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/api/docs/auth.ts",
+    "groupTitle": "로그인/회원가입"
+  },
+  {
     "type": "put",
     "url": "/api/badge",
     "title": "달성한 뱃지 조회",
