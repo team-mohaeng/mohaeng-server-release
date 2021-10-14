@@ -57,6 +57,7 @@ app.use("/api/today", require("./api/challenge"));
 app.use("/api/character", require("./api/character"));
 app.use("/api/badge", require("./api/badge"));
 app.use("/api/home", require("./api/home"));
+app.use("/api/message", require("./api/message"));
 
 // error handler
 app.use(function (err, req, res, next) {
