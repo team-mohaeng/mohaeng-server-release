@@ -1,4 +1,5 @@
 import { User } from "../models/User";
+import { Feed } from "../models/Feed";
 import { ChangeNicknameRequestDTO } from "../dto/Profile/Nickname/request/ChangeNicknameRequestDTO";
 import { ChangeNicknameResponseDTO } from "../dto/Profile/Nickname/response/ChangeNicknameResponseDTO";
 import { notExistUser, nicknameLengthCheck, sameNickname, alreadyExistNickname, serverError } from "../errors";
@@ -24,16 +25,22 @@ export default {
         return sameNickname;
       }
       
-      const hasNickname = await User.findOne({ attributes: ['nickname'], where: { nickname: nickname } });
+      const hasNickname = await User.findOne({ attributes: ['nickname'], where: { nickname: nickname }});
       if (hasNickname) {
         return alreadyExistNickname;
       }
       
-      await User.update({
+      User.update({
         nickname: nickname
       }, {
-        where: {id: id}
+        where: { id: id }
       });
+
+      Feed.update({
+        nickname: nickname
+      }, {
+        where: { nickname: user.nickname }
+      })
       
       const responseDTO: ChangeNicknameResponseDTO = {
         status: 200,
