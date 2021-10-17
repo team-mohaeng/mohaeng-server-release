@@ -1,9 +1,9 @@
 import { Badge } from "../class/Badge";
 
 export const courseBadges = [
-  new Badge(1, "내 건강 챙기미", "건강 코스 3개", "https://mohaeng.s3.ap-northeast-2.amazonaws.com/KakaoTalk_20210831_225938643.jpg"),
-  new Badge(2, "아이마이미마인", "나돌봄 코스 3개", "https://mohaeng.s3.ap-northeast-2.amazonaws.com/KakaoTalk_20210831_225938643.jpg"),
-  new Badge(3, "바른생활 모범생", "생활습관 코스 3개", "https://mohaeng.s3.ap-northeast-2.amazonaws.com/KakaoTalk_20210831_225938643.jpg"),
+  new Badge(1, "내 건강 챙기미", "건강 코스 3개", ""),
+  new Badge(2, "아이마이미마인", "나돌봄 코스 3개", ""),
+  new Badge(3, "바른생활 모범생", "생활습관 코스 3개", ""),
   new Badge(4, "대담한 일상탈출", "일탈 코스 3개", ""),
   new Badge(5, "추억은 방울방울", "추억 코스 3개", ""),
   new Badge(6, "진정한 사랑꾼", "사랑 코스 3개", ""),
@@ -17,7 +17,7 @@ export const challengeBadges = [
 ]
 
 export const challengeCountBadges = [
-  new Badge(11, "모행 홀릭 챌린지", "챌린지 연속 수행 21개", ""),
+  new Badge(11, "모행 홀릭 챌린지", "코스 연속 3개", ""),
 ]
 
 export const feedBadges = [

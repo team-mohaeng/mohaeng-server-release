@@ -1,4 +1,4 @@
-import { CharacterCard } from "./CharacterCard";
+import { CharacterCard } from './CharacterCard';
 
 export class Character {
   private type: number;
