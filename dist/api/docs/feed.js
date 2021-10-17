@@ -259,7 +259,8 @@
  * 200 OK 내 서랍장 조회
  * {
  *  "status": 200,
- *  "data": [
+ *  "data": {
+ *    "feeds": [
  *    {
  *      "postId": 131,
  *      "course": "초보 사진가",
@@ -304,6 +305,7 @@
  *      "isDelete": true
  *    }
  *   ]
+ *  }
  * }
  *
  * @apiErrorExample Error-Response:
@@ -356,10 +358,11 @@
  * 200 OK 커뮤니티 조회
  * {
  *  "status": 200,
- *  "isNew": false,
- *  "hasFeed": 2,
- *  "userCount": 0,
- *  "data": [
+ *  "data": {
+ *    "isNew": false,
+ *    "hasFeed": 2,
+ *    "userCount": 0,
+ *    "feeds": [
  *    {
  *      "postId": 135,
  *      "course": "중급 사진가",
@@ -404,6 +407,7 @@
  *      "isDelete": true
  *    }
  *   ]
+ *  }
  * }
  *
  * @apiErrorExample Error-Response:

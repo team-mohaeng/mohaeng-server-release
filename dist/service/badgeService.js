@@ -13,7 +13,7 @@ exports.default = {
             }
             //뱃지 하나로 합치기
             const badges = Badge_2.courseBadges.concat(Badge_2.challengeBadges, Badge_2.challengeCountBadges, Badge_2.feedBadges, Badge_2.stickerBadges);
-            const badgeResponse = new Array();
+            const badgeArray = new Array();
             const userBadges = await Badge_1.Badge.findAll({ attributes: ["id"], where: { user_id: userId } });
             //뱃지 id만 담는 배열
             let badgeIdArray = new Array();
@@ -29,7 +29,7 @@ exports.default = {
                         image: badge.getImageURL(),
                         hasBadge: false
                     };
-                    badgeResponse.push(badgeInfo);
+                    badgeArray.push(badgeInfo);
                 });
             }
             else {
@@ -42,7 +42,7 @@ exports.default = {
                             image: badge.getImageURL(),
                             hasBadge: true
                         };
-                        badgeResponse.push(badgeInfo);
+                        badgeArray.push(badgeInfo);
                     }
                     else {
                         let badgeInfo = {
@@ -52,14 +52,17 @@ exports.default = {
                             image: badge.getImageURL(),
                             hasBadge: false
                         };
-                        badgeResponse.push(badgeInfo);
+                        badgeArray.push(badgeInfo);
                     }
                 });
             }
             User_1.User.update({ is_badge_new: false }, { where: { id: userId } });
+            const badgeResponse = {
+                badges: badgeArray
+            };
             const responseDTO = {
                 status: 200,
-                badges: badgeResponse
+                data: badgeResponse
             };
             return responseDTO;
         }

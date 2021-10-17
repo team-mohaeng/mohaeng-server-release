@@ -26,7 +26,7 @@ exports.default = (req, next) => {
     const token = req.header("token");
     // Check if not token
     if (!token) {
-        return errors_1.notGetToken;
+        return errors_1.notExistToken;
     }
     // Verify token
     admin
@@ -38,7 +38,7 @@ exports.default = (req, next) => {
     })
         .catch((error) => {
         console.log(error);
-        return errors_1.expiredToken;
+        return errors_1.invalidToken;
     });
 };
 //# sourceMappingURL=verifyToken.js.map
