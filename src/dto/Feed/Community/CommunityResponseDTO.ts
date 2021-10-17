@@ -1,9 +1,13 @@
 export interface CommunityResponseDTO {
   status: number;
+  data: CommunityDTO;
+}
+
+export interface CommunityDTO {
   isNew: boolean;
   hasFeed: number;
   userCount: number;
-  data: FeedDTO[];
+  feeds: FeedDTO[];
 }
 
 export interface FeedDTO {
