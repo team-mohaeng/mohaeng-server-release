@@ -2,7 +2,6 @@ import express from "express";
 import { SetCharacterRequestDTO } from "../dto/Character/Set/request/SetCharacterRequestDTO";
 import characterService from "../service/characterService";
 import auth from "../middleware/auth";
-import { invalidParameter } from "../errors";
 
 const router = express.Router();
 
@@ -17,8 +16,8 @@ router.put("/", auth, async (req, res) => {
   res.status(result.status).json(result);
 })
 
-router.get("/:client", auth, async (req, res) => {
-  const result = await characterService.getCharacter(req.body.user.id, req.params.client);
+router.get("/", auth, async (req, res) => {
+  const result = await characterService.getCharacter(req.body.user.id);
   res.status(result.status).json(result);
 })
 
