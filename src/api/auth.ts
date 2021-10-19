@@ -133,7 +133,7 @@ router.get("/kakao/callback", async (req, res) => {
   res.status(result.status).json(result);
 })
 
-router.post("/nickname", verifyFCM, async (req, res) => {
+router.post("/nickname", async (req, res) => {
   try{
     const { nickname, token } = req.body;
     const requestDTO: SocialLogInRequestDTO = {
