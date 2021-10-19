@@ -91,7 +91,7 @@ exports.default = {
                 }
                 //스킨
                 else {
-                    image = Skin_2.skins[cardId - 64].getImageURL();
+                    image = Skin_2.iosSkins[cardId - 64].getImageURL();
                     Skin_1.Skin.create({ id: cardId, user_id: +id });
                 }
                 levelUpResponse = {
