@@ -7,7 +7,6 @@ const errors_1 = require("../errors");
 const Character_2 = require("../dummy/Character");
 const CharacterCard_1 = require("../dummy/CharacterCard");
 const Skin_2 = require("../dummy/Skin");
-const Skin_3 = require("../dummy/Skin");
 exports.default = {
     setCharacter: async (userId, dto) => {
         try {
@@ -42,11 +41,8 @@ exports.default = {
             return errors_1.serverError;
         }
     },
-    getCharacter: async (id, client) => {
+    getCharacter: async (id) => {
         try {
-            if (client != "aos" && client != "ios") {
-                return errors_1.invalidParameter;
-            }
             const user = await User_1.User.findOne({ attributes: ["character_card", "character_skin"], where: { id: id } });
             if (!user) {
                 return errors_1.notExistUser;
@@ -57,19 +53,10 @@ exports.default = {
                 image: CharacterCard_1.characterCards[user.character_card - 1].getImageURL()
             };
             //현재스킨
-            let currentSkin;
-            if (client == "ios") {
-                currentSkin = {
-                    id: user.character_skin,
-                    image: Skin_2.iosSkins[user.character_skin - 64].getImageURL()
-                };
-            }
-            else {
-                currentSkin = {
-                    id: user.character_skin,
-                    image: Skin_3.aosSkins[user.character_skin - 64].getImageURL()
-                };
-            }
+            const currentSkin = {
+                id: user.character_skin,
+                image: Skin_2.skins[user.character_skin - 64].getImageURL()
+            };
             //캐릭터
             const characterArray = new Array(); //캐릭터 타입, 카드 배열
             let cardArray = new Array(); //캐릭터 카드 배열
@@ -117,48 +104,25 @@ exports.default = {
                 skinIdArray.push(userSkin.id);
             });
             const skinArray = new Array();
-            if (client == "ios") {
-                Skin_2.iosSkins.forEach(skin => {
-                    //사용자가 스킨을 가지고 있는 경우
-                    if (skinIdArray.includes(skin.getId())) {
-                        const skinInfo = {
-                            id: skin.getId(),
-                            image: skin.getImageURL(),
-                            hasSkin: true,
-                        };
-                        skinArray.push(skinInfo);
-                    }
-                    else {
-                        const skinInfo = {
-                            id: skin.getId(),
-                            image: "",
-                            hasSkin: false,
-                        };
-                        skinArray.push(skinInfo);
-                    }
-                });
-            }
-            else {
-                Skin_3.aosSkins.forEach(skin => {
-                    //사용자가 스킨을 가지고 있는 경우
-                    if (skinIdArray.includes(skin.getId())) {
-                        const skinInfo = {
-                            id: skin.getId(),
-                            image: skin.getImageURL(),
-                            hasSkin: true,
-                        };
-                        skinArray.push(skinInfo);
-                    }
-                    else {
-                        const skinInfo = {
-                            id: skin.getId(),
-                            image: "",
-                            hasSkin: false,
-                        };
-                        skinArray.push(skinInfo);
-                    }
-                });
-            }
+            Skin_2.skins.forEach(skin => {
+                //사용자가 스킨을 가지고 있는 경우
+                if (skinIdArray.includes(skin.getId())) {
+                    const skinInfo = {
+                        id: skin.getId(),
+                        image: skin.getImageURL(),
+                        hasSkin: true,
+                    };
+                    skinArray.push(skinInfo);
+                }
+                else {
+                    const skinInfo = {
+                        id: skin.getId(),
+                        image: "",
+                        hasSkin: false,
+                    };
+                    skinArray.push(skinInfo);
+                }
+            });
             const CharacterResponse = {
                 currentCharacter: currentCharacter,
                 currentSkin: currentSkin,

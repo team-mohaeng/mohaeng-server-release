@@ -47,7 +47,7 @@
  * }
  */
 /**
- * @api {get} /api/character/:client 캐릭터 조회
+ * @api {get} /api/character 캐릭터 조회
  *
  * @apiVersion 1.0.0
  * @apiName getCharacter

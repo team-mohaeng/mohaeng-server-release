@@ -17,8 +17,8 @@ router.put("/", auth_1.default, async (req, res) => {
     const result = await characterService_1.default.setCharacter(req.body.user.id, requestDTO);
     res.status(result.status).json(result);
 });
-router.get("/:client", auth_1.default, async (req, res) => {
-    const result = await characterService_1.default.getCharacter(req.body.user.id, req.params.client);
+router.get("/", auth_1.default, async (req, res) => {
+    const result = await characterService_1.default.getCharacter(req.body.user.id);
     res.status(result.status).json(result);
 });
 module.exports = router;
