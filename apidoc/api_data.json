@@ -1423,7 +1423,7 @@
   },
   {
     "type": "get",
-    "url": "/api/character",
+    "url": "/api/character/:client",
     "title": "캐릭터 조회",
     "version": "1.0.0",
     "name": "getCharacter",
