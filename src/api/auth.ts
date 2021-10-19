@@ -12,6 +12,7 @@ import { ChangePasswordRequestDTO } from "../dto/Auth/Password/request/ChangePas
 import auth from "../middleware/auth";
 import verifyFCM from "../middleware/verifyToken";
 import { serverError } from "../errors";
+import kakao from "../middleware/kakao";
 
 const router = express.Router();
 
@@ -121,6 +122,17 @@ router.delete("/delete", auth, async (req, res) => {
     return serverError;
   }
 })
+
+router.post("/kakao", kakao, async (req, res) => {
+  try{
+    const result = await authService.kakao();
+    res.status(result.status).json(result);
+  } catch (err) {
+    console.log(err);
+    return serverError;
+  }
+})
+
 
 module.exports = router;
 
