@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const User_1 = require("../models/User");
+const Feed_1 = require("../models/Feed");
 const errors_1 = require("../errors");
 const CompleteCourse_1 = require("../models/CompleteCourse");
 const Course_1 = require("../dummy/Course");
@@ -22,10 +23,15 @@ exports.default = {
             if (hasNickname) {
                 return errors_1.alreadyExistNickname;
             }
-            await User_1.User.update({
+            User_1.User.update({
                 nickname: nickname
             }, {
                 where: { id: id }
+            });
+            Feed_1.Feed.update({
+                nickname: nickname
+            }, {
+                where: { nickname: user.nickname }
             });
             const responseDTO = {
                 status: 200,

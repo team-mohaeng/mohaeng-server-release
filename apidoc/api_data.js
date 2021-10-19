@@ -162,12 +162,21 @@ define({ "api": [
     "groupTitle": "로그인/회원가입"
   },
   {
-    "type": "get",
+    "type": "post",
     "url": "/api/kakao",
-    "title": "카카오 로그인",
+    "title": "카카오 토큰 유효성 검사",
     "version": "1.0.0",
     "name": "kakaoLogin",
     "group": "로그인/회원가입",
+    "header": {
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Bearer\": \"카카오 토큰\"\n}",
+          "type": "json"
+        }
+      ]
+    },
     "success": {
       "fields": {
         "Success 200": [
@@ -183,7 +192,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "200 OK\n{\n \"status\": 200,\n \"message\": \"토큰 인증을 완료하였습니다.\"\n}\n\n500 서버 에러\n{\n \"status\": 500,\n \"message\": \"서버 에러입니다. 서버 파트에게 문의해주세요 *^^*\"\n}",
+          "content": "200 OK\n{\n \"status\": 200,\n \"message\": \"토큰 인증을 완료하였습니다.\"\n}",
           "type": "json"
         }
       ]

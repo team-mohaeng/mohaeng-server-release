@@ -134,11 +134,16 @@
  * }
  */
 /**
- * @api {get} /api/kakao 카카오 로그인
+ * @api {post} /api/kakao 카카오 토큰 유효성 검사
  *
  * @apiVersion 1.0.0
  * @apiName kakaoLogin
  * @apiGroup 로그인/회원가입
+ *
+ * @apiHeaderExample {json} Header-Example:
+ * {
+ *  "Bearer": "카카오 토큰"
+ * }
  *
  * @apiSuccess {String} message
  *
@@ -147,12 +152,6 @@
  * {
  *  "status": 200,
  *  "message": "토큰 인증을 완료하였습니다."
- * }
- *
- * 500 서버 에러
- * {
- *  "status": 500,
- *  "message": "서버 에러입니다. 서버 파트에게 문의해주세요 *^^*"
  * }
  */
 /**
