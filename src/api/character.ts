@@ -18,11 +18,7 @@ router.put("/", auth, async (req, res) => {
 })
 
 router.get("/:client", auth, async (req, res) => {
-  const client = req.params.client;
-  if (client != "aos" && client != "ios") {
-    return invalidParameter;  
-  }
-  const result = await characterService.getCharacter(req.body.user.id, client);
+  const result = await characterService.getCharacter(req.body.user.id, req.params.client);
   res.status(result.status).json(result);
 })
 

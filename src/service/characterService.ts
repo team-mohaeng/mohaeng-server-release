@@ -3,7 +3,7 @@ import { Skin } from "../models/Skin";
 import { Character } from "../models/Character";
 import { SetCharacterRequestDTO } from "../dto/Character/Set/request/SetCharacterRequestDTO";
 import { SetCharacterResponseDTO } from "../dto/Character/Set/response/SetCharacterResponseDTO";
-import { notExistUser, notExistSkin, notExistCharacter, serverError } from "../errors";
+import { notExistUser, notExistSkin, notExistCharacter, invalidParameter, serverError } from "../errors";
 import { GetCharacterResponseDTO, CharacterResponseDTO, CurrentCharacterDTO, CurrentSkinDTO, CharacterDTO, cardDTO, SkinDTO } from "../dto/Character/Get/GetCharacterResponseDTO";
 import { characters } from "../dummy/Character";
 import { characterCards } from "../dummy/CharacterCard";
@@ -50,6 +50,9 @@ export default {
   },
   getCharacter: async (id: string, client: string) => {
     try{
+      if (client != "aos" && client != "ios") {
+        return invalidParameter;  
+      }
       const user = await User.findOne({ attributes: ["character_card", "character_skin"], where: { id: id }});
       if (!user) {
         return notExistUser;
