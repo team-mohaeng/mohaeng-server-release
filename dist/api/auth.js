@@ -4,14 +4,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const axios_1 = __importDefault(require("axios"));
-const qs_1 = __importDefault(require("qs"));
 const express_validator_1 = require("express-validator");
-const config_1 = __importDefault(require("../config"));
 const authService_1 = __importDefault(require("../service/authService"));
 const auth_1 = __importDefault(require("../middleware/auth"));
-const verifyToken_1 = __importDefault(require("../middleware/verifyToken"));
 const errors_1 = require("../errors");
+const kakao_1 = __importDefault(require("../middleware/kakao"));
 const router = express_1.default.Router();
 router.post("/signup", [
     (0, express_validator_1.check)("email", "이메일 형식이 올바르지 않습니다").trim().isEmail(),
@@ -74,42 +71,7 @@ router.put("/password", [
     const result = await authService_1.default.change(requestDTO);
     res.status(result.status).json(result);
 });
-router.get("/kakao", async (req, res) => {
-    try {
-        const REST_API_KEY = config_1.default.kakaoRestAPIKey;
-        const REDIRECT_URI = config_1.default.redirectUri;
-        const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}`;
-        res.redirect(kakaoAuthUrl);
-    }
-    catch (err) {
-        console.log(err);
-        return errors_1.serverError;
-    }
-});
-router.get("/kakao/callback", async (req, res) => {
-    try {
-        const token = await (0, axios_1.default)({
-            method: "POST",
-            url: "https://kauth.kakao.com/oauth/token",
-            headers: {
-                'content-type': 'application/x-www-form-urlencoded'
-            },
-            data: qs_1.default.stringify({
-                grant_type: 'authorization_code',
-                client_id: config_1.default.kakaoRestAPIKey,
-                redirectUri: config_1.default.redirectUri,
-                code: req.query.code,
-            })
-        });
-    }
-    catch (err) {
-        console.log(err);
-        return errors_1.serverError;
-    }
-    const result = await authService_1.default.kakao();
-    res.status(result.status).json(result);
-});
-router.post("/nickname", verifyToken_1.default, async (req, res) => {
+router.post("/nickname", async (req, res) => {
     try {
         const { nickname, token } = req.body;
         const requestDTO = {
@@ -127,6 +89,16 @@ router.post("/nickname", verifyToken_1.default, async (req, res) => {
 router.delete("/delete", auth_1.default, async (req, res) => {
     try {
         const result = await authService_1.default.delete(req.body.user.id);
+        res.status(result.status).json(result);
+    }
+    catch (err) {
+        console.log(err);
+        return errors_1.serverError;
+    }
+});
+router.post("/kakao", kakao_1.default, async (req, res) => {
+    try {
+        const result = await authService_1.default.kakao();
         res.status(result.status).json(result);
     }
     catch (err) {

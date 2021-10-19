@@ -137,19 +137,6 @@ exports.default = {
             return errors_1.serverError;
         }
     },
-    kakao: async () => {
-        try {
-            const responseDTO = {
-                status: 200,
-                message: "토큰 인증이 완료되었습니다."
-            };
-            return responseDTO;
-        }
-        catch (err) {
-            console.log(err);
-            return errors_1.serverError;
-        }
-    },
     nickname: async (dto) => {
         try {
             const { nickname, token } = dto;
@@ -206,6 +193,19 @@ exports.default = {
             console.error(err);
             return errors_1.serverError;
         }
-    }
+    },
+    kakao: async () => {
+        try {
+            const responseDTO = {
+                status: 200,
+                message: "토큰 인증이 완료되었습니다."
+            };
+            return responseDTO;
+        }
+        catch (err) {
+            console.log(err);
+            return errors_1.serverError;
+        }
+    },
 };
 //# sourceMappingURL=authService.js.map
