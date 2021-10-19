@@ -3,11 +3,11 @@ import { Skin } from "../models/Skin";
 import { Character } from "../models/Character";
 import { SetCharacterRequestDTO } from "../dto/Character/Set/request/SetCharacterRequestDTO";
 import { SetCharacterResponseDTO } from "../dto/Character/Set/response/SetCharacterResponseDTO";
-import { notExistUser, notExistSkin, notExistCharacter, serverError } from "../errors";
+import { notExistUser, notExistSkin, notExistCharacter, invalidParameter, serverError } from "../errors";
 import { GetCharacterResponseDTO, CharacterResponseDTO, CurrentCharacterDTO, CurrentSkinDTO, CharacterDTO, cardDTO, SkinDTO } from "../dto/Character/Get/GetCharacterResponseDTO";
 import { characters } from "../dummy/Character";
 import { characterCards } from "../dummy/CharacterCard";
-import { skins } from "../dummy/Skin";
+import { iosSkins, aosSkins } from "../dummy/Skin";
 
 export default {
   setCharacter: async (userId: string, dto: SetCharacterRequestDTO) => {
@@ -47,8 +47,11 @@ export default {
       return serverError;
     }
   },
-  getCharacter: async (id: string) => {
+  getCharacter: async (id: string, client: string) => {
     try{
+      if (client != "aos" && client != "ios") {
+        return invalidParameter;  
+      }
       const user = await User.findOne({ attributes: ["character_card", "character_skin"], where: { id: id }});
       if (!user) {
         return notExistUser;
@@ -60,9 +63,19 @@ export default {
       }
 
       //현재스킨
-      const currentSkin: CurrentSkinDTO = {
-        id: user.character_skin, 
-        image: skins[user.character_skin-64].getImageURL()
+      let currentSkin: CurrentSkinDTO;
+      if (client == "ios") {
+        currentSkin = {
+          id: user.character_skin, 
+          image: iosSkins[user.character_skin-64].getImageURL()
+        }
+      }
+
+      else {
+        currentSkin = {
+          id: user.character_skin, 
+          image: aosSkins[user.character_skin-64].getImageURL()
+        }
       }
       
       //캐릭터
@@ -115,25 +128,49 @@ export default {
       })
 
       const skinArray: Array<SkinDTO> = new Array<SkinDTO>();
-      skins.forEach(skin => {
+      if (client == "ios") {
+        iosSkins.forEach(skin => {
         //사용자가 스킨을 가지고 있는 경우
-        if (skinIdArray.includes(skin.getId())) {
-          const skinInfo: SkinDTO = {
-            id: skin.getId(),
-            image: skin.getImageURL(),
-            hasSkin: true,
+          if (skinIdArray.includes(skin.getId())) {
+            const skinInfo: SkinDTO = {
+              id: skin.getId(),
+              image: skin.getImageURL(),
+              hasSkin: true,
+            }
+            skinArray.push(skinInfo);
           }
-          skinArray.push(skinInfo);
-        }
-        else {
-          const skinInfo: SkinDTO = {
-            id: skin.getId(),
-            image: "",
-            hasSkin: false,
+          else {
+            const skinInfo: SkinDTO = {
+              id: skin.getId(),
+              image: "",
+              hasSkin: false,
+            }
+            skinArray.push(skinInfo);
           }
-          skinArray.push(skinInfo);
-        }
-      });
+        });
+      }
+
+      else {
+        aosSkins.forEach(skin => {
+          //사용자가 스킨을 가지고 있는 경우
+            if (skinIdArray.includes(skin.getId())) {
+              const skinInfo: SkinDTO = {
+                id: skin.getId(),
+                image: skin.getImageURL(),
+                hasSkin: true,
+              }
+              skinArray.push(skinInfo);
+            }
+            else {
+              const skinInfo: SkinDTO = {
+                id: skin.getId(),
+                image: "",
+                hasSkin: false,
+              }
+              skinArray.push(skinInfo);
+            }
+          });
+      }
 
       const CharacterResponse: CharacterResponseDTO = {
         currentCharacter: currentCharacter,

@@ -18,7 +18,7 @@ import { Skin } from "../models/Skin";
 import { levels }  from "../dummy/Level"
 import { courses } from '../dummy/Course';
 import { characterCards } from "../dummy/CharacterCard";
-import { skins } from "../dummy/Skin";
+import { iosSkins } from "../dummy/Skin";
 import { getYear, getMonth, getYesterday, getDay } from "../formatter/mohaengDateFormatter";
 import { alreadyExsitEmoji, feedLengthCheck, notAuthorized, notExistFeedContent, notExistUser, notExistEmoji, notExistFeed, serverError, wrongEmojiId, alreadyReported, invalidReport } from "../errors";
 import { ConfigurationServicePlaceholders } from "aws-sdk/lib/config_service_placeholders";
@@ -113,7 +113,7 @@ export default {
         }
         //스킨
         else {
-          image = skins[cardId-64].getImageURL();
+          image = iosSkins[cardId-64].getImageURL();
           Skin.create({ id: cardId, user_id: +id });
         }
         levelUpResponse = {
