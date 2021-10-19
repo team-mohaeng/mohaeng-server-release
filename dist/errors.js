@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.invalidEmail = exports.invalidReport = exports.alreadyReported = exports.notExistCharacter = exports.notExistSkin = exports.notExistEmoji = exports.alreadyExsitEmoji = exports.wrongEmojiId = exports.notExistFeed = exports.notAuthorized = exports.feedLengthCheck = exports.notExistFeedContent = exports.alreadyCompleteChallenge = exports.notExistProgressCourse = exports.notExistChallengeId = exports.notExistCourseId = exports.invalidCourseChallengeId = exports.notMatchSignIn = exports.invalidToken = exports.notExistToken = exports.notExistUid = exports.alreadyExistEmail = exports.alreadyExistNickname = exports.sameNickname = exports.nicknameLengthCheck = exports.notExistUser = exports.serverError = void 0;
+exports.invalidParameter = exports.invalidEmail = exports.invalidReport = exports.alreadyReported = exports.notExistCharacter = exports.notExistSkin = exports.notExistEmoji = exports.alreadyExsitEmoji = exports.wrongEmojiId = exports.notExistFeed = exports.notAuthorized = exports.feedLengthCheck = exports.notExistFeedContent = exports.alreadyCompleteChallenge = exports.notExistProgressCourse = exports.notExistChallengeId = exports.notExistCourseId = exports.invalidCourseChallengeId = exports.notMatchSignIn = exports.invalidToken = exports.notExistToken = exports.notExistUid = exports.alreadyExistEmail = exports.alreadyExistNickname = exports.sameNickname = exports.nicknameLengthCheck = exports.notExistUser = exports.serverError = void 0;
 const constant_1 = require("./constant");
 exports.serverError = {
     status: 500,
@@ -109,5 +109,9 @@ exports.invalidReport = {
 exports.invalidEmail = {
     status: 404,
     message: "유효하지 않은 이메일입니다."
+};
+exports.invalidParameter = {
+    status: 404,
+    message: "파라미터를 확인해주세요."
 };
 //# sourceMappingURL=errors.js.map

@@ -91,7 +91,7 @@ exports.default = {
                 }
                 //스킨
                 else {
-                    image = Skin_2.skins[cardId - 64].getImageURL();
+                    image = Skin_2.iosSkins[cardId - 64].getImageURL();
                     Skin_1.Skin.create({ id: cardId, user_id: +id });
                 }
                 levelUpResponse = {
@@ -446,7 +446,7 @@ exports.default = {
             const feedResponse = new Array();
             const week = new Array("일", "월", "화", "수", "목", "금", "토");
             //피드 모두 가져오기
-            const feeds = await Feed_1.Feed.findAll({ order: [["id", "DESC"]] });
+            const feeds = await Feed_1.Feed.findAll({ order: [["id", "DESC"]], where: { isPrivate: false } });
             for (let i = 0; i < feeds.length; i++) {
                 const emojiArray = new Array();
                 const emojis = await Emoji_1.Emoji.findAll({ where: { feed_id: feeds[i].id } });
