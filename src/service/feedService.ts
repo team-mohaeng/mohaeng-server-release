@@ -513,7 +513,7 @@ export default {
       const week = new Array("일", "월", "화", "수", "목", "금", "토");
 
       //피드 모두 가져오기
-      const feeds = await Feed.findAll({ order: [["id", "DESC"]]});
+      const feeds = await Feed.findAll({ order: [["id", "DESC"]], where: { isPrivate: false }});
       
       for (let i = 0; i < feeds.length; i++) {
         const emojiArray: Array<EmojiDTO> = new Array<EmojiDTO>();
