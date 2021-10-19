@@ -97,42 +97,6 @@ router.put(
     res.status(result.status).json(result);
   });
 
-router.get("/kakao", async (req, res) => {
-  try{
-  const REST_API_KEY = config.kakaoRestAPIKey;
-  const REDIRECT_URI = config.redirectUri;
-  const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}`;
-  res.redirect(kakaoAuthUrl);
-  } catch (err) {
-    console.log(err);
-    return serverError;
-  }
-})
-
-router.get("/kakao/callback", async (req, res) => {
-  try{
-    const token = await axios({
-      method: "POST",
-      url: "https://kauth.kakao.com/oauth/token",
-      headers:{
-        'content-type':'application/x-www-form-urlencoded'
-      },
-      data:qs.stringify({
-        grant_type: 'authorization_code',
-        client_id: config.kakaoRestAPIKey,
-        redirectUri: config.redirectUri,
-        code: req.query.code,
-      })
-    });
-
-  } catch (err) {
-    console.log(err);
-    return serverError;
-  }
-  const result = await authService.kakao();
-  res.status(result.status).json(result);
-})
-
 router.post("/nickname", verifyFCM, async (req, res) => {
   try{
     const { nickname, token } = req.body;
