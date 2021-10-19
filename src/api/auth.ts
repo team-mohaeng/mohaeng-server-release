@@ -98,7 +98,7 @@ router.put(
     res.status(result.status).json(result);
   });
 
-router.post("/nickname", verifyFCM, async (req, res) => {
+router.post("/nickname", async (req, res) => {
   try{
     const { nickname, token } = req.body;
     const requestDTO: SocialLogInRequestDTO = {
@@ -132,7 +132,6 @@ router.post("/kakao", kakao, async (req, res) => {
     return serverError;
   }
 })
-
 
 module.exports = router;
 
