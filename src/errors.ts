@@ -136,3 +136,8 @@ export const invalidEmail: IFail = {
   message: "유효하지 않은 이메일입니다."
 }
 
+export const invalidParameter: IFail = {
+  status: 404,
+  message: "파라미터를 확인해주세요."
+}
+
