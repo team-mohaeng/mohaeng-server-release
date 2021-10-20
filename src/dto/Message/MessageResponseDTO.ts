@@ -1,6 +1,7 @@
 export default interface MessageResponseDTO {
   status: number;
   data: {
+    profileImg: string;
     messages: UserMessageResponseDTO[];
   };
 }
