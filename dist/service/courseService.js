@@ -183,6 +183,7 @@ exports.default = {
             User_1.User.update({
                 current_course_id: cid + 1,
                 current_challenge_id: 1,
+                current_progress_percent: 0,
                 is_completed: false,
                 challenge_penalty: isPenalty,
             }, { where: { id: id } });
