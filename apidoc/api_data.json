@@ -2136,7 +2136,7 @@
       "examples": [
         {
           "title": "Header-Example:",
-          "content": "{\n \"Content-Type\": \"application/json\",\n \"Bearer\": \"{jwt}\"\n}",
+          "content": "{\n \"Content-Type\": \"application/json\",\n \"Bearer\": \"{jwt}\",\n \"clent\": \"ios\" or \"aos\"\n}",
           "type": "json"
         }
       ]
