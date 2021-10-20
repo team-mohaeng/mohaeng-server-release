@@ -421,7 +421,13 @@ export default {
         for (let j = 0; j < emojis.length; j++) {
           if (myFeeds[i].id == emojis[j].feed_id) { 
             const emojiId = emojis[j].emoji_id; //피드에 붙는 이모지 id
-            emojiCount[emojiId]+=1; //count +1
+            if (emojiCount[emojiId] == 99) {
+              emojiCount[emojiId] = 99;
+            }
+            else {
+              emojiCount[emojiId]+=1; //count +1
+            }
+            
 
             if (userId == emojis[j].user_id) { //사용자가 피드에 이모지 붙였는지 여부
               myEmoji = +emojiId
@@ -525,7 +531,12 @@ export default {
         for (let j = 0; j < emojis.length; j++) {
           if (feeds[i].id == emojis[j].feed_id) { 
             const emojiId = emojis[j].emoji_id; //피드에 붙는 이모지 id
-            emojiCount[emojiId]+=1; //count +1
+            if (emojiCount[emojiId] == 99) {
+              emojiCount[emojiId] = 99;
+            }
+            else {
+              emojiCount[emojiId]+=1; //count +1
+            }
 
             if (userId == emojis[j].user_id) { //사용자가 피드에 이모지 붙였는지 여부
               myEmoji = +emojiId
