@@ -411,33 +411,39 @@ export default {
         create_time: {[Op.between]:
           [`${year}-${month}`, `${year}-${month}-${getDay(new Date(yearNumber, monthNumber, 0))} 23:59:59`] //달의 마지막날 구하기
       }}})
+
+      const emojis = await Emoji.findAll();
+      let emojiCount=[0, 0, 0, 0, 0, 0, 0]; //피드에 있는 이모지 개수 넣는 배열, emojiId 1~6, 0번째 요소는 사용X
+      let emojiArray: Array<EmojiDTO> = new Array<EmojiDTO>(); //이모지 id랑 count 넣는 배열
+      let myEmoji = 0; //조회하는 유저가 피드에 추가한 이모지, 0은 이모지 추가 안한 경우
       
       for (let i = 0; i < myFeeds.length; i++) {
-        const emojiArray: Array<EmojiDTO> = new Array<EmojiDTO>();
-        const emojis = await Emoji.findAll({ where: { feed_id: myFeeds[i].id }})
+        for (let j = 0; j < emojis.length; j++) {
+          if (myFeeds[i].id == emojis[j].feed_id) { 
+            const emojiId = emojis[j].emoji_id; //피드에 붙는 이모지 id
+            if (emojiCount[emojiId] == 99) {
+              emojiCount[emojiId] = 99;
+            }
+            else {
+              emojiCount[emojiId]+=1; //count +1
+            }
+            
 
-        //각 피드마다 이모지의 종류와 그 개수
+            if (userId == emojis[j].user_id) { //사용자가 피드에 이모지 붙였는지 여부
+              myEmoji = +emojiId
+            }
+          }
+        }
+
         for (let emojiNumber = 1; emojiNumber < 7; emojiNumber++) {
-          const newEmojiArray = emojis.filter(emoji => emoji.emoji_id==`${emojiNumber}`)
-          //이모지 개수 0개일 경우 생략
-          if (newEmojiArray.length == 0) {
+          if (emojiCount[emojiNumber] == 0) { //이모지 개수 0개면 skip
             continue;
           }
-          //이모지 최대 개수 99개 제한
-          if (newEmojiArray.length >= 99) {
-            newEmojiArray.length=99;
+          const emoji: EmojiDTO = {
+            id: emojiNumber,
+            count: emojiCount[emojiNumber]
           }
-          emojiArray.push({id: emojiNumber, count: newEmojiArray.length});
-        }
-        
-        //사용자가 피드에 이모지를 추가했는지 여부
-        let myEmoji = await Emoji.findOne({ attributes: ["emoji_id"], where: { user_id: userId, feed_id: myFeeds[i].id }})
-        let userEmoji;
-        if (!myEmoji) {
-          userEmoji = 0;
-        }
-        else {
-          userEmoji = myEmoji.emoji_id;
+          emojiArray.push(emoji);
         }
         
         const myFeed: FeedDTO = {
@@ -453,11 +459,14 @@ export default {
           date: getDay(myFeeds[i].create_time),
           day: week[myFeeds[i].create_time.getDay()],
           emoji: emojiArray,
-          myEmoji: userEmoji,
+          myEmoji: myEmoji,
           isReport: false,
           isDelete: true
         }
         feedResponse.push(myFeed);
+        //배열 초기화
+        emojiArray=[];
+        emojiCount=[0, 0, 0, 0, 0, 0, 0];
       }
       
       const myFeedDTO: MyFeedDTO = {
@@ -512,54 +521,44 @@ export default {
       const feedResponse: Array<FeedDTO> = new Array<FeedDTO>();
       const week = new Array("일", "월", "화", "수", "목", "금", "토");
 
-      //피드 모두 가져오기
       const feeds = await Feed.findAll({ order: [["id", "DESC"]], where: { isPrivate: false }});
+      const emojis = await Emoji.findAll();
+      let emojiCount=[0, 0, 0, 0, 0, 0, 0]; //이모지 개수 넣는 배열, emojiId 1~6, 0번째 요소는 사용X
+      let emojiArray: Array<EmojiDTO> = new Array<EmojiDTO>(); //이모지 id랑 count 넣는 배열
+      let myEmoji = 0; //조회하는 유저가 피드에 추가한 이모지, 0은 이모지 추가 안한 경우
       
       for (let i = 0; i < feeds.length; i++) {
-        const emojiArray: Array<EmojiDTO> = new Array<EmojiDTO>();
-        const emojis = await Emoji.findAll({ where: { feed_id: feeds[i].id }})
+        for (let j = 0; j < emojis.length; j++) {
+          if (feeds[i].id == emojis[j].feed_id) { 
+            const emojiId = emojis[j].emoji_id; //피드에 붙는 이모지 id
+            if (emojiCount[emojiId] == 99) {
+              emojiCount[emojiId] = 99;
+            }
+            else {
+              emojiCount[emojiId]+=1; //count +1
+            }
 
-        //각 피드마다 이모지의 종류와 그 개수
+            if (userId == emojis[j].user_id) { //사용자가 피드에 이모지 붙였는지 여부
+              myEmoji = +emojiId
+            }
+          }
+        }
+
         for (let emojiNumber = 1; emojiNumber < 7; emojiNumber++) {
-          const newEmojiArray = emojis.filter(emoji => emoji.emoji_id == `${emojiNumber}`)
-          //이모지 개수 0개일 경우 생략
-          if (newEmojiArray.length == 0) {
+          if (emojiCount[emojiNumber] == 0) { //이모지 개수 0개면 skip
             continue;
           }
-          //이모지 최대 개수 99개 제한
-          if (newEmojiArray.length >= 99) {
-            newEmojiArray.length=99;
+          const emoji: EmojiDTO = {
+            id: emojiNumber,
+            count: emojiCount[emojiNumber]
           }
-          emojiArray.push({id: emojiNumber, count: newEmojiArray.length});
-        }
-        
-        //사용자가 피드에 이모지를 추가했는지 여부
-        let myEmoji = await Emoji.findOne({ attributes: ["emoji_id"], where: { user_id: userId, feed_id: feeds[i].id }})
-        let userEmoji;
-        if (!myEmoji) {
-          userEmoji = 0;
-        }
-        else {
-          userEmoji = myEmoji.emoji_id;
+          emojiArray.push(emoji);
         }
 
         //신고 가능 여부
-        let isReport;
-        if (user.nickname != feeds[i].nickname) {
-          isReport = true;
-        }
-        else {
-          isReport = false;
-        }
-
+        const isReport = (user.nickname!=feeds[i].nickname) ? true : false;
         //삭제 가능 여부
-        let isDelete;
-        if (user.nickname == feeds[i].nickname) {
-          isDelete = true;
-        }
-        else {
-          isDelete = false;
-        }
+        const isDelete = (user.nickname==feeds[i].nickname) ? true : false;
 
         const myFeed: FeedDTO = {
           postId: feeds[i].id,
@@ -574,11 +573,14 @@ export default {
           date: getDay(feeds[i].create_time),
           day: week[feeds[i].create_time.getDay()],
           emoji: emojiArray,
-          myEmoji: userEmoji,
+          myEmoji: myEmoji,
           isReport: isReport,
           isDelete: isDelete
         }
         feedResponse.push(myFeed);
+        //배열 초기화
+        emojiArray=[];
+        emojiCount=[0, 0, 0, 0, 0, 0, 0];
       }
 
       const community: CommunityDTO = {
