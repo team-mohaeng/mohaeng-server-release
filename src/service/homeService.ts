@@ -6,10 +6,10 @@ import HomeResponseDTO, { UserCourseResponseDTO } from '../dto/Home/HomeResponse
 import { courses } from '../dummy/Course';
 import { levels } from '../dummy/Level';
 import { images } from '../dummy/Image';
-import { skins } from '../dummy/Skin';
+import { aosSkins, iosSkins, skins } from '../dummy/Skin';
 
 export default {
-  home: async (id: string) => {
+  home: async (id: string, client: string) => {
     try {
       // 닉네임, 레벨, 해피지수, 현재 코스, 현재 챌린지, 현재 코스 진행률, 
       // 캐릭터 타입, 캐릭터 카드 아이디, 캐릭터 스킨, 스타일 업데이트 여부, 뱃지 업데이트 여부
@@ -33,6 +33,8 @@ export default {
         };
       }
 
+      const skin = (client == "ios") ? iosSkins[user.character_skin - 64].getImageURL() : aosSkins[user.character_skin - 64].getImageURL();
+
       const responseDTO: HomeResponseDTO = {
         status: 200,
         data: {
@@ -41,7 +43,7 @@ export default {
           happy: user.affinity,
           fullHappy: levels[user.level - 1].getFullHappy(),
           characterLottie: images[user.character_card - 1].getLottieURL(),
-          characterSkin: skins[user.character_skin-64].getImageURL(),
+          characterSkin: skin,
           isStyleNew: user.is_style_new,
           isBadgeNew: user.is_badge_new,
           course: courseResponseDTO
