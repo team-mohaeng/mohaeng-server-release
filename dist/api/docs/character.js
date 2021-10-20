@@ -47,7 +47,7 @@
  * }
  */
 /**
- * @api {get} /api/character/:client 캐릭터 조회
+ * @api {get} /api/character 캐릭터 조회
  *
  * @apiVersion 1.0.0
  * @apiName getCharacter
@@ -57,6 +57,7 @@
  * {
  *  "Content-Type": "application/json",
  *  "Bearer": "{jwt}"
+ *  "client": "aos/ios"
  * }
  *
  * @apiSuccess {Object} currentCharacter
@@ -155,6 +156,12 @@
  * {
  *  "status": 401,
  *  "message": "유저가 존재하지 않습니다."
+ * }
+ *
+ * 404 잘못된 헤더
+ * {
+ *  "status": 404,
+ *  "message": "헤더를 확인해주세요"
  * }
  */ 
 //# sourceMappingURL=character.js.map

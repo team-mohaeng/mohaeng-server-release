@@ -69,6 +69,7 @@
  *  "Bearer": "{jwt}"
  * }
  *
+ * @apiSuccess {Boolean} isProgress 유저가 현재 진행하고 있는 코스가 존재하는지 여부
  * @apiSuccess {Object[]} courses 완료한 코스 목록
  * @apiSuccess {Number} id 코스 인덱싱 아이디 (코스 고유 아이디 아님)
  * @apiSuccess {Number} situation 코스 진행 상태 (항상 완료 상태인 2)
@@ -92,6 +93,7 @@
  * {
  *  "status": 202,
  *  "data": {
+ *    "isProgress": true,
  *    "courses": [],
  *  }
  * }
@@ -100,6 +102,7 @@
  * {
  *  "status": 200,
  *  "data": {
+ *    "isProgress": true,
  *    "courses": [
  *      {
  *        "id": 1,
