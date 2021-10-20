@@ -1568,6 +1568,13 @@
         "Success 200": [
           {
             "group": "Success 200",
+            "type": "Boolean",
+            "optional": false,
+            "field": "isProgress",
+            "description": "<p>유저가 현재 진행하고 있는 코스가 존재하는지 여부</p>"
+          },
+          {
+            "group": "Success 200",
             "type": "Object[]",
             "optional": false,
             "field": "courses",
@@ -1655,7 +1662,7 @@
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "202 완료한 코스가 없을 때\n{\n \"status\": 202,\n \"data\": {\n   \"courses\": [],\n }\n}\n\n200 완료한 코스가 있을 때\n{\n \"status\": 200,\n \"data\": {\n   \"courses\": [\n     {\n       \"id\": 1,\n       \"situation\": 2,\n       \"property\": 3,\n       \"title\": \"나 돌아갈래\",\n       \"totalDays\": 7,\n       \"year\": \"2021\",\n       \"month\": \"09\",\n       \"date\": \"26\",\n       \"challenges\": [\n         {\n           \"day\": 1,\n           \"situation\": 2,\n           \"title\": \"교복 입은 사진 찾아보기\",\n           \"year\": \"2021\",\n           \"month\": \"09\",\n           \"date\": \"20\",\n         },\n         // ...\n       ]\n     },\n     // ...\n   ]\n }\n}",
+          "content": "202 완료한 코스가 없을 때\n{\n \"status\": 202,\n \"data\": {\n   \"isProgress\": true,\n   \"courses\": [],\n }\n}\n\n200 완료한 코스가 있을 때\n{\n \"status\": 200,\n \"data\": {\n   \"isProgress\": true,\n   \"courses\": [\n     {\n       \"id\": 1,\n       \"situation\": 2,\n       \"property\": 3,\n       \"title\": \"나 돌아갈래\",\n       \"totalDays\": 7,\n       \"year\": \"2021\",\n       \"month\": \"09\",\n       \"date\": \"26\",\n       \"challenges\": [\n         {\n           \"day\": 1,\n           \"situation\": 2,\n           \"title\": \"교복 입은 사진 찾아보기\",\n           \"year\": \"2021\",\n           \"month\": \"09\",\n           \"date\": \"20\",\n         },\n         // ...\n       ]\n     },\n     // ...\n   ]\n }\n}",
           "type": "json"
         }
       ]

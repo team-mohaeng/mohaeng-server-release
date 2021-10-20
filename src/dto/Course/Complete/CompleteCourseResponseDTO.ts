@@ -4,6 +4,7 @@ export default interface CompleteCourseResponseDTO {
 }
 
 export interface WrapCompleteCourseResponseDTO {
+  isProgress: boolean;
   courses: TotalCompleteCourseResponseDTO[];
 }
 
