@@ -1076,6 +1076,13 @@
             "group": "Success 200",
             "type": "String",
             "optional": false,
+            "field": "profileImg",
+            "description": "<p>유저 캐릭터카드에 맞는 프로필 이미지</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
             "field": "date",
             "description": "<p>알람 받은 날짜</p>"
           },
@@ -1098,7 +1105,7 @@
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "200 알람을 받지 않은 상태\n{\n \"status\": 200,\n \"data\": {\n   \"messages\": {\n     \"date\": \"2021-10-12T15:00:00.000Z\",\n     \"message\" : [],\n     \"isNew\": false\n   }\n }\n}\n\n200 알람을 받은 상태\n{\n \"status\": 200,\n \"data\": {\n   \"messages\": {\n     \"date\": \"2021-10-12T15:00:00.000Z\",\n     \"message\" : [\n       \"모행, 오늘 어땠어?\",\n       \"많이 힘들었구나...ㅜㅜ\",\n       \"챌린지 인증하고 푹 자자!\"\n     ],\n     \"isNew\": false\n   }\n }\n}",
+          "content": "200 알람을 받지 않은 상태\n{\n \"status\": 200,\n \"data\": {\n   \"profileImg\": \"profile.url\",\n   \"messages\": {\n     \"date\": \"2021-10-12T15:00:00.000Z\",\n     \"message\" : [],\n     \"isNew\": false\n   }\n }\n}\n\n200 알람을 받은 상태\n{\n \"status\": 200,\n \"data\": {\n   \"profileImg\": \"profile.url\",\n   \"messages\": {\n     \"date\": \"2021-10-12T15:00:00.000Z\",\n     \"message\" : [\n       \"모행, 오늘 어땠어?\",\n       \"많이 힘들었구나...ㅜㅜ\",\n       \"챌린지 인증하고 푹 자자!\"\n     ],\n     \"isNew\": false\n   }\n }\n}",
           "type": "json"
         }
       ]
@@ -2129,7 +2136,7 @@
       "examples": [
         {
           "title": "Header-Example:",
-          "content": "{\n \"Content-Type\": \"application/json\",\n \"Bearer\": \"{jwt}\"\n}",
+          "content": "{\n \"Content-Type\": \"application/json\",\n \"Bearer\": \"{jwt}\",\n \"clent\": \"ios\" or \"aos\"\n}",
           "type": "json"
         }
       ]
