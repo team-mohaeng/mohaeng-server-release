@@ -23,7 +23,7 @@ export interface FeedDTO {
   date: string;
   day: string;
   emoji: EmojiDTO[]
-  myEmoji: string;
+  myEmoji: number;
   isReport: boolean;
   isDelete: boolean;
 }

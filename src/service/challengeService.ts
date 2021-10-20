@@ -417,11 +417,15 @@ export default {
       });
       
       const today = new Date(); // 오늘
-      let recentChallengeDate = new Date(); // DB에 저장된 최근 챌린지 완료 날짜 다음날
-      recentChallengeDate = new Date(recentChallengeDate.setDate(user.recent_challenge_date.getDate() + 1));
-      // 챌린지 연속 수행 여부
-      if (getYear(today) == getYear(recentChallengeDate) && getMonth(today) == getMonth(recentChallengeDate) && getDay(today) == getDay(recentChallengeDate)) { // 연속 수행에 성공한 경우
-        challengeSuccessCount++;
+      if (user.recent_challenge_date != null) {
+        let recentChallengeDate = new Date(); // DB에 저장된 최근 챌린지 완료 날짜 다음날
+        recentChallengeDate = new Date(recentChallengeDate.setDate(user.recent_challenge_date.getDate() + 1));
+        // 챌린지 연속 수행 여부
+        if (getYear(today) == getYear(recentChallengeDate) && getMonth(today) == getMonth(recentChallengeDate) && getDay(today) == getDay(recentChallengeDate)) { // 연속 수행에 성공한 경우
+          challengeSuccessCount++;
+        } else {
+          challengeSuccessCount = 1;
+        }
       } else {
         challengeSuccessCount = 1;
       }
