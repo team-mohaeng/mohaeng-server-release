@@ -4,14 +4,14 @@ const constant_1 = require("../constant");
 const errors_1 = require("../errors");
 const User_1 = require("../models/User");
 const Message_1 = require("../models/Message");
+const Image_1 = require("../dummy/Image");
 exports.default = {
     chatting: async (id) => {
         try {
             const user = await User_1.User.findOne({
-                attributes: ['nickname'],
+                attributes: ['nickname', 'character_card'],
                 where: { id: id }
             });
-            const userId = Number(id);
             if (!user) {
                 return errors_1.notExistUser;
             }
@@ -19,15 +19,6 @@ exports.default = {
                 where: { user_id: id },
                 order: ["date"]
             });
-            // if (!messages || messages.length == 0) {
-            //   const responseDTO: MessageResponseDTO = {
-            //     status: 200,
-            //     data: {
-            //       messages: [],
-            //     }
-            //   };
-            //   return responseDTO;
-            // }
             let userMessageDTO = [];
             for (let i = 0; i < messages.length; i++) {
                 const userMessage = messages[i];
@@ -39,13 +30,14 @@ exports.default = {
                 userMessageDTO.push({
                     date: userMessage.date,
                     message: mentList,
-                    isNew: userMessage.is_new
+                    isNew: userMessage.is_new,
                 });
             }
             Message_1.Message.update({ is_new: false }, { where: { user_id: id } });
             const responseDTO = {
                 status: 200,
                 data: {
+                    profileImg: Image_1.images[user.character_card - 1].getProfileURL(),
                     messages: userMessageDTO
                 }
             };

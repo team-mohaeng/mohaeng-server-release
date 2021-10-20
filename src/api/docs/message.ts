@@ -11,6 +11,7 @@
  *  "Bearer": "{jwt}"
  * }
  * 
+ * @apiSuccess {String} profileImg 유저 캐릭터카드에 맞는 프로필 이미지
  * @apiSuccess {String} date 알람 받은 날짜
  * @apiSuccess {String[]} message 푸시 알람 멘트 배열
  * @apiSuccess {Boolean} isNew 유저가 확인했는지 여부
@@ -20,6 +21,7 @@
  * {
  *  "status": 200,
  *  "data": {
+ *    "profileImg": "profile.url",
  *    "messages": {
  *      "date": "2021-10-12T15:00:00.000Z",
  *      "message" : [],
@@ -32,6 +34,7 @@
  * {
  *  "status": 200,
  *  "data": {
+ *    "profileImg": "profile.url",
  *    "messages": {
  *      "date": "2021-10-12T15:00:00.000Z",
  *      "message" : [
