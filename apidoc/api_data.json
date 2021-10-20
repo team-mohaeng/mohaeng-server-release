@@ -1423,7 +1423,7 @@
   },
   {
     "type": "get",
-    "url": "/api/character/:client",
+    "url": "/api/character",
     "title": "캐릭터 조회",
     "version": "1.0.0",
     "name": "getCharacter",
@@ -1432,7 +1432,7 @@
       "examples": [
         {
           "title": "Header-Example:",
-          "content": "{\n \"Content-Type\": \"application/json\",\n \"Bearer\": \"{jwt}\"\n}",
+          "content": "{\n \"Content-Type\": \"application/json\",\n \"Bearer\": \"{jwt}\"\n \"client\": \"aos/ios\"\n}",
           "type": "json"
         }
       ]
@@ -1482,7 +1482,7 @@
       "examples": [
         {
           "title": "Error-Response:",
-          "content": "401 존재하지 않는 유저\n{\n \"status\": 401,\n \"message\": \"유저가 존재하지 않습니다.\"\n}",
+          "content": "401 존재하지 않는 유저\n{\n \"status\": 401,\n \"message\": \"유저가 존재하지 않습니다.\"\n}\n\n404 잘못된 헤더\n{\n \"status\": 404,\n \"message\": \"헤더를 확인해주세요\"\n}",
           "type": "json"
         }
       ]
@@ -1566,6 +1566,13 @@
     "success": {
       "fields": {
         "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Boolean",
+            "optional": false,
+            "field": "isProgress",
+            "description": "<p>유저가 현재 진행하고 있는 코스가 존재하는지 여부</p>"
+          },
           {
             "group": "Success 200",
             "type": "Object[]",
@@ -1655,7 +1662,7 @@
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "202 완료한 코스가 없을 때\n{\n \"status\": 202,\n \"data\": {\n   \"courses\": [],\n }\n}\n\n200 완료한 코스가 있을 때\n{\n \"status\": 200,\n \"data\": {\n   \"courses\": [\n     {\n       \"id\": 1,\n       \"situation\": 2,\n       \"property\": 3,\n       \"title\": \"나 돌아갈래\",\n       \"totalDays\": 7,\n       \"year\": \"2021\",\n       \"month\": \"09\",\n       \"date\": \"26\",\n       \"challenges\": [\n         {\n           \"day\": 1,\n           \"situation\": 2,\n           \"title\": \"교복 입은 사진 찾아보기\",\n           \"year\": \"2021\",\n           \"month\": \"09\",\n           \"date\": \"20\",\n         },\n         // ...\n       ]\n     },\n     // ...\n   ]\n }\n}",
+          "content": "202 완료한 코스가 없을 때\n{\n \"status\": 202,\n \"data\": {\n   \"isProgress\": true,\n   \"courses\": [],\n }\n}\n\n200 완료한 코스가 있을 때\n{\n \"status\": 200,\n \"data\": {\n   \"isProgress\": true,\n   \"courses\": [\n     {\n       \"id\": 1,\n       \"situation\": 2,\n       \"property\": 3,\n       \"title\": \"나 돌아갈래\",\n       \"totalDays\": 7,\n       \"year\": \"2021\",\n       \"month\": \"09\",\n       \"date\": \"26\",\n       \"challenges\": [\n         {\n           \"day\": 1,\n           \"situation\": 2,\n           \"title\": \"교복 입은 사진 찾아보기\",\n           \"year\": \"2021\",\n           \"month\": \"09\",\n           \"date\": \"20\",\n         },\n         // ...\n       ]\n     },\n     // ...\n   ]\n }\n}",
           "type": "json"
         }
       ]

@@ -97,11 +97,15 @@ export default {
         return notExistUser;
       }
 
+      const currentCourseId = user.current_course_id;
+      const isProgress = currentCourseId != null ? true : false;
+
       const completeCourses = await CompleteCourse.findAll({ where: { user_id: id } });
       if (completeCourses.length == 0) {
         const notExistCompleteCourse: CompleteCourseResponseDTO = {
           status: 202,
           data: {
+            isProgress: isProgress,
             courses: []
           }
         }
@@ -155,6 +159,7 @@ export default {
       const responseDTO: CompleteCourseResponseDTO = {
         status: 200,
         data: {
+          isProgress: isProgress,
           courses: responseCourses
         }
       };
