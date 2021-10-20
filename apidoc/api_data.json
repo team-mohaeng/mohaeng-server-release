@@ -1482,7 +1482,7 @@
       "examples": [
         {
           "title": "Error-Response:",
-          "content": "401 존재하지 않는 유저\n{\n \"status\": 401,\n \"message\": \"유저가 존재하지 않습니다.\"\n}",
+          "content": "401 존재하지 않는 유저\n{\n \"status\": 401,\n \"message\": \"유저가 존재하지 않습니다.\"\n}\n\n404 잘못된 헤더\n{\n \"status\": 404,\n \"message\": \"헤더를 확인해주세요\"\n}",
           "type": "json"
         }
       ]
