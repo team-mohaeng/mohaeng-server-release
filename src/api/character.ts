@@ -16,8 +16,8 @@ router.put("/", auth, async (req, res) => {
   res.status(result.status).json(result);
 })
 
-router.get("/", auth, async (req, res) => {
-  const result = await characterService.getCharacter(req.body.user.id);
+router.get("/:client", auth, async (req, res) => {
+  const result = await characterService.getCharacter(req.body.user.id, req.params.client);
   res.status(result.status).json(result);
 })
 

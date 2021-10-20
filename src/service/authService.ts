@@ -177,21 +177,6 @@ export default {
       return serverError;
     }
   },
-  
-  kakao: async () => {
-  try{
-    const responseDTO: SocialLogInResponseDTO = {
-        status: 200,
-        message: "토큰 인증이 완료되었습니다."
-      }
-    
-    return responseDTO;
-    
-  } catch (err) {
-      console.log(err);
-      return serverError;
-    }
-  },
 
   nickname: async (dto: SocialLogInRequestDTO) => {
     try{
@@ -264,5 +249,20 @@ export default {
       console.error(err);
       return serverError;
     }
-  }
+  },
+
+  kakao: async () => {
+    try{
+      const responseDTO: SocialLogInResponseDTO = {
+          status: 200,
+          message: "토큰 인증이 완료되었습니다."
+        }
+      
+      return responseDTO;
+      
+    } catch (err) {
+        console.log(err);
+        return serverError;
+      }
+  },
 }
