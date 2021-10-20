@@ -4,15 +4,15 @@ import { IFail } from '../interfaces/IFail';
 import { User } from '../models/User';
 import { Message } from '../models/Message';
 import MessageResponseDTO, { UserMessageResponseDTO } from '../dto/Message/MessageResponseDTO'
+import { images } from '../dummy/Image';
 
 export default {
   chatting: async (id: string) => {
     try {
       const user = await User.findOne({
-        attributes: ['nickname'],
+        attributes: ['nickname', 'character_card'],
         where: { id: id }
       });
-      const userId = Number(id);
 
       if (!user) {
         return notExistUser;
@@ -22,16 +22,6 @@ export default {
         where: { user_id: id },
         order: ["date"]
       });
-
-      // if (!messages || messages.length == 0) {
-      //   const responseDTO: MessageResponseDTO = {
-      //     status: 200,
-      //     data: {
-      //       messages: [],
-      //     }
-      //   };
-      //   return responseDTO;
-      // }
 
       let userMessageDTO: UserMessageResponseDTO[] = [];
       for (let i = 0; i < messages.length; i++) {
@@ -46,7 +36,7 @@ export default {
         userMessageDTO.push({
           date: userMessage.date,
           message: mentList,
-          isNew: userMessage.is_new
+          isNew: userMessage.is_new,
         });
       }
 
@@ -58,6 +48,7 @@ export default {
       const responseDTO: MessageResponseDTO = {
         status: 200,
         data: {
+          profileImg: images[user.character_card-1].getProfileURL(),
           messages: userMessageDTO
         }
       };
