@@ -1423,7 +1423,7 @@
   },
   {
     "type": "get",
-    "url": "/api/character/:client",
+    "url": "/api/character",
     "title": "캐릭터 조회",
     "version": "1.0.0",
     "name": "getCharacter",
@@ -1432,7 +1432,7 @@
       "examples": [
         {
           "title": "Header-Example:",
-          "content": "{\n \"Content-Type\": \"application/json\",\n \"Bearer\": \"{jwt}\"\n}",
+          "content": "{\n \"Content-Type\": \"application/json\",\n \"Bearer\": \"{jwt}\"\n \"client\": \"aos/ios\"\n}",
           "type": "json"
         }
       ]
@@ -1482,7 +1482,7 @@
       "examples": [
         {
           "title": "Error-Response:",
-          "content": "401 존재하지 않는 유저\n{\n \"status\": 401,\n \"message\": \"유저가 존재하지 않습니다.\"\n}",
+          "content": "401 존재하지 않는 유저\n{\n \"status\": 401,\n \"message\": \"유저가 존재하지 않습니다.\"\n}\n\n404 잘못된 헤더\n{\n \"status\": 404,\n \"message\": \"헤더를 확인해주세요\"\n}",
           "type": "json"
         }
       ]
