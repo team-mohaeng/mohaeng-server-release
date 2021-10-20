@@ -33,7 +33,7 @@ export default {
         };
       }
 
-      const skin = (client == "ios") ? iosSkins[user.character_skin - 64].getImageURL() : aosSkins[user.character_skin - 1].getImageURL();
+      const skin = (client == "ios") ? iosSkins[user.character_skin - 64].getImageURL() : aosSkins[user.character_skin - 64].getImageURL();
 
       const responseDTO: HomeResponseDTO = {
         status: 200,
