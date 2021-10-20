@@ -8,7 +8,8 @@
  * @apiHeaderExample {json} Header-Example:
  * {
  *  "Content-Type": "application/json",
- *  "Bearer": "{jwt}"
+ *  "Bearer": "{jwt}",
+ *  "clent": "ios" or "aos"
  * }
  *
  * @apiSuccess {String} nickname 유저 닉네임

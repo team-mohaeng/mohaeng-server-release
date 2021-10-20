@@ -8,7 +8,7 @@ const auth_1 = __importDefault(require("../middleware/auth"));
 const homeService_1 = __importDefault(require("../service/homeService"));
 const router = express_1.default.Router();
 router.get("/", auth_1.default, async (req, res) => {
-    const result = await homeService_1.default.home(req.body.user.id);
+    const result = await homeService_1.default.home(req.body.user.id, req.header("client"));
     res.status(result.status).json(result);
 });
 module.exports = router;
