@@ -44,7 +44,7 @@ exports.default = {
     getCharacter: async (id, client) => {
         try {
             if (client != "aos" && client != "ios") {
-                return errors_1.invalidParameter;
+                return errors_1.invalidClient;
             }
             const user = await User_1.User.findOne({ attributes: ["character_card", "character_skin"], where: { id: id } });
             if (!user) {
