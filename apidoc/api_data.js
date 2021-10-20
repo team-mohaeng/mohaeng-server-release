@@ -1423,7 +1423,7 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "/api/character/:client",
+    "url": "/api/character",
     "title": "캐릭터 조회",
     "version": "1.0.0",
     "name": "getCharacter",
@@ -1432,7 +1432,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Header-Example:",
-          "content": "{\n \"Content-Type\": \"application/json\",\n \"Bearer\": \"{jwt}\"\n}",
+          "content": "{\n \"Content-Type\": \"application/json\",\n \"Bearer\": \"{jwt}\"\n \"client\": \"aos/ios\"\n}",
           "type": "json"
         }
       ]
