@@ -24,7 +24,7 @@ export default {
       }
 
       let courseResponseDTO: UserCourseResponseDTO = {};
-      if (user.current_course_id && user.current_challenge_id && user.current_progress_percent) {
+      if (user.current_course_id != null && user.current_challenge_id != null && user.current_progress_percent != null) {
         const courseId = user.current_course_id - 1;
         const challengeId = user.current_challenge_id - 1;
         courseResponseDTO = {
