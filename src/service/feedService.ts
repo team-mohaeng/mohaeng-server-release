@@ -47,7 +47,7 @@ export default {
         user_id: id,
         nickname: user.nickname,
         current_course_id: user.current_course_id,
-        current_challenge_id: user.current_course_id,
+        current_challenge_id: user.current_challenge_id,
         mood: mood,
         content: content,
         image: image,
