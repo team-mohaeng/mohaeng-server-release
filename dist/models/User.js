@@ -11,6 +11,9 @@ class User extends sequelize_1.Model {
 }
 exports.User = User;
 User.init({
+    sub: {
+        type: sequelize_1.DataTypes.STRING(100),
+    },
     token: {
         type: sequelize_1.DataTypes.STRING(100),
     },

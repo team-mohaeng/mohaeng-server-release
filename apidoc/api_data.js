@@ -1,5 +1,62 @@
 define({ "api": [
   {
+    "type": "post",
+    "url": "/api/apple/login",
+    "title": "애플 로그인",
+    "version": "1.0.0",
+    "name": "appleLogIn",
+    "group": "로그인/회원가입",
+    "header": {
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\"\n \"idToken\": \"apple id token\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "parameter": {
+      "examples": [
+        {
+          "title": "Request-Example:",
+          "content": "{\n \"token\": \"device token\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": false,
+            "field": "jwt",
+            "description": ""
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "200 OK\n{\n \"status\": 200,\n \"data\": {\n   \"jwt\": \"jwt 토큰\"\n }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "\n403 토큰 누락\n{\n \"status\": 403,\n \"message\": \"토큰이 없습니다. 토큰을 함께 보내주세요.\"\n}\n\n403 토큰 유효성 검증 실패\n{\n \"status\": 403,\n \"message\": \"유효성 인증에 실패하였습니다.\"\n}\n\n500 서버 에러\n{\n \"status\": 500,\n \"message\": \"서버 에러입니다. 서버 파트에게 문의해주세요 *^^*\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/api/docs/auth.ts",
+    "groupTitle": "로그인/회원가입"
+  },
+  {
     "type": "put",
     "url": "/api/password",
     "title": "비밀번호 변경",
@@ -58,16 +115,16 @@ define({ "api": [
   },
   {
     "type": "post",
-    "url": "/api/nickname",
-    "title": "소셜로그인 회원가입",
+    "url": "/api/apple",
+    "title": "애플 회원가입",
     "version": "1.0.0",
-    "name": "createUser",
+    "name": "createApple",
     "group": "로그인/회원가입",
     "header": {
       "examples": [
         {
           "title": "Header-Example:",
-          "content": "{\n \"Content-Type\": \"application/json\"\n \"token\": \"token\"\n}",
+          "content": "{\n \"Content-Type\": \"application/json\"\n \"idToken\": \"apple id token\"\n}",
           "type": "json"
         }
       ]
@@ -76,7 +133,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Request-Example:",
-          "content": "{\n \"nickname\": \"시원뿡\"\n}",
+          "content": "{\n \"nickname\": \"시원뿡\"\n \"token\": \"device token\"\n}",
           "type": "json"
         }
       ]
