@@ -193,10 +193,10 @@ export default {
         return alreadyExistNickname;
       }
 
-      const alreadySignedUp = await User.findOne({ attributes: ['sub'], where: { sub: sub }});
-      if (alreadySignedUp) {
-        return alreadySignedUp;
-      }
+      // const alreadySignedUp = await User.findOne({ attributes: ['sub'], where: { sub: sub }});
+      // if (alreadySignedUp) {
+      //   return alreadySignedUp;
+      // }
       
       const user = await User.create({
         nickname: nickname,
