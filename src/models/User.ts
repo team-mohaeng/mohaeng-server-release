@@ -3,6 +3,7 @@ import sequelize from './index';
 
 interface UserAttributes {
   id?: number; //not null, auto increment
+  sub?: string;
   token?: string;
   email?: string;
   password?: string;
@@ -32,6 +33,7 @@ interface UserAttributes {
 
 export class User extends Model<UserAttributes>{
   public readonly id!: number;
+  public sub: string;
   public token: string;
   public email: string;
   public password: string;
@@ -64,6 +66,9 @@ export class User extends Model<UserAttributes>{
 
 User.init(
   {
+    sub: {
+      type: DataTypes.STRING(100),
+    },
     token: {
       type: DataTypes.STRING(100),
     },
