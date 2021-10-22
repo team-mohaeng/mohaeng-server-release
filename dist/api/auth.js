@@ -7,6 +7,7 @@ const express_1 = __importDefault(require("express"));
 const express_validator_1 = require("express-validator");
 const authService_1 = __importDefault(require("../service/authService"));
 const auth_1 = __importDefault(require("../middleware/auth"));
+const apple_1 = __importDefault(require("../middleware/apple"));
 const errors_1 = require("../errors");
 const kakao_1 = __importDefault(require("../middleware/kakao"));
 const router = express_1.default.Router();
@@ -71,14 +72,30 @@ router.put("/password", [
     const result = await authService_1.default.change(requestDTO);
     res.status(result.status).json(result);
 });
-router.post("/nickname", async (req, res) => {
+router.post("/apple", apple_1.default, async (req, res) => {
     try {
-        const { nickname, token } = req.body;
+        const { nickname, sub, token } = req.body;
         const requestDTO = {
             nickname: nickname,
+            sub: sub,
             token: token
         };
-        const result = await authService_1.default.nickname(requestDTO);
+        const result = await authService_1.default.social(requestDTO);
+        res.status(result.status).json(result);
+    }
+    catch (err) {
+        console.log(err);
+        return errors_1.serverError;
+    }
+});
+router.post("/apple/login", apple_1.default, async (req, res) => {
+    try {
+        const { sub, token } = req.body;
+        const requestDTO = {
+            sub: sub,
+            token: token
+        };
+        const result = await authService_1.default.socialLogIn(requestDTO);
         res.status(result.status).json(result);
     }
     catch (err) {

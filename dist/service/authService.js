@@ -137,9 +137,9 @@ exports.default = {
             return errors_1.serverError;
         }
     },
-    nickname: async (dto) => {
+    social: async (dto) => {
         try {
-            const { nickname, token } = dto;
+            const { nickname, sub, token } = dto;
             if (nickname.length > 6 || nickname.length == 0) {
                 return errors_1.nicknameLengthCheck;
             }
@@ -149,6 +149,7 @@ exports.default = {
             }
             const user = await User_1.User.create({
                 nickname: nickname,
+                sub: sub,
                 token: token,
             });
             const payload = {
@@ -163,6 +164,35 @@ exports.default = {
             Skin_1.Skin.create({
                 user_id: user.id,
             });
+            const responseDTO = {
+                status: 200,
+                data: {
+                    jwt: jwtToken,
+                }
+            };
+            return responseDTO;
+        }
+        catch (err) {
+            console.error(err);
+            return errors_1.serverError;
+        }
+    },
+    socialLogIn: async (dto) => {
+        try {
+            const { sub, token } = dto;
+            const user = await User_1.User.findOne({ where: { sub: sub } });
+            if (!user) {
+                return errors_1.notExistUser;
+            }
+            else {
+                User_1.User.update({ token: token }, { where: { sub: sub } });
+            }
+            const payload = {
+                user: {
+                    id: user.id,
+                },
+            };
+            const jwtToken = jsonwebtoken_1.default.sign(payload, config_1.default.jwtSecret);
             const responseDTO = {
                 status: 200,
                 data: {

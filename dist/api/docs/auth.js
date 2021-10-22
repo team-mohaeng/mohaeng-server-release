@@ -155,21 +155,22 @@
  * }
  */
 /**
- * @api {post} /api/nickname 소셜로그인 회원가입
+ * @api {post} /api/apple 애플 회원가입
  *
  * @apiVersion 1.0.0
- * @apiName createUser
+ * @apiName createApple
  * @apiGroup 로그인/회원가입
  *
  * * @apiHeaderExample {json} Header-Example:
  * {
  *  "Content-Type": "application/json"
- *  "token": "token"
+ *  "idToken": "apple id token"
  * }
  *
  * @apiParamExample {json} Request-Example:
  * {
  *  "nickname": "시원뿡"
+ *  "token": "device token"
  * }
  *
  * @apiSuccess {string} jwt
@@ -196,6 +197,55 @@
  *  "status": 404,
  *  "message": "이미 사용 중인 닉네임입니다."
  * }
+ *
+ * 403 토큰 누락
+ * {
+ *  "status": 403,
+ *  "message": "토큰이 없습니다. 토큰을 함께 보내주세요."
+ * }
+ *
+ * 403 토큰 유효성 검증 실패
+ * {
+ *  "status": 403,
+ *  "message": "유효성 인증에 실패하였습니다."
+ * }
+ *
+ * 500 서버 에러
+ * {
+ *  "status": 500,
+ *  "message": "서버 에러입니다. 서버 파트에게 문의해주세요 *^^*"
+ * }
+ */
+/**
+ * @api {post} /api/apple/login 애플 로그인
+ *
+ * @apiVersion 1.0.0
+ * @apiName appleLogIn
+ * @apiGroup 로그인/회원가입
+ *
+ * * @apiHeaderExample {json} Header-Example:
+ * {
+ *  "Content-Type": "application/json"
+ *  "idToken": "apple id token"
+ * }
+ *
+ * @apiParamExample {json} Request-Example:
+ * {
+ *  "token": "device token"
+ * }
+ *
+ * @apiSuccess {string} jwt
+ *
+ * @apiSuccessExample {json} Success-Response:
+ * 200 OK
+ * {
+ *  "status": 200,
+ *  "data": {
+ *    "jwt": "jwt 토큰"
+ *  }
+ * }
+ *
+ * @apiErrorExample Error-Response:
  *
  * 403 토큰 누락
  * {
