@@ -19,6 +19,7 @@ import { SocialLogInRequestDTO } from '../dto/Auth/Social/request/SocialLogInReq
 import { SocialSignUpRequestDTO } from '../dto/Auth/Social/request/SocialSignUpRequestDTO';
 import { serverError, alreadyExistEmail, nicknameLengthCheck, alreadyExistNickname, notMatchSignIn, notExistUser, invalidEmail } from "../errors";
 import { DeleteAccountResponseDTO } from '../dto/Auth/Delete/DeleteAccountResponse';
+import { where } from 'sequelize/types';
 
 
 export default {
@@ -187,9 +188,14 @@ export default {
         return nicknameLengthCheck;
       }
       
-      const hasNickname = await User.findOne({ attributes: ['nickname'], where: { nickname: nickname } });
+      const hasNickname = await User.findOne({ attributes: ['nickname'], where: { nickname: nickname }});
       if (hasNickname) {
         return alreadyExistNickname;
+      }
+
+      const alreadySignedUp = await User.findOne({ attributes: ['sub'], where: { sub: sub }});
+      if (alreadySignedUp) {
+        return alreadySignedUp;
       }
       
       const user = await User.create({
@@ -240,7 +246,7 @@ export default {
         return notExistUser
       }
       else {
-        User.update({ token: token}, { where: { sub: sub }});
+        User.update({ token: token }, { where: { sub: sub }});
       }
 
       const payload = {
