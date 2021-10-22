@@ -147,6 +147,10 @@ exports.default = {
             if (hasNickname) {
                 return errors_1.alreadyExistNickname;
             }
+            // const alreadySignedUp = await User.findOne({ attributes: ['sub'], where: { sub: sub }});
+            // if (alreadySignedUp) {
+            //   return alreadySignedUp;
+            // }
             const user = await User_1.User.create({
                 nickname: nickname,
                 sub: sub,
