@@ -141,3 +141,8 @@ export const invalidClient: IFail = {
   message: "헤더를 확인해주세요."
 }
 
+export const alreadySignedUp: IFail = {
+  status: 404,
+  message: "이미 가입된 회원입니다."
+}
+
