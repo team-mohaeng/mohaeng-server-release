@@ -16,7 +16,8 @@ import { CheckEmailRequestDTO } from '../dto/Auth/Password/request/CheckEmailReq
 import { CheckEmailResponseDTO } from '../dto/Auth/Password/response/CheckEmailResponseDTO';
 import { SocialLogInResponseDTO } from '../dto/Auth/Social/response/SocialLogInResponseDTO';
 import { SocialLogInRequestDTO } from '../dto/Auth/Social/request/SocialLogInRequestDTO';
-import { serverError, notExistUid, alreadyExistEmail, nicknameLengthCheck, alreadyExistNickname, notMatchSignIn, notExistUser, invalidEmail } from "../errors";
+import { SocialSignUpRequestDTO } from '../dto/Auth/Social/request/SocialSignUpRequestDTO';
+import { serverError, alreadyExistEmail, nicknameLengthCheck, alreadyExistNickname, notMatchSignIn, notExistUser, invalidEmail } from "../errors";
 import { DeleteAccountResponseDTO } from '../dto/Auth/Delete/DeleteAccountResponse';
 
 
@@ -178,9 +179,9 @@ export default {
     }
   },
 
-  nickname: async (dto: SocialLogInRequestDTO) => {
+  social: async (dto: SocialSignUpRequestDTO) => {
     try{
-      const { nickname, token } = dto;
+      const { nickname, sub, token } = dto;
 
       if ( nickname.length > 6 || nickname.length == 0 ) {
         return nicknameLengthCheck;
@@ -193,6 +194,7 @@ export default {
       
       const user = await User.create({
         nickname: nickname,
+        sub: sub,
         token: token,
       });
 
@@ -214,6 +216,43 @@ export default {
       Skin.create({
         user_id: user.id,
       })
+
+      const responseDTO: SignUpResponseDTO = {
+        status: 200,
+        data: {
+          jwt: jwtToken,
+        }
+      }
+      
+      return responseDTO;
+
+    } catch (err) {
+      console.error(err);
+      return serverError;
+    }
+  },
+  socialLogIn: async (dto: SocialLogInRequestDTO) => {
+    try{
+      const { sub, token } = dto;
+      
+      const user = await User.findOne({ where: { sub: sub }});
+      if (!user) {
+        return notExistUser
+      }
+      else {
+        User.update({ token: token}, { where: { sub: sub }});
+      }
+
+      const payload = {
+        user: {
+          id: user.id,
+        },
+      };
+
+      const jwtToken = jwt.sign(
+        payload,
+        config.jwtSecret,
+      );
 
       const responseDTO: SignUpResponseDTO = {
         status: 200,

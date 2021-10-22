@@ -1,16 +1,14 @@
 import express from "express";
-import axios from "axios";
-import qs from "qs";
 import { check, validationResult } from "express-validator";
-import config from "../config";
 import authService from "../service/authService";
 import { SignUpRequestDTO } from "../dto/Auth/SignUp/request/SignUpRequestDTO";
 import { SignInRequestDTO } from "../dto/Auth/SignIn/request/SignInRequestDTO";
+import { SocialSignUpRequestDTO } from "../dto/Auth/Social/request/SocialSignUpRequestDTO";
 import { SocialLogInRequestDTO } from "../dto/Auth/Social/request/SocialLogInRequestDTO";
 import { CheckEmailRequestDTO } from "../dto/Auth/Password/request/CheckEmailRequestDTO";
 import { ChangePasswordRequestDTO } from "../dto/Auth/Password/request/ChangePasswordRequestDTO";
 import auth from "../middleware/auth";
-import verifyFCM from "../middleware/verifyToken";
+import apple from "../middleware/apple";
 import { serverError } from "../errors";
 import kakao from "../middleware/kakao";
 
@@ -98,14 +96,30 @@ router.put(
     res.status(result.status).json(result);
   });
 
-router.post("/nickname", async (req, res) => {
+router.post("/apple", apple, async (req, res) => { 
   try{
-    const { nickname, token } = req.body;
-    const requestDTO: SocialLogInRequestDTO = {
+    const { nickname, sub, token } = req.body;
+    const requestDTO: SocialSignUpRequestDTO = {
       nickname: nickname,
+      sub: sub,
       token: token
     };
-    const result = await authService.nickname(requestDTO);
+    const result = await authService.social(requestDTO);
+    res.status(result.status).json(result);
+  } catch (err) {
+    console.log(err);
+    return serverError;
+  }
+})
+
+router.post("/apple/login", apple, async (req, res) => { 
+  try{
+    const { sub, token } = req.body;
+    const requestDTO: SocialLogInRequestDTO = {
+      sub: sub,
+      token: token
+    };
+    const result = await authService.socialLogIn(requestDTO);
     res.status(result.status).json(result);
   } catch (err) {
     console.log(err);
@@ -132,6 +146,8 @@ router.post("/kakao", kakao, async (req, res) => {
     return serverError;
   }
 })
+
+
 
 module.exports = router;
 
