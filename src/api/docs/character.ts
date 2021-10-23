@@ -87,12 +87,14 @@
  *          {
  *            "id": 1,
  *            "image": "image.url",
+ *            "preview": "preview.url"
  *            "hasCard": true,
  *            "isNew": false
  *          },
  *          {
  *            "id": 2,
  *            "image": "image.url",
+ *            "preview": "preview.url"
  *            "hasCard": true,
  *            "isNew": false
  *          },
@@ -117,6 +119,7 @@
  *          {
  *            "id": 11,
  *            "image": "image.url",
+ *            "preview": "preview.url"
  *            "hasCard": true,
  *            "isNew": false
  *          },
