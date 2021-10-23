@@ -17,9 +17,8 @@ import { CheckEmailResponseDTO } from '../dto/Auth/Password/response/CheckEmailR
 import { SocialLogInResponseDTO } from '../dto/Auth/Social/response/SocialLogInResponseDTO';
 import { SocialLogInRequestDTO } from '../dto/Auth/Social/request/SocialLogInRequestDTO';
 import { SocialSignUpRequestDTO } from '../dto/Auth/Social/request/SocialSignUpRequestDTO';
-import { serverError, alreadyExistEmail, nicknameLengthCheck, alreadyExistNickname, notMatchSignIn, notExistUser, invalidEmail } from "../errors";
+import { serverError, alreadyExistEmail, nicknameLengthCheck, alreadyExistNickname, notMatchSignIn, notExistUser, invalidEmail, alreadySignedUp } from "../errors";
 import { DeleteAccountResponseDTO } from '../dto/Auth/Delete/DeleteAccountResponse';
-import { where } from 'sequelize/types';
 
 
 export default {
@@ -193,8 +192,8 @@ export default {
         return alreadyExistNickname;
       }
 
-      const alreadySignedUp = await User.findOne({ attributes: ['sub'], where: { sub: sub }});
-      if (alreadySignedUp) {
+      const isSignedUp = await User.findOne({ attributes: ['sub'], where: { sub: sub }});
+      if (isSignedUp) {
         return alreadySignedUp;
       }
       
