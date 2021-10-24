@@ -98,13 +98,12 @@ router.put(
 
 router.post("/apple", apple, async (req, res) => { 
   try{
-    const { nickname, sub, token } = req.body;
     const requestDTO: SocialSignUpRequestDTO = {
-      nickname: nickname,
-      sub: sub,
-      token: token
+      nickname: req.body.nickname,
+      sub: req.body.sub,
+      token: req.header("token")
     };
-    const result = await authService.social(requestDTO);
+    const result = await authService.socialSignUp(requestDTO);
     res.status(result.status).json(result);
   } catch (err) {
     console.log(err);
@@ -112,14 +111,13 @@ router.post("/apple", apple, async (req, res) => {
   }
 })
 
-router.post("/apple/login", apple, async (req, res) => { 
+router.post("/apple/signup", apple, async (req, res) => { 
   try{
-    const { sub, token } = req.body;
     const requestDTO: SocialLogInRequestDTO = {
-      sub: sub,
-      token: token
+      sub: req.body.sub,
+      token: req.header("token")
     };
-    const result = await authService.socialLogIn(requestDTO);
+    const result = await authService.social(requestDTO);
     res.status(result.status).json(result);
   } catch (err) {
     console.log(err);
@@ -137,9 +135,28 @@ router.delete("/delete", auth, async (req, res) => {
   }
 })
 
+router.post("/kakao/signup", kakao, async (req, res) => {
+  try{
+    const requestDTO: SocialSignUpRequestDTO = {
+      nickname: req.body.nickname,
+      sub: req.body.token.id,
+      token: req.header("token")
+    }
+    const result = await authService.socialSignUp(requestDTO);
+    res.status(result.status).json(result);
+  } catch (err) {
+    console.log(err);
+    return serverError;
+  }
+})
+
 router.post("/kakao", kakao, async (req, res) => {
   try{
-    const result = await authService.kakao();
+    const requestDTO: SocialLogInRequestDTO = {
+      sub: req.body.token.id,
+      token: req.header("token")
+    }
+    const result = await authService.social(requestDTO);
     res.status(result.status).json(result);
   } catch (err) {
     console.log(err);
