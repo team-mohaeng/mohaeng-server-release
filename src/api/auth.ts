@@ -9,8 +9,10 @@ import { CheckEmailRequestDTO } from "../dto/Auth/Password/request/CheckEmailReq
 import { ChangePasswordRequestDTO } from "../dto/Auth/Password/request/ChangePasswordRequestDTO";
 import auth from "../middleware/auth";
 import apple from "../middleware/apple";
-import { serverError } from "../errors";
 import kakao from "../middleware/kakao";
+import google from "../middleware/google";
+import { serverError } from "../errors";
+
 
 const router = express.Router();
 
@@ -96,7 +98,7 @@ router.put(
     res.status(result.status).json(result);
   });
 
-router.post("/apple", apple, async (req, res) => { 
+router.post("/apple/signup", apple, async (req, res) => { 
   try{
     const requestDTO: SocialSignUpRequestDTO = {
       nickname: req.body.nickname,
@@ -111,7 +113,7 @@ router.post("/apple", apple, async (req, res) => {
   }
 })
 
-router.post("/apple/signup", apple, async (req, res) => { 
+router.post("/apple", apple, async (req, res) => { 
   try{
     const requestDTO: SocialLogInRequestDTO = {
       sub: req.body.sub,
@@ -125,9 +127,28 @@ router.post("/apple/signup", apple, async (req, res) => {
   }
 })
 
-router.delete("/delete", auth, async (req, res) => {
+router.post("/google/signup", google, async (req, res) => { 
   try{
-    const result = await authService.delete(req.body.user.id);
+    const requestDTO: SocialSignUpRequestDTO = {
+      nickname: req.body.nickname,
+      sub: req.body.sub,
+      token: req.header("token")
+    };
+    const result = await authService.socialSignUp(requestDTO);
+    res.status(result.status).json(result);
+  } catch (err) {
+    console.log(err);
+    return serverError;
+  }
+})
+
+router.post("/google", google, async (req, res) => { 
+  try{
+    const requestDTO: SocialLogInRequestDTO = {
+      sub: req.body.sub,
+      token: req.header("token")
+    };
+    const result = await authService.social(requestDTO);
     res.status(result.status).json(result);
   } catch (err) {
     console.log(err);
@@ -157,6 +178,16 @@ router.post("/kakao", kakao, async (req, res) => {
       token: req.header("token")
     }
     const result = await authService.social(requestDTO);
+    res.status(result.status).json(result);
+  } catch (err) {
+    console.log(err);
+    return serverError;
+  }
+})
+
+router.delete("/delete", auth, async (req, res) => {
+  try{
+    const result = await authService.delete(req.body.user.id);
     res.status(result.status).json(result);
   } catch (err) {
     console.log(err);
