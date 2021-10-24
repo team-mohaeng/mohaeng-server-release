@@ -1,36 +1,30 @@
 import axios from "axios";
 import jwt from "jsonwebtoken";
-import { invalidToken, notExistToken, serverError } from "../errors";
+import { invalidToken, notExistToken } from "../errors";
 const NodeRSA = require('node-rsa');
 
 //Get public key
 export default async(req, res, next) => {
-  try{
-    const idToken = req.header("idToken");
-    if (!idToken) {
-      return notExistToken;
-    }
-    const result = await axios.request({
-      method: "GET",
-      url: "https://appleid.apple.com/auth/keys",
-    })
-    const key = result.data;
-    const jwtClaims = verifyIdToken(key, idToken);
-    jwtClaims
-    .then((token) => { 
-      const sub = token.sub
-      req.body.sub = sub;
-      next();
-    })
-    .catch((err) => {
-      console.log(err);
-      return invalidToken;
-    })
+  const idToken = req.header("idToken");
+  if (!idToken) {
+    res.status(notExistToken.status).json(notExistToken);
   }
-  catch (err) {
+  const result = await axios.request({
+    method: "GET",
+    url: "https://appleid.apple.com/auth/keys",
+  })
+  const key = result.data;
+  const jwtClaims = verifyIdToken(key, idToken);
+  jwtClaims
+  .then((token) => { 
+    const sub = token.sub
+    req.body.sub = sub;
+    next();
+  })
+  .catch((err) => {
     console.log(err);
-    return serverError;
-  }
+    res.status(invalidToken.status).json(invalidToken);
+  })
 };
 //Decryption of id'u token by public key and rs256 algorithm
 async function verifyIdToken(key, idToken) { //id_token, client_id

@@ -7,24 +7,26 @@ const axios_1 = __importDefault(require("axios"));
 const errors_1 = require("../errors");
 exports.default = async (req, res, next) => {
     // Get token from header
-    const token = req.header("Bearer");
+    const idToken = req.header("idToken");
     // Check if not token
-    if (!token) {
-        return errors_1.notExistToken;
+    if (!idToken) {
+        res.status(errors_1.notExistToken.status).json(errors_1.notExistToken);
     }
     // Verify token
     try {
-        await (0, axios_1.default)({
+        const token = await (0, axios_1.default)({
             method: "GET",
             url: "https://kapi.kakao.com/v1/user/access_token_info",
             headers: {
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${idToken}`
             }
         });
+        req.body.token = token.data;
         next();
     }
     catch (err) {
-        return errors_1.invalidToken;
+        console.log(err);
+        res.status(errors_1.invalidToken.status).json(errors_1.invalidToken);
     }
 };
 //# sourceMappingURL=kakao.js.map

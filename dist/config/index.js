@@ -43,6 +43,10 @@ exports.default = {
      */
     kakaoRestAPIKey: process.env.REST_API_KEY,
     redirectUri: process.env.REDIRECT_URI,
+    /**
+     * Your secret sauce
+     */
+    googleClientId: process.env.GOOGLE_CLIENT_ID,
 };
 exports.smtpTransport = nodemailer_1.default.createTransport({
     service: "Naver",
