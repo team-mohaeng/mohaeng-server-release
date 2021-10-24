@@ -271,7 +271,7 @@ export default {
 
       data = {
         user: true,
-        jwt: jwt
+        jwt: jwtToken
       }
 
       responseDTO = {
