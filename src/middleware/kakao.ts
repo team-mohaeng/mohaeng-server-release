@@ -1,27 +1,29 @@
 import axios from "axios";
 import { TOKEN_ERROR_MESSAGE } from "../constant";
-import { invalidEmail, invalidToken, notExistToken } from "../errors";
+import { invalidToken, notExistToken } from "../errors";
 
 export default async (req, res, next) => {
   // Get token from header
-  const token = req.header("Bearer");
+  const idToken = req.header("idToken");
 
   // Check if not token
-  if (!token) {
-    return notExistToken;
+  if (!idToken) {
+    res.status(notExistToken.status).json(notExistToken);
   }
 
   // Verify token
   try {
-    await axios({
+    const token = await axios({
       method: "GET",
       url: "https://kapi.kakao.com/v1/user/access_token_info",
       headers:{
-        'Authorization':`Bearer ${token}`
+        'Authorization':`Bearer ${idToken}`
       }
     });
+    req.body.token = token.data;
     next();
   } catch (err) {
-    return invalidToken;
+    console.log(err);
+    res.status(invalidToken.status).json(invalidToken);
   }
 };

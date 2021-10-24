@@ -9,8 +9,10 @@ import { CheckEmailRequestDTO } from "../dto/Auth/Password/request/CheckEmailReq
 import { ChangePasswordRequestDTO } from "../dto/Auth/Password/request/ChangePasswordRequestDTO";
 import auth from "../middleware/auth";
 import apple from "../middleware/apple";
-import { serverError } from "../errors";
 import kakao from "../middleware/kakao";
+import google from "../middleware/google";
+import { serverError } from "../errors";
+
 
 const router = express.Router();
 
@@ -96,13 +98,26 @@ router.put(
     res.status(result.status).json(result);
   });
 
+router.post("/apple/signup", apple, async (req, res) => { 
+  try{
+    const requestDTO: SocialSignUpRequestDTO = {
+      nickname: req.body.nickname,
+      sub: req.body.sub,
+      token: req.header("token")
+    };
+    const result = await authService.socialSignUp(requestDTO);
+    res.status(result.status).json(result);
+  } catch (err) {
+    console.log(err);
+    return serverError;
+  }
+})
+
 router.post("/apple", apple, async (req, res) => { 
   try{
-    const { nickname, sub, token } = req.body;
-    const requestDTO: SocialSignUpRequestDTO = {
-      nickname: nickname,
-      sub: sub,
-      token: token
+    const requestDTO: SocialLogInRequestDTO = {
+      sub: req.body.sub,
+      token: req.header("token")
     };
     const result = await authService.social(requestDTO);
     res.status(result.status).json(result);
@@ -112,14 +127,57 @@ router.post("/apple", apple, async (req, res) => {
   }
 })
 
-router.post("/apple/login", apple, async (req, res) => { 
+router.post("/google/signup", google, async (req, res) => { 
   try{
-    const { sub, token } = req.body;
-    const requestDTO: SocialLogInRequestDTO = {
-      sub: sub,
-      token: token
+    const requestDTO: SocialSignUpRequestDTO = {
+      nickname: req.body.nickname,
+      sub: req.body.sub,
+      token: req.header("token")
     };
-    const result = await authService.socialLogIn(requestDTO);
+    const result = await authService.socialSignUp(requestDTO);
+    res.status(result.status).json(result);
+  } catch (err) {
+    console.log(err);
+    return serverError;
+  }
+})
+
+router.post("/google", google, async (req, res) => { 
+  try{
+    const requestDTO: SocialLogInRequestDTO = {
+      sub: req.body.sub,
+      token: req.header("token")
+    };
+    const result = await authService.social(requestDTO);
+    res.status(result.status).json(result);
+  } catch (err) {
+    console.log(err);
+    return serverError;
+  }
+})
+
+router.post("/kakao/signup", kakao, async (req, res) => {
+  try{
+    const requestDTO: SocialSignUpRequestDTO = {
+      nickname: req.body.nickname,
+      sub: req.body.token.id,
+      token: req.header("token")
+    }
+    const result = await authService.socialSignUp(requestDTO);
+    res.status(result.status).json(result);
+  } catch (err) {
+    console.log(err);
+    return serverError;
+  }
+})
+
+router.post("/kakao", kakao, async (req, res) => {
+  try{
+    const requestDTO: SocialLogInRequestDTO = {
+      sub: req.body.token.id,
+      token: req.header("token")
+    }
+    const result = await authService.social(requestDTO);
     res.status(result.status).json(result);
   } catch (err) {
     console.log(err);
@@ -130,16 +188,6 @@ router.post("/apple/login", apple, async (req, res) => {
 router.delete("/delete", auth, async (req, res) => {
   try{
     const result = await authService.delete(req.body.user.id);
-    res.status(result.status).json(result);
-  } catch (err) {
-    console.log(err);
-    return serverError;
-  }
-})
-
-router.post("/kakao", kakao, async (req, res) => {
-  try{
-    const result = await authService.kakao();
     res.status(result.status).json(result);
   } catch (err) {
     console.log(err);

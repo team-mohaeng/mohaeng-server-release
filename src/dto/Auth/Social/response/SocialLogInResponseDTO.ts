@@ -1,4 +1,9 @@
 export interface SocialLogInResponseDTO {
 	status: number;
-  message: string;
+  data: socialLogInDTO;
+}
+
+export interface socialLogInDTO {
+  user: boolean;
+  jwt?: string;
 }
