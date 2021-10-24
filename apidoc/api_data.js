@@ -20,7 +20,7 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "Boolean",
+            "type": "boolean",
             "optional": false,
             "field": "user",
             "description": ""
@@ -37,12 +37,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "200 OK 사용자 있을 경우\n{\n \"status\": 200,\n \"data\": {\n   \"user\": true,\n   \"jwt\": \"jwt 토큰\"\n }\n}",
-          "type": "json"
-        },
-        {
-          "title": "Success-Response:",
-          "content": "200 OK 사용자 없을 경우\n{\n \"status\": 200,\n \"data\": {\n   \"user\": false,\n }\n}",
+          "content": "200 OK 사용자 있을 경우\n{\n \"status\": 200,\n \"data\": {\n   \"user\": true,\n   \"jwt\": \"jwt 토큰\"\n }\n}\n\n200 OK 사용자 없을 경우\n{\n \"status\": 200,\n \"data\": {\n   \"user\": false,\n }\n}",
           "type": "json"
         }
       ]
@@ -64,7 +59,7 @@ define({ "api": [
     "url": "/api/apple/signup",
     "title": "애플 회원가입",
     "version": "1.0.0",
-    "name": "appleLogIn",
+    "name": "appleSignUp",
     "group": "로그인/회원가입",
     "header": {
       "examples": [
@@ -223,6 +218,118 @@ define({ "api": [
   },
   {
     "type": "post",
+    "url": "/api/google",
+    "title": "구글 로그인",
+    "version": "1.0.0",
+    "name": "googleLogIn",
+    "group": "로그인/회원가입",
+    "header": {
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\"\n \"idToken\": \"구글 id 토큰\"\n \"token\": \"디바이스 토큰\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "boolean",
+            "optional": false,
+            "field": "user",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": false,
+            "field": "jwt",
+            "description": ""
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "200 OK 사용자 있을 경우\n{\n \"status\": 200,\n \"data\": {\n   \"user\": true,\n   \"jwt\": \"jwt 토큰\"\n }\n}\n\n200 OK 사용자 없을 경우\n{\n \"status\": 200,\n \"data\": {\n   \"user\": false,\n }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "403 토큰 누락\n{\n \"status\": 403,\n \"message\": \"토큰이 없습니다. 토큰을 함께 보내주세요.\"\n}\n\n403 토큰 유효성 검증 실패\n{\n \"status\": 403,\n \"message\": \"유효성 인증에 실패하였습니다.\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/api/docs/auth.ts",
+    "groupTitle": "로그인/회원가입"
+  },
+  {
+    "type": "post",
+    "url": "/api/google/signup",
+    "title": "구글 회원가입",
+    "version": "1.0.0",
+    "name": "googleSignUp",
+    "group": "로그인/회원가입",
+    "header": {
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\"\n \"idToken\": \"구글 id 토큰\"\n \"token\": \"디바이스 토큰\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "parameter": {
+      "examples": [
+        {
+          "title": "Request-Example:",
+          "content": "{\n \"nickname\": \"시원뿡\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": false,
+            "field": "jwt",
+            "description": ""
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "200 OK\n{\n \"status\": 200,\n \"data\": {\n   \"jwt\": \"jwt 토큰\"\n }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "403 토큰 누락\n{\n \"status\": 403,\n \"message\": \"토큰이 없습니다. 토큰을 함께 보내주세요.\"\n}\n\n403 토큰 유효성 검증 실패\n{\n \"status\": 403,\n \"message\": \"유효성 인증에 실패하였습니다.\"\n}\n\n404 닉네임 중복\n{\n \"status\": 404,\n \"message\": \"이미 사용중인 닉네임입니다.\"\n}\n\n404 닉네임 글자 제한\n{\n \"status\": 404,\n \"message\": \"닉네임은 1-6글자 이내로 작성해주세요\"\n}\n\n500 서버 에러\n{\n \"status\": 500,\n \"message\": \"서버 에러입니다. 서버 파트에게 문의해주세요 *^^*\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/api/docs/auth.ts",
+    "groupTitle": "로그인/회원가입"
+  },
+  {
+    "type": "post",
     "url": "/api/kakao",
     "title": "카카오 로그인",
     "version": "1.0.0",
@@ -242,14 +349,14 @@ define({ "api": [
         "Success 200": [
           {
             "group": "Success 200",
-            "type": "Boolean",
+            "type": "boolean",
             "optional": false,
             "field": "user",
             "description": ""
           },
           {
             "group": "Success 200",
-            "type": "String",
+            "type": "string",
             "optional": false,
             "field": "jwt",
             "description": ""
@@ -259,12 +366,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "200 OK 사용자 있을 경우\n{\n \"status\": 200,\n \"data\": {\n   \"user\": true,\n   \"jwt\": \"jwt\"\n }\n}",
-          "type": "json"
-        },
-        {
-          "title": "Success-Response:",
-          "content": "200 OK 사용자 없을 경우\n{\n \"status\": 200,\n \"data\": {\n   \"user\": false,\n }\n}",
+          "content": "200 OK 사용자 있을 경우\n{\n \"status\": 200,\n \"data\": {\n   \"user\": true,\n   \"jwt\": \"jwt\"\n }\n}\n\n200 OK 사용자 없을 경우\n{\n \"status\": 200,\n \"data\": {\n   \"user\": false,\n }\n}",
           "type": "json"
         }
       ]
@@ -341,7 +443,7 @@ define({ "api": [
   {
     "type": "get",
     "url": "/api/password/:email",
-    "title": "인증코드 보내기",
+    "title": "비밀번호 인증코드 보내기",
     "version": "1.0.0",
     "name": "sendCode",
     "group": "로그인/회원가입",
@@ -389,7 +491,7 @@ define({ "api": [
   {
     "type": "post",
     "url": "/api/signin",
-    "title": "로그인",
+    "title": "이메일 로그인",
     "version": "1.0.0",
     "name": "signin",
     "group": "로그인/회원가입",
@@ -446,7 +548,7 @@ define({ "api": [
   {
     "type": "post",
     "url": "/api/signup",
-    "title": "회원가입",
+    "title": "이메일 회원가입",
     "version": "1.0.0",
     "name": "signup",
     "group": "로그인/회원가입",
