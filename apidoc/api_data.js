@@ -1,7 +1,7 @@
 define({ "api": [
   {
     "type": "post",
-    "url": "/api/apple/login",
+    "url": "/api/apple",
     "title": "애플 로그인",
     "version": "1.0.0",
     "name": "appleLogIn",
@@ -10,7 +10,67 @@ define({ "api": [
       "examples": [
         {
           "title": "Header-Example:",
-          "content": "{\n \"Content-Type\": \"application/json\"\n \"idToken\": \"apple id token\"\n}",
+          "content": "{\n \"Content-Type\": \"application/json\"\n \"idToken\": \"애플 id 토큰\"\n \"token\": \"디바이스 토큰\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Boolean",
+            "optional": false,
+            "field": "user",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": false,
+            "field": "jwt",
+            "description": ""
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "200 OK 사용자 있을 경우\n{\n \"status\": 200,\n \"data\": {\n   \"user\": true,\n   \"jwt\": \"jwt 토큰\"\n }\n}",
+          "type": "json"
+        },
+        {
+          "title": "Success-Response:",
+          "content": "200 OK 사용자 없을 경우\n{\n \"status\": 200,\n \"data\": {\n   \"user\": false,\n }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "403 토큰 누락\n{\n \"status\": 403,\n \"message\": \"토큰이 없습니다. 토큰을 함께 보내주세요.\"\n}\n\n403 토큰 유효성 검증 실패\n{\n \"status\": 403,\n \"message\": \"유효성 인증에 실패하였습니다.\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/api/docs/auth.ts",
+    "groupTitle": "로그인/회원가입"
+  },
+  {
+    "type": "post",
+    "url": "/api/apple/signup",
+    "title": "애플 회원가입",
+    "version": "1.0.0",
+    "name": "appleLogIn",
+    "group": "로그인/회원가입",
+    "header": {
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\"\n \"idToken\": \"애플 id 토큰\"\n \"token\": \"디바이스 토큰\"\n}",
           "type": "json"
         }
       ]
@@ -19,7 +79,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Request-Example:",
-          "content": "{\n \"token\": \"device token\"\n}",
+          "content": "{\n \"nickname\": \"시원뿡\"\n}",
           "type": "json"
         }
       ]
@@ -48,7 +108,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Error-Response:",
-          "content": "\n403 토큰 누락\n{\n \"status\": 403,\n \"message\": \"토큰이 없습니다. 토큰을 함께 보내주세요.\"\n}\n\n403 토큰 유효성 검증 실패\n{\n \"status\": 403,\n \"message\": \"유효성 인증에 실패하였습니다.\"\n}\n\n500 서버 에러\n{\n \"status\": 500,\n \"message\": \"서버 에러입니다. 서버 파트에게 문의해주세요 *^^*\"\n}",
+          "content": "403 토큰 누락\n{\n \"status\": 403,\n \"message\": \"토큰이 없습니다. 토큰을 함께 보내주세요.\"\n}\n\n403 토큰 유효성 검증 실패\n{\n \"status\": 403,\n \"message\": \"유효성 인증에 실패하였습니다.\"\n}\n\n404 닉네임 중복\n{\n \"status\": 404,\n \"message\": \"이미 사용중인 닉네임입니다.\"\n}\n\n404 닉네임 글자 제한\n{\n \"status\": 404,\n \"message\": \"닉네임은 1-6글자 이내로 작성해주세요\"\n}\n\n500 서버 에러\n{\n \"status\": 500,\n \"message\": \"서버 에러입니다. 서버 파트에게 문의해주세요 *^^*\"\n}",
           "type": "json"
         }
       ]
@@ -114,63 +174,6 @@ define({ "api": [
     "groupTitle": "로그인/회원가입"
   },
   {
-    "type": "post",
-    "url": "/api/apple",
-    "title": "애플 회원가입",
-    "version": "1.0.0",
-    "name": "createApple",
-    "group": "로그인/회원가입",
-    "header": {
-      "examples": [
-        {
-          "title": "Header-Example:",
-          "content": "{\n \"Content-Type\": \"application/json\"\n \"idToken\": \"apple id token\"\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "parameter": {
-      "examples": [
-        {
-          "title": "Request-Example:",
-          "content": "{\n \"nickname\": \"시원뿡\"\n \"token\": \"device token\"\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "string",
-            "optional": false,
-            "field": "jwt",
-            "description": ""
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Success-Response:",
-          "content": "200 OK\n{\n \"status\": 200,\n \"data\": {\n   \"jwt\": \"jwt 토큰\"\n }\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "error": {
-      "examples": [
-        {
-          "title": "Error-Response:",
-          "content": "\n404 닉네임 글자 제한\n{\n \"status\": 404,\n \"message\": \"닉네임은 1-6글자 이내로 작성해주세요\"\n}\n\n404 닉네임 중복\n{\n \"status\": 404,\n \"message\": \"이미 사용 중인 닉네임입니다.\"\n}\n\n403 토큰 누락\n{\n \"status\": 403,\n \"message\": \"토큰이 없습니다. 토큰을 함께 보내주세요.\"\n}\n\n403 토큰 유효성 검증 실패\n{\n \"status\": 403,\n \"message\": \"유효성 인증에 실패하였습니다.\"\n}\n\n500 서버 에러\n{\n \"status\": 500,\n \"message\": \"서버 에러입니다. 서버 파트에게 문의해주세요 *^^*\"\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "filename": "src/api/docs/auth.ts",
-    "groupTitle": "로그인/회원가입"
-  },
-  {
     "type": "delete",
     "url": "/api/delete",
     "title": "회원탈퇴",
@@ -221,7 +224,7 @@ define({ "api": [
   {
     "type": "post",
     "url": "/api/kakao",
-    "title": "카카오 토큰 유효성 검사",
+    "title": "카카오 로그인",
     "version": "1.0.0",
     "name": "kakaoLogin",
     "group": "로그인/회원가입",
@@ -229,7 +232,76 @@ define({ "api": [
       "examples": [
         {
           "title": "Header-Example:",
-          "content": "{\n \"Bearer\": \"카카오 토큰\"\n}",
+          "content": "{\n \"Content-Type\": \"application/json\"\n \"idToken\": \"카카오 토큰\"\n \"token\": \"디바이스 토큰\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Boolean",
+            "optional": false,
+            "field": "user",
+            "description": ""
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "jwt",
+            "description": ""
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "200 OK 사용자 있을 경우\n{\n \"status\": 200,\n \"data\": {\n   \"user\": true,\n   \"jwt\": \"jwt\"\n }\n}",
+          "type": "json"
+        },
+        {
+          "title": "Success-Response:",
+          "content": "200 OK 사용자 없을 경우\n{\n \"status\": 200,\n \"data\": {\n   \"user\": false,\n }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "403 토큰 누락\n{\n \"status\": 403,\n \"message\": \"토큰이 없습니다. 토큰을 함께 보내주세요.\"\n}\n\n403 토큰 유효성 검증 실패\n{\n \"status\": 403,\n \"message\": \"유효성 인증에 실패하였습니다.\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/api/docs/auth.ts",
+    "groupTitle": "로그인/회원가입"
+  },
+  {
+    "type": "post",
+    "url": "/api/kakao/signup",
+    "title": "카카오 회원가입",
+    "version": "1.0.0",
+    "name": "kakaoSignUp",
+    "group": "로그인/회원가입",
+    "header": {
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\"\n \"idToken\": \"카카오 토큰\"\n \"token\": \"디바이스 토큰\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "parameter": {
+      "examples": [
+        {
+          "title": "Request-Example:",
+          "content": "{\n \"nickname\": \"시원뿡\"\n}",
           "type": "json"
         }
       ]
@@ -241,7 +313,7 @@ define({ "api": [
             "group": "Success 200",
             "type": "String",
             "optional": false,
-            "field": "message",
+            "field": "jwt",
             "description": ""
           }
         ]
@@ -249,7 +321,16 @@ define({ "api": [
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "200 OK\n{\n \"status\": 200,\n \"message\": \"토큰 인증을 완료하였습니다.\"\n}",
+          "content": "200 OK\n{\n \"status\": 200,\n \"data\": {\n   \"jwt\": \"jwt\"\n }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "403 토큰 누락\n{\n \"status\": 403,\n \"message\": \"토큰이 없습니다. 토큰을 함께 보내주세요.\"\n}\n\n403 토큰 유효성 검증 실패\n{\n \"status\": 403,\n \"message\": \"유효성 인증에 실패하였습니다.\"\n}\n\n404 닉네임 중복\n{\n \"status\": 404,\n \"message\": \"이미 사용중인 닉네임입니다.\"\n}\n\n404 닉네임 글자 제한\n{\n \"status\": 404,\n \"message\": \"닉네임은 1-6글자 이내로 작성해주세요\"\n}\n\n404 이미 가입된 회원\n{\n \"status\": 404,\n \"message\": \"이미 가입된 회원입니다.\"\n}",
           "type": "json"
         }
       ]

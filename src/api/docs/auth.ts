@@ -136,7 +136,7 @@
  */
 
 /**
- * @api {post} /api/kakao 카카오 토큰 유효성 검사
+ * @api {post} /api/kakao 카카오 로그인
  * 
  * @apiVersion 1.0.0
  * @apiName kakaoLogin
@@ -144,63 +144,78 @@
  *
  * @apiHeaderExample {json} Header-Example:
  * {
- *  "Bearer": "카카오 토큰"
+ *  "Content-Type": "application/json"
+ *  "idToken": "카카오 토큰"
+ *  "token": "디바이스 토큰"
  * }
  * 
- * @apiSuccess {String} message
+ * @apiSuccess {Boolean} user
+ * @apiSuccess {String} jwt
  * 
  * @apiSuccessExample {json} Success-Response:
- * 200 OK
+ * 200 OK 사용자 있을 경우
  * {
  *  "status": 200,
- *  "message": "토큰 인증을 완료하였습니다."
+ *  "data": {
+ *    "user": true,
+ *    "jwt": "jwt"
+ *  }
+ * }
+ * 
+ * @apiSuccessExample {json} Success-Response:
+ * 200 OK 사용자 없을 경우
+ * {
+ *  "status": 200,
+ *  "data": {
+ *    "user": false,
+ *  }
+ * }
+ * 
+ * @apiErrorExample Error-Response:
+ * 403 토큰 누락
+ * {
+ *  "status": 403,
+ *  "message": "토큰이 없습니다. 토큰을 함께 보내주세요."
+ * }
+ * 
+ * 403 토큰 유효성 검증 실패
+ * {
+ *  "status": 403,
+ *  "message": "유효성 인증에 실패하였습니다."
  * }
  */
 
 /**
- * @api {post} /api/apple 애플 회원가입
+ * @api {post} /api/kakao/signup 카카오 회원가입
  * 
  * @apiVersion 1.0.0
- * @apiName createApple
+ * @apiName kakaoSignUp
  * @apiGroup 로그인/회원가입
- * 
- * * @apiHeaderExample {json} Header-Example:
+ *
+ * @apiHeaderExample {json} Header-Example:
  * {
  *  "Content-Type": "application/json"
- *  "idToken": "apple id token"
+ *  "idToken": "카카오 토큰"
+ *  "token": "디바이스 토큰"
  * }
  * 
  * @apiParamExample {json} Request-Example:
  * {
  *  "nickname": "시원뿡"
- *  "token": "device token"
  * }
- *
- * @apiSuccess {string} jwt
+ * 
+ * @apiSuccess {String} jwt
  * 
  * @apiSuccessExample {json} Success-Response:
  * 200 OK
  * {
  *  "status": 200,
  *  "data": {
- *    "jwt": "jwt 토큰"
+ *    "jwt": "jwt"
  *  }
  * }
  * 
  * @apiErrorExample Error-Response:
- * 
- * 404 닉네임 글자 제한
- * {
- *  "status": 404,
- *  "message": "닉네임은 1-6글자 이내로 작성해주세요"
- * }
- * 
- * 404 닉네임 중복
- * {
- *  "status": 404,
- *  "message": "이미 사용 중인 닉네임입니다."
- * }
- * 
  * 403 토큰 누락
  * {
  *  "status": 403,
@@ -213,15 +228,27 @@
  *  "message": "유효성 인증에 실패하였습니다."
  * }
  * 
- * 500 서버 에러
+ * 404 닉네임 중복
  * {
- *  "status": 500,
- *  "message": "서버 에러입니다. 서버 파트에게 문의해주세요 *^^*"
+ *  "status": 404,
+ *  "message": "이미 사용중인 닉네임입니다."
+ * }
+ * 
+ * 404 닉네임 글자 제한
+ * {
+ *  "status": 404,
+ *  "message": "닉네임은 1-6글자 이내로 작성해주세요"
+ * }
+ * 
+ * 404 이미 가입된 회원
+ * {
+ *  "status": 404,
+ *  "message": "이미 가입된 회원입니다."
  * }
  */
 
 /**
- * @api {post} /api/apple/login 애플 로그인
+ * @api {post} /api/apple 애플 로그인
  * 
  * @apiVersion 1.0.0
  * @apiName appleLogIn
@@ -230,12 +257,63 @@
  * * @apiHeaderExample {json} Header-Example:
  * {
  *  "Content-Type": "application/json"
- *  "idToken": "apple id token"
+ *  "idToken": "애플 id 토큰"
+ *  "token": "디바이스 토큰"
+ * }
+ * 
+ * @apiSuccess {Boolean} user
+ * @apiSuccess {string} jwt
+ * 
+ * @apiSuccessExample {json} Success-Response:
+ * 200 OK 사용자 있을 경우
+ * {
+ *  "status": 200,
+ *  "data": {
+ *    "user": true,
+ *    "jwt": "jwt 토큰"
+ *  }
+ * }
+ * 
+ * @apiSuccessExample {json} Success-Response:
+ * 200 OK 사용자 없을 경우
+ * {
+ *  "status": 200,
+ *  "data": {
+ *    "user": false,
+ *  }
+ * }
+ * 
+ * @apiErrorExample Error-Response:
+ * 403 토큰 누락
+ * {
+ *  "status": 403,
+ *  "message": "토큰이 없습니다. 토큰을 함께 보내주세요."
+ * }
+ * 
+ * 403 토큰 유효성 검증 실패
+ * {
+ *  "status": 403,
+ *  "message": "유효성 인증에 실패하였습니다."
+ * }
+ */
+
+/**
+ * @api {post} /api/apple/signup 애플 회원가입
+ * 
+ * @apiVersion 1.0.0
+ * @apiName appleLogIn
+ * @apiGroup 로그인/회원가입
+ * 
+ * * @apiHeaderExample {json} Header-Example:
+ * {
+ *  "Content-Type": "application/json"
+ *  "idToken": "애플 id 토큰"
+ *  "token": "디바이스 토큰"
  * }
  * 
  * @apiParamExample {json} Request-Example:
  * {
- *  "token": "device token"
+ *  "nickname": "시원뿡"
  * }
  *
  * @apiSuccess {string} jwt
@@ -250,7 +328,6 @@
  * }
  * 
  * @apiErrorExample Error-Response:
- * 
  * 403 토큰 누락
  * {
  *  "status": 403,
@@ -261,6 +338,18 @@
  * {
  *  "status": 403,
  *  "message": "유효성 인증에 실패하였습니다."
+ * }
+ * 
+ * 404 닉네임 중복
+ * {
+ *  "status": 404,
+ *  "message": "이미 사용중인 닉네임입니다."
+ * }
+ * 
+ * 404 닉네임 글자 제한
+ * {
+ *  "status": 404,
+ *  "message": "닉네임은 1-6글자 이내로 작성해주세요"
  * }
  * 
  * 500 서버 에러
