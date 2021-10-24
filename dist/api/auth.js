@@ -8,8 +8,9 @@ const express_validator_1 = require("express-validator");
 const authService_1 = __importDefault(require("../service/authService"));
 const auth_1 = __importDefault(require("../middleware/auth"));
 const apple_1 = __importDefault(require("../middleware/apple"));
-const errors_1 = require("../errors");
 const kakao_1 = __importDefault(require("../middleware/kakao"));
+const google_1 = __importDefault(require("../middleware/google"));
+const errors_1 = require("../errors");
 const router = express_1.default.Router();
 router.post("/signup", [
     (0, express_validator_1.check)("email", "이메일 형식이 올바르지 않습니다").trim().isEmail(),
@@ -72,13 +73,26 @@ router.put("/password", [
     const result = await authService_1.default.change(requestDTO);
     res.status(result.status).json(result);
 });
+router.post("/apple/signup", apple_1.default, async (req, res) => {
+    try {
+        const requestDTO = {
+            nickname: req.body.nickname,
+            sub: req.body.sub,
+            token: req.header("token")
+        };
+        const result = await authService_1.default.socialSignUp(requestDTO);
+        res.status(result.status).json(result);
+    }
+    catch (err) {
+        console.log(err);
+        return errors_1.serverError;
+    }
+});
 router.post("/apple", apple_1.default, async (req, res) => {
     try {
-        const { nickname, sub, token } = req.body;
         const requestDTO = {
-            nickname: nickname,
-            sub: sub,
-            token: token
+            sub: req.body.sub,
+            token: req.header("token")
         };
         const result = await authService_1.default.social(requestDTO);
         res.status(result.status).json(result);
@@ -88,14 +102,57 @@ router.post("/apple", apple_1.default, async (req, res) => {
         return errors_1.serverError;
     }
 });
-router.post("/apple/login", apple_1.default, async (req, res) => {
+router.post("/google/signup", google_1.default, async (req, res) => {
     try {
-        const { sub, token } = req.body;
         const requestDTO = {
-            sub: sub,
-            token: token
+            nickname: req.body.nickname,
+            sub: req.body.sub,
+            token: req.header("token")
         };
-        const result = await authService_1.default.socialLogIn(requestDTO);
+        const result = await authService_1.default.socialSignUp(requestDTO);
+        res.status(result.status).json(result);
+    }
+    catch (err) {
+        console.log(err);
+        return errors_1.serverError;
+    }
+});
+router.post("/google", google_1.default, async (req, res) => {
+    try {
+        const requestDTO = {
+            sub: req.body.sub,
+            token: req.header("token")
+        };
+        const result = await authService_1.default.social(requestDTO);
+        res.status(result.status).json(result);
+    }
+    catch (err) {
+        console.log(err);
+        return errors_1.serverError;
+    }
+});
+router.post("/kakao/signup", kakao_1.default, async (req, res) => {
+    try {
+        const requestDTO = {
+            nickname: req.body.nickname,
+            sub: req.body.token.id,
+            token: req.header("token")
+        };
+        const result = await authService_1.default.socialSignUp(requestDTO);
+        res.status(result.status).json(result);
+    }
+    catch (err) {
+        console.log(err);
+        return errors_1.serverError;
+    }
+});
+router.post("/kakao", kakao_1.default, async (req, res) => {
+    try {
+        const requestDTO = {
+            sub: req.body.token.id,
+            token: req.header("token")
+        };
+        const result = await authService_1.default.social(requestDTO);
         res.status(result.status).json(result);
     }
     catch (err) {
@@ -106,16 +163,6 @@ router.post("/apple/login", apple_1.default, async (req, res) => {
 router.delete("/delete", auth_1.default, async (req, res) => {
     try {
         const result = await authService_1.default.delete(req.body.user.id);
-        res.status(result.status).json(result);
-    }
-    catch (err) {
-        console.log(err);
-        return errors_1.serverError;
-    }
-});
-router.post("/kakao", kakao_1.default, async (req, res) => {
-    try {
-        const result = await authService_1.default.kakao();
         res.status(result.status).json(result);
     }
     catch (err) {

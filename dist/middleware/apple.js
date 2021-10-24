@@ -9,32 +9,26 @@ const errors_1 = require("../errors");
 const NodeRSA = require('node-rsa');
 //Get public key
 exports.default = async (req, res, next) => {
-    try {
-        const idToken = req.header("idToken");
-        if (!idToken) {
-            return errors_1.notExistToken;
-        }
-        const result = await axios_1.default.request({
-            method: "GET",
-            url: "https://appleid.apple.com/auth/keys",
-        });
-        const key = result.data;
-        const jwtClaims = verifyIdToken(key, idToken);
-        jwtClaims
-            .then((token) => {
-            const sub = token.sub;
-            req.body.sub = sub;
-            next();
-        })
-            .catch((err) => {
-            console.log(err);
-            return errors_1.invalidToken;
-        });
+    const idToken = req.header("idToken");
+    if (!idToken) {
+        res.status(errors_1.notExistToken.status).json(errors_1.notExistToken);
     }
-    catch (err) {
+    const result = await axios_1.default.request({
+        method: "GET",
+        url: "https://appleid.apple.com/auth/keys",
+    });
+    const key = result.data;
+    const jwtClaims = verifyIdToken(key, idToken);
+    jwtClaims
+        .then((token) => {
+        const sub = token.sub;
+        req.body.sub = sub;
+        next();
+    })
+        .catch((err) => {
         console.log(err);
-        return errors_1.serverError;
-    }
+        res.status(errors_1.invalidToken.status).json(errors_1.invalidToken);
+    });
 };
 //Decryption of id'u token by public key and rs256 algorithm
 async function verifyIdToken(key, idToken) {

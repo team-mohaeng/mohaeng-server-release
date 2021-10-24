@@ -87,6 +87,7 @@ exports.default = {
                         const cardInfo = {
                             id: card.getId(),
                             image: card.getImageURL(),
+                            preview: card.getPreviewURL(),
                             hasCard: true,
                             isNew: userCards[index].is_new
                         };

@@ -137,7 +137,7 @@ exports.default = {
             return errors_1.serverError;
         }
     },
-    social: async (dto) => {
+    socialSignUp: async (dto) => {
         try {
             const { nickname, sub, token } = dto;
             if (nickname.length > 6 || nickname.length == 0) {
@@ -147,10 +147,10 @@ exports.default = {
             if (hasNickname) {
                 return errors_1.alreadyExistNickname;
             }
-            // const alreadySignedUp = await User.findOne({ attributes: ['sub'], where: { sub: sub }});
-            // if (alreadySignedUp) {
-            //   return alreadySignedUp;
-            // }
+            const isSignedUp = await User_1.User.findOne({ attributes: ['sub'], where: { sub: sub } });
+            if (isSignedUp) {
+                return errors_1.alreadySignedUp;
+            }
             const user = await User_1.User.create({
                 nickname: nickname,
                 sub: sub,
@@ -181,12 +181,21 @@ exports.default = {
             return errors_1.serverError;
         }
     },
-    socialLogIn: async (dto) => {
+    social: async (dto) => {
         try {
             const { sub, token } = dto;
+            let responseDTO;
+            let data;
             const user = await User_1.User.findOne({ where: { sub: sub } });
             if (!user) {
-                return errors_1.notExistUser;
+                data = {
+                    user: false
+                };
+                responseDTO = {
+                    status: 200,
+                    data: data
+                };
+                return responseDTO;
             }
             else {
                 User_1.User.update({ token: token }, { where: { sub: sub } });
@@ -197,11 +206,13 @@ exports.default = {
                 },
             };
             const jwtToken = jsonwebtoken_1.default.sign(payload, config_1.default.jwtSecret);
-            const responseDTO = {
+            data = {
+                user: true,
+                jwt: jwtToken
+            };
+            responseDTO = {
                 status: 200,
-                data: {
-                    jwt: jwtToken,
-                }
+                data: data
             };
             return responseDTO;
         }
@@ -225,19 +236,6 @@ exports.default = {
         }
         catch (err) {
             console.error(err);
-            return errors_1.serverError;
-        }
-    },
-    kakao: async () => {
-        try {
-            const responseDTO = {
-                status: 200,
-                message: "토큰 인증이 완료되었습니다."
-            };
-            return responseDTO;
-        }
-        catch (err) {
-            console.log(err);
             return errors_1.serverError;
         }
     },
