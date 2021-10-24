@@ -14,12 +14,11 @@ import { ChangePasswordRequestDTO } from '../dto/Auth/Password/request/ChangePas
 import { ChangePasswordResponseDTO } from '../dto/Auth/Password/response/ChangePasswordResponseDTO';
 import { CheckEmailRequestDTO } from '../dto/Auth/Password/request/CheckEmailRequestDTO';
 import { CheckEmailResponseDTO } from '../dto/Auth/Password/response/CheckEmailResponseDTO';
-import { SocialLogInResponseDTO } from '../dto/Auth/Social/response/SocialLogInResponseDTO';
+import { socialLogInDTO, SocialLogInResponseDTO } from '../dto/Auth/Social/response/SocialLogInResponseDTO';
 import { SocialLogInRequestDTO } from '../dto/Auth/Social/request/SocialLogInRequestDTO';
 import { SocialSignUpRequestDTO } from '../dto/Auth/Social/request/SocialSignUpRequestDTO';
-import { serverError, alreadyExistEmail, nicknameLengthCheck, alreadyExistNickname, notMatchSignIn, notExistUser, invalidEmail } from "../errors";
+import { serverError, alreadyExistEmail, nicknameLengthCheck, alreadyExistNickname, notMatchSignIn, notExistUser, invalidEmail, alreadySignedUp } from "../errors";
 import { DeleteAccountResponseDTO } from '../dto/Auth/Delete/DeleteAccountResponse';
-import { where } from 'sequelize/types';
 
 
 export default {
@@ -180,7 +179,7 @@ export default {
     }
   },
 
-  social: async (dto: SocialSignUpRequestDTO) => {
+  socialSignUp: async (dto: SocialSignUpRequestDTO) => {
     try{
       const { nickname, sub, token } = dto;
 
@@ -192,11 +191,10 @@ export default {
       if (hasNickname) {
         return alreadyExistNickname;
       }
-
-      // const alreadySignedUp = await User.findOne({ attributes: ['sub'], where: { sub: sub }});
-      // if (alreadySignedUp) {
-      //   return alreadySignedUp;
-      // }
+      const isSignedUp = await User.findOne({ attributes: ['sub'], where: { sub: sub }});
+      if (isSignedUp) {
+        return alreadySignedUp;
+      }
       
       const user = await User.create({
         nickname: nickname,
@@ -237,13 +235,23 @@ export default {
       return serverError;
     }
   },
-  socialLogIn: async (dto: SocialLogInRequestDTO) => {
+  social: async (dto: SocialLogInRequestDTO) => {
     try{
       const { sub, token } = dto;
-      
+      let responseDTO: SocialLogInResponseDTO;
+      let data: socialLogInDTO;
       const user = await User.findOne({ where: { sub: sub }});
+      
       if (!user) {
-        return notExistUser
+        data = {
+          user: false
+        }
+        
+        responseDTO = {
+          status: 200,
+          data: data
+        }
+        return responseDTO;
       }
       else {
         User.update({ token: token }, { where: { sub: sub }});
@@ -260,11 +268,14 @@ export default {
         config.jwtSecret,
       );
 
-      const responseDTO: SignUpResponseDTO = {
+      data = {
+        user: true,
+        jwt: jwtToken
+      }
+
+      responseDTO = {
         status: 200,
-        data: {
-          jwt: jwtToken,
-        }
+        data: data
       }
       
       return responseDTO;
@@ -294,20 +305,5 @@ export default {
       console.error(err);
       return serverError;
     }
-  },
-
-  kakao: async () => {
-    try{
-      const responseDTO: SocialLogInResponseDTO = {
-          status: 200,
-          message: "토큰 인증이 완료되었습니다."
-        }
-      
-      return responseDTO;
-      
-    } catch (err) {
-        console.log(err);
-        return serverError;
-      }
   },
 }

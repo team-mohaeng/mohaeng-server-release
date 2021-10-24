@@ -28,6 +28,7 @@ export interface CharacterDTO {
 export interface cardDTO {
   id: number,
   image: string,
+  preview?: string,
   hasCard: boolean,
   isNew: boolean
 }
