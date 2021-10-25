@@ -189,7 +189,8 @@ exports.default = {
             const user = await User_1.User.findOne({ where: { sub: sub } });
             if (!user) {
                 data = {
-                    user: false
+                    user: false,
+                    jwt: ""
                 };
                 responseDTO = {
                     status: 200,

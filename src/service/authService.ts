@@ -244,7 +244,8 @@ export default {
       
       if (!user) {
         data = {
-          user: false
+          user: false,
+          jwt: ""
         }
         
         responseDTO = {
