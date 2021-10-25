@@ -37,7 +37,7 @@
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "200 OK 사용자 있을 경우\n{\n \"status\": 200,\n \"data\": {\n   \"user\": true,\n   \"jwt\": \"jwt 토큰\"\n }\n}\n\n200 OK 사용자 없을 경우\n{\n \"status\": 200,\n \"data\": {\n   \"user\": false,\n }\n}",
+          "content": "200 OK 사용자 있을 경우\n{\n \"status\": 200,\n \"data\": {\n   \"user\": true,\n   \"jwt\": \"jwt 토큰\"\n }\n}\n\n200 OK 사용자 없을 경우\n{\n \"status\": 200,\n \"data\": {\n   \"user\": false,\n   \"jwt\": \"\"\n }\n}",
           "type": "json"
         }
       ]
@@ -254,7 +254,7 @@
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "200 OK 사용자 있을 경우\n{\n \"status\": 200,\n \"data\": {\n   \"user\": true,\n   \"jwt\": \"jwt 토큰\"\n }\n}\n\n200 OK 사용자 없을 경우\n{\n \"status\": 200,\n \"data\": {\n   \"user\": false,\n }\n}",
+          "content": "200 OK 사용자 있을 경우\n{\n \"status\": 200,\n \"data\": {\n   \"user\": true,\n   \"jwt\": \"jwt 토큰\"\n }\n}\n\n200 OK 사용자 없을 경우\n{\n \"status\": 200,\n \"data\": {\n   \"user\": false,\n   \"jwt\": \"\"\n }\n}",
           "type": "json"
         }
       ]
@@ -366,7 +366,7 @@
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "200 OK 사용자 있을 경우\n{\n \"status\": 200,\n \"data\": {\n   \"user\": true,\n   \"jwt\": \"jwt\"\n }\n}\n\n200 OK 사용자 없을 경우\n{\n \"status\": 200,\n \"data\": {\n   \"user\": false,\n }\n}",
+          "content": "200 OK 사용자 있을 경우\n{\n \"status\": 200,\n \"data\": {\n   \"user\": true,\n   \"jwt\": \"jwt\"\n }\n}\n\n200 OK 사용자 없을 경우\n{\n \"status\": 200,\n \"data\": {\n   \"user\": false,\n   \"jwt\": \"\"\n }\n}",
           "type": "json"
         }
       ]
