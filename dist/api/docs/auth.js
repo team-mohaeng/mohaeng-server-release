@@ -165,6 +165,7 @@
  *  "status": 200,
  *  "data": {
  *    "user": false,
+ *    "jwt": ""
  *  }
  * }
  *
@@ -274,6 +275,7 @@
  *  "status": 200,
  *  "data": {
  *    "user": false,
+ *    "jwt": ""
  *  }
  * }
  *
@@ -383,6 +385,7 @@
  *  "status": 200,
  *  "data": {
  *    "user": false,
+ *    "jwt": ""
  *  }
  * }
  *
