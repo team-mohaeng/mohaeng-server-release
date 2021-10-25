@@ -5,5 +5,5 @@ export interface SocialLogInResponseDTO {
 
 export interface socialLogInDTO {
   user: boolean;
-  jwt?: string;
+  jwt: string;
 }
