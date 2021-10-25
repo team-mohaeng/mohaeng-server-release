@@ -101,7 +101,10 @@ export default {
       const currentCourseId = user.current_course_id;
       const isProgress = currentCourseId != null ? true : false;
 
-      const completeCourses = await CompleteCourse.findAll({ where: { user_id: id } });
+      const completeCourses = await CompleteCourse.findAll({
+        where: { user_id: id },
+        order: [['end_date', 'DESC']]
+      });
       if (completeCourses.length == 0) {
         const notExistCompleteCourse: CompleteCourseResponseDTO = {
           status: 202,
