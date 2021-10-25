@@ -34,14 +34,15 @@ export default {
 
       let beforeCourses: SimpleCourseResponseDTO[] = [];
       let afterCourses: SimpleCourseResponseDTO[] = [];
+      let sortCourses = courses.sort((a, b) => (a.getTitle() < b.getTitle() ? -1 : 1));
 
-      for (let i = 0; i < courses.length; ++i) {
+      for (let i = 0; i < sortCourses.length; ++i) {
         let flag = false;
         if (isProgress && (i+1) == currentCourseId) {
           continue; // 현재 진행 중인 코스면 skip
         }
 
-        let course = courses[i];
+        let course = sortCourses[i];
         
         // 완료한 코스일 경우
         for (let j = 0; j < completeCourses.length; ++j) {
