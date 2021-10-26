@@ -1498,7 +1498,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Header-Example:",
-          "content": "{\n \"Content-Type\": \"application/json\",\n \"Bearer\": \"{jwt}\"\n}",
+          "content": "{\n \"Content-Type\": \"application/json\",\n \"Bearer\": \"{jwt}\"\n \"client\": \"ios\" or \"aos\"\n}",
           "type": "json"
         }
       ]
@@ -1660,7 +1660,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Error-Response:",
-          "content": "401 존재하지 않는 유저\n{\n \"status\": 401,\n \"message\": \"유저가 존재하지 않습니다.\"\n}\n\n404 진행 중인 코스가 없는 경우\n{\n \"status\": 404,\n \"message\": \"진행 중인 코스가 없습니다.\"\n}",
+          "content": "400 헤더 오류\n{\n \"status\": 400,\n \"message\": \"헤더를 확인해주세요.\"\n}\n\n401 존재하지 않는 유저\n{\n \"status\": 401,\n \"message\": \"유저가 존재하지 않습니다.\"\n}\n\n404 진행 중인 코스가 없는 경우\n{\n \"status\": 404,\n \"message\": \"진행 중인 코스가 없습니다.\"\n}",
           "type": "json"
         }
       ]
@@ -1729,7 +1729,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Error-Response:",
-          "content": "401 존재하지 않는 유저\n{\n \"status\": 401,\n \"message\": \"유저가 존재하지 않습니다.\"\n}\n\n404 잘못된 헤더\n{\n \"status\": 404,\n \"message\": \"헤더를 확인해주세요\"\n}",
+          "content": "400 잘못된 헤더\n{\n \"status\": 404,\n \"message\": \"헤더를 확인해주세요\"\n}\n\n401 존재하지 않는 유저\n{\n \"status\": 401,\n \"message\": \"유저가 존재하지 않습니다.\"\n}",
           "type": "json"
         }
       ]
@@ -2034,7 +2034,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Header-Example:",
-          "content": "{\n \"Content-Type\": \"application/json\",\n \"Bearer\": \"{jwt}\"\n}",
+          "content": "{\n \"Content-Type\": \"application/json\",\n \"Bearer\": \"{jwt}\"\n \"client\": \"ios\" or \"aos\"\n}",
           "type": "json"
         }
       ]
@@ -2196,7 +2196,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Error-Response:",
-          "content": "401 존재하지 않는 유저\n{\n \"status\": 401,\n \"message\": \"유저가 존재하지 않습니다.\"\n}\n\n404 존재하지 않는 코스\n{\n \"status\": 404,\n \"message\": \"해당 id의 코스가 존재하지 않습니다.\"\n}",
+          "content": "400 헤더 오류\n{\n \"status\": 400,\n \"message\": \"헤더를 확인해주세요.\"\n}\n\n401 존재하지 않는 유저\n{\n \"status\": 401,\n \"message\": \"유저가 존재하지 않습니다.\"\n}\n\n404 존재하지 않는 코스\n{\n \"status\": 404,\n \"message\": \"해당 id의 코스가 존재하지 않습니다.\"\n}",
           "type": "json"
         }
       ]
@@ -2376,7 +2376,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Header-Example:",
-          "content": "{\n \"Content-Type\": \"application/json\",\n \"Bearer\": \"{jwt}\",\n \"clent\": \"ios\" or \"aos\"\n}",
+          "content": "{\n \"Content-Type\": \"application/json\",\n \"Bearer\": \"{jwt}\",\n \"client\": \"ios\" or \"aos\"\n}",
           "type": "json"
         }
       ]
@@ -2468,7 +2468,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Error-Response:",
-          "content": "401 존재하지 않는 유저\n{\n \"status\": 401,\n \"message\": \"유저가 존재하지 않습니다.\"\n}",
+          "content": "400 헤더 오류\n{\n \"status\": 400,\n \"message\": \"헤더를 확인해주세요.\"\n}\n\n401 존재하지 않는 유저\n{\n \"status\": 401,\n \"message\": \"유저가 존재하지 않습니다.\"\n}",
           "type": "json"
         }
       ]
