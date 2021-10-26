@@ -137,7 +137,7 @@ export const invalidEmail: IFail = {
 }
 
 export const invalidClient: IFail = {
-  status: 404,
+  status: 400,
   message: "헤더를 확인해주세요."
 }
 

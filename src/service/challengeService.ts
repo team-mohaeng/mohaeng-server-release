@@ -3,7 +3,7 @@ import { courses } from '../dummy/Course';
 import { challengeBadges, challengeCountBadges, courseBadges, specificChallengeBadges } from '../dummy/Badge';
 import { levels } from '../dummy/Level';
 import { skins } from '../dummy/Skin';
-import { invalidCourseChallengeId, alreadyCompleteChallenge, notExistChallengeId, notExistCourseId, notExistProgressCourse, notExistUser } from "../errors";
+import { invalidCourseChallengeId, alreadyCompleteChallenge, notExistChallengeId, notExistCourseId, notExistProgressCourse, notExistUser, invalidClient } from "../errors";
 import { getDay, getMonth, getYear } from '../formatter/mohaengDateFormatter';
 import { IFail } from "../interfaces/IFail";
 import { User } from '../models/User';
@@ -20,8 +20,12 @@ import { Character } from '../models/Character';
 import { images } from '../dummy/Image';
 
 export default {
-  today: async (id: string) => {
+  today: async (id: string, client: string) => {
     try {
+      if (!client) {
+        return invalidClient;
+      }
+
       // 닉네임, 현재 진행 중인 코스 아이디, 현재 진행 중인 챌린지 아이디, 챌린지 수행 여부, 코스 변경 패널티 여부
       // 완료한 챌린지 개수, 연속 수행한 챌린지 개수, 현재 유저의 캐릭터 타입, 현재 유저의 캐릭터 카드
       const user = await User.findOne({
@@ -173,10 +177,6 @@ export default {
         date = getDay(completeDate);
       }
 
-      /*
-      캐릭터 분기처리 해야함
-      */
-
       const todayCourse: TodayCourseDetailResponseDTO = {
         id: course.getId(),
         situation: situation,
@@ -190,7 +190,8 @@ export default {
         challenges: todayChallenges
       };
 
-      const imageURLs = images[user.character_card - 1].getImageURLs();
+      
+      const imageURLs = (client == "ios") ? images[user.character_card - 1].getIosImageURLs() : images[user.character_card - 1].getAosImageURLs();
       const responseDTO: TodayChallengeResponseDTO = {
         status: 200,
         data: {
