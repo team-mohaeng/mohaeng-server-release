@@ -11,6 +11,7 @@ const CompleteCourse_1 = require("../models/CompleteCourse");
 const ProgressChallenge_1 = require("../models/ProgressChallenge");
 const User_1 = require("../models/User");
 const Badge_2 = require("../models/Badge");
+const Image_1 = require("../dummy/Image");
 exports.default = {
     library: async (id) => {
         try {
@@ -31,10 +32,10 @@ exports.default = {
             let sortCourses = Course_1.courses.sort((a, b) => (a.getTitle() < b.getTitle() ? -1 : 1));
             for (let i = 0; i < sortCourses.length; ++i) {
                 let flag = false;
-                if (isProgress && (i + 1) == currentCourseId) {
+                let course = sortCourses[i];
+                if (isProgress && course.getId() == currentCourseId) {
                     continue; // 현재 진행 중인 코스면 skip
                 }
-                let course = sortCourses[i];
                 // 완료한 코스일 경우
                 for (let j = 0; j < completeCourses.length; ++j) {
                     if (completeCourses[j].course_id == course.getId()) {
@@ -159,12 +160,16 @@ exports.default = {
             return serverError;
         }
     },
-    start: async (id, courseId) => {
+    start: async (id, courseId, client) => {
         try {
+            if (!client) {
+                return errors_1.invalidClient;
+            }
             let user = await User_1.User.findOne({
-                attributes: ['nickname', 'current_course_id', 'current_challenge_id', 'is_completed', 'complete_challenge_count', 'challenge_success_count'],
+                attributes: ['nickname', 'current_course_id', 'current_challenge_id', 'is_completed', 'complete_challenge_count', 'character_card', 'challenge_success_count'],
                 where: { id: id }
             });
+            const userCharacterCard = user.character_card;
             if (!user) {
                 return errors_1.notExistUser;
             }
@@ -262,13 +267,14 @@ exports.default = {
                 attributes: ['challenge_penalty'],
                 where: { id: id }
             });
+            const imageURLs = (client == "ios") ? Image_1.images[userCharacterCard - 1].getIosImageURLs() : Image_1.images[user.character_card - 1].getAosImageURLs();
             const responseDTO = {
                 status: 200,
                 data: {
                     isComplete: false,
                     isPenalty: isPenalty,
-                    mainCharacterImg: "",
-                    popupCharacterImg: "",
+                    mainCharacterImg: imageURLs[0],
+                    popupCharacterImg: imageURLs[1],
                     course: startCourse
                 }
             };

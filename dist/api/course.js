@@ -16,7 +16,7 @@ router.get("/complete", auth_1.default, async (req, res) => {
     res.status(result.status).json(result);
 });
 router.put("/:courseId", auth_1.default, async (req, res) => {
-    const result = await courseService_1.default.start(req.body.user.id, req.params.courseId);
+    const result = await courseService_1.default.start(req.body.user.id, req.params.courseId, req.header("client"));
     res.status(result.status).json(result);
 });
 module.exports = router;

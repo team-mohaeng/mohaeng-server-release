@@ -4,7 +4,7 @@ import CourseLibraryResponseDTO, { SimpleCourseResponseDTO } from '../dto/Course
 import StartCourseResponseDTO, { StartChallengeDetailResponseDTO, StartCourseDetailResponseDTO } from '../dto/Course/Start/StartCourseResponseDTO';
 import { courses } from '../dummy/Course';
 import { challengeBadges, challengeCountBadges } from '../dummy/Badge';
-import { notExistCourseId, notExistUser } from "../errors";
+import { notExistCourseId, notExistUser, invalidClient } from "../errors";
 import { getDay, getMonth, getYear } from '../formatter/mohaengDateFormatter';
 import { IFail } from "../interfaces/IFail";
 import { BeforeChallenge } from '../models/BeforeChallenge';
@@ -13,6 +13,7 @@ import { CompleteCourse } from "../models/CompleteCourse";
 import { ProgressChallenge } from '../models/ProgressChallenge';
 import { User } from "../models/User";
 import { Badge } from "../models/Badge";
+import { images } from '../dummy/Image';
 
 export default {
   library: async (id: string) => {
@@ -38,12 +39,12 @@ export default {
 
       for (let i = 0; i < sortCourses.length; ++i) {
         let flag = false;
-        if (isProgress && (i+1) == currentCourseId) {
+        let course = sortCourses[i];
+
+        if (isProgress && course.getId() == currentCourseId) {
           continue; // 현재 진행 중인 코스면 skip
         }
 
-        let course = sortCourses[i];
-        
         // 완료한 코스일 경우
         for (let j = 0; j < completeCourses.length; ++j) {
           if (completeCourses[j].course_id == course.getId()) {
@@ -178,12 +179,17 @@ export default {
       return serverError;
     }
   },
-  start: async (id: string, courseId: string) => {
+  start: async (id: string, courseId: string, client: string) => {
     try {
+      if (!client) {
+        return invalidClient;
+      }
+
       let user = await User.findOne({
-        attributes: ['nickname', 'current_course_id', 'current_challenge_id', 'is_completed', 'complete_challenge_count', 'challenge_success_count'],
+        attributes: ['nickname', 'current_course_id', 'current_challenge_id', 'is_completed', 'complete_challenge_count', 'character_card', 'challenge_success_count'],
         where: { id: id }
       });
+      const userCharacterCard = user.character_card;
 
       if (!user) {
         return notExistUser;
@@ -302,13 +308,14 @@ export default {
         where: { id: id }
       });
 
+      const imageURLs = (client == "ios") ? images[userCharacterCard - 1].getIosImageURLs() : images[user.character_card - 1].getAosImageURLs();
       const responseDTO: StartCourseResponseDTO = {
         status: 200,
         data: {
           isComplete: false,
           isPenalty: isPenalty,
-          mainCharacterImg: "",
-          popupCharacterImg: "",
+          mainCharacterImg: imageURLs[0],
+          popupCharacterImg: imageURLs[1],
           course: startCourse
         }
       };

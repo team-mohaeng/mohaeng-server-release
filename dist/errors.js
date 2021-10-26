@@ -111,7 +111,7 @@ exports.invalidEmail = {
     message: "유효하지 않은 이메일입니다."
 };
 exports.invalidClient = {
-    status: 404,
+    status: 400,
     message: "헤더를 확인해주세요."
 };
 exports.alreadySignedUp = {
