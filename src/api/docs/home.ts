@@ -60,6 +60,12 @@
  * }
  * 
  * @apiErrorExample Error-Response:
+ * 400 헤더 오류
+ * {
+ *  "status": 400,
+ *  "message": "헤더를 확인해주세요."
+ * }
+ * 
  * 401 존재하지 않는 유저
  * {
  *  "status": 401,
