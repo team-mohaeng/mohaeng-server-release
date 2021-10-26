@@ -1,12 +1,11 @@
 import express from "express";
 import auth from "../middleware/auth";
 import challengeService from '../service/challengeService';
-import courseService from '../service/courseService';
 
 const router = express.Router();
 
 router.get("/", auth, async (req, res) => {
-  const result = await challengeService.today(req.body.user.id);
+  const result = await challengeService.today(req.body.user.id, req.header("client"));
   res.status(result.status).json(result);
 });
 
