@@ -1,7 +1,7 @@
 import { SERVER_ERROR_MESSAGE } from '../constant';
 import { IFail } from "../interfaces/IFail";
 import { User } from '../models/User';
-import { notExistUser } from "../errors";
+import { notExistUser, invalidClient } from "../errors";
 import HomeResponseDTO, { UserCourseResponseDTO } from '../dto/Home/HomeResponseDTO';
 import { courses } from '../dummy/Course';
 import { levels } from '../dummy/Level';
@@ -11,6 +11,10 @@ import { aosSkins, iosSkins, skins } from '../dummy/Skin';
 export default {
   home: async (id: string, client: string) => {
     try {
+      if (!client) {
+        return invalidClient;
+      }
+
       // 닉네임, 레벨, 해피지수, 현재 코스, 현재 챌린지, 현재 코스 진행률, 
       // 캐릭터 타입, 캐릭터 카드 아이디, 캐릭터 스킨, 스타일 업데이트 여부, 뱃지 업데이트 여부
       const user = await User.findOne({

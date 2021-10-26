@@ -15,7 +15,7 @@ router.get("/complete", auth, async (req, res) => {
 });
 
 router.put("/:courseId", auth, async (req, res) => {
-  const result = await courseService.start(req.body.user.id, req.params.courseId);
+  const result = await courseService.start(req.body.user.id, req.params.courseId, req.header("client"));
   res.status(result.status).json(result);
 });
 
