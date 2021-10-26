@@ -28,12 +28,13 @@ exports.default = {
             });
             let beforeCourses = [];
             let afterCourses = [];
-            for (let i = 0; i < Course_1.courses.length; ++i) {
+            let sortCourses = Course_1.courses.sort((a, b) => (a.getTitle() < b.getTitle() ? -1 : 1));
+            for (let i = 0; i < sortCourses.length; ++i) {
                 let flag = false;
                 if (isProgress && (i + 1) == currentCourseId) {
                     continue; // 현재 진행 중인 코스면 skip
                 }
-                let course = Course_1.courses[i];
+                let course = sortCourses[i];
                 // 완료한 코스일 경우
                 for (let j = 0; j < completeCourses.length; ++j) {
                     if (completeCourses[j].course_id == course.getId()) {
@@ -87,7 +88,10 @@ exports.default = {
             }
             const currentCourseId = user.current_course_id;
             const isProgress = currentCourseId != null ? true : false;
-            const completeCourses = await CompleteCourse_1.CompleteCourse.findAll({ where: { user_id: id } });
+            const completeCourses = await CompleteCourse_1.CompleteCourse.findAll({
+                where: { user_id: id },
+                order: [['end_date', 'DESC']]
+            });
             if (completeCourses.length == 0) {
                 const notExistCompleteCourse = {
                     status: 202,
