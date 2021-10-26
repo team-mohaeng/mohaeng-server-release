@@ -4,7 +4,7 @@ import CourseLibraryResponseDTO, { SimpleCourseResponseDTO } from '../dto/Course
 import StartCourseResponseDTO, { StartChallengeDetailResponseDTO, StartCourseDetailResponseDTO } from '../dto/Course/Start/StartCourseResponseDTO';
 import { courses } from '../dummy/Course';
 import { challengeBadges, challengeCountBadges } from '../dummy/Badge';
-import { notExistCourseId, notExistUser } from "../errors";
+import { notExistCourseId, notExistUser, invalidClient } from "../errors";
 import { getDay, getMonth, getYear } from '../formatter/mohaengDateFormatter';
 import { IFail } from "../interfaces/IFail";
 import { BeforeChallenge } from '../models/BeforeChallenge';
@@ -13,6 +13,7 @@ import { CompleteCourse } from "../models/CompleteCourse";
 import { ProgressChallenge } from '../models/ProgressChallenge';
 import { User } from "../models/User";
 import { Badge } from "../models/Badge";
+import { images } from '../dummy/Image';
 
 export default {
   library: async (id: string) => {
@@ -178,8 +179,12 @@ export default {
       return serverError;
     }
   },
-  start: async (id: string, courseId: string) => {
+  start: async (id: string, courseId: string, client: string) => {
     try {
+      if (!client) {
+        return invalidClient;
+      }
+
       let user = await User.findOne({
         attributes: ['nickname', 'current_course_id', 'current_challenge_id', 'is_completed', 'complete_challenge_count', 'challenge_success_count'],
         where: { id: id }
@@ -302,13 +307,14 @@ export default {
         where: { id: id }
       });
 
+      const imageURLs = (client == "ios") ? images[user.character_card - 1].getIosImageURLs() : images[user.character_card - 1].getAosImageURLs();
       const responseDTO: StartCourseResponseDTO = {
         status: 200,
         data: {
           isComplete: false,
           isPenalty: isPenalty,
-          mainCharacterImg: "",
-          popupCharacterImg: "",
+          mainCharacterImg: imageURLs[0],
+          popupCharacterImg: imageURLs[1],
           course: startCourse
         }
       };
