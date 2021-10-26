@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.stickerBadges = exports.feedBadges = exports.challengeCountBadges = exports.challengeBadges = exports.courseBadges = void 0;
+exports.specificChallengeBadges = exports.stickerBadges = exports.feedBadges = exports.challengeCountBadges = exports.challengeBadges = exports.courseBadges = void 0;
 const Badge_1 = require("../class/Badge");
 exports.courseBadges = [
     new Badge_1.Badge(1, "내 건강 챙기미", "건강 코스 3개", "https://sopt28-test.s3.ap-northeast-2.amazonaws.com/badge13.png"),
@@ -30,5 +30,12 @@ exports.stickerBadges = [
     new Badge_1.Badge(17, "관심의 시작", "스티커 붙이기 5개", "https://sopt28-test.s3.ap-northeast-2.amazonaws.com/badge7.png"),
     new Badge_1.Badge(18, "관심 전달자", "스티커 붙이기 30개", "https://sopt28-test.s3.ap-northeast-2.amazonaws.com/badge8.png"),
     new Badge_1.Badge(19, "모행의 마당발", "스티커 붙이기 60개", "https://sopt28-test.s3.ap-northeast-2.amazonaws.com/badge9.png"),
+];
+exports.specificChallengeBadges = [
+    new Badge_1.Badge(20, "일몰 사진가", "일몰사진 찍기", "https://sopt28-test.s3.ap-northeast-2.amazonaws.com/badge20.png"),
+    new Badge_1.Badge(21, "드라이브 DJ", "드라이브 할 때 듣기 좋은 노래", "https://sopt28-test.s3.ap-northeast-2.amazonaws.com/badge21.png"),
+    new Badge_1.Badge(22, "주부 마스터", "마트가서 장보기", "https://sopt28-test.s3.ap-northeast-2.amazonaws.com/badge22.png"),
+    new Badge_1.Badge(23, "사랑은 쌍쌍바를 타고", "같이 아이스크림 먹기", "https://sopt28-test.s3.ap-northeast-2.amazonaws.com/badge23.png"),
+    new Badge_1.Badge(24, "따뜻한 전화기", "가족과 3분 이상 통화하기", "https://sopt28-test.s3.ap-northeast-2.amazonaws.com/badge24.png")
 ];
 //# sourceMappingURL=Badge.js.map

@@ -1,6 +1,6 @@
 import { SERVER_ERROR_MESSAGE } from "../constant";
 import { courses } from '../dummy/Course';
-import { challengeBadges, challengeCountBadges, courseBadges } from '../dummy/Badge';
+import { challengeBadges, challengeCountBadges, courseBadges, specificChallengeBadges } from '../dummy/Badge';
 import { levels } from '../dummy/Level';
 import { skins } from '../dummy/Skin';
 import { invalidCourseChallengeId, alreadyCompleteChallenge, notExistChallengeId, notExistCourseId, notExistProgressCourse, notExistUser } from "../errors";
@@ -500,6 +500,44 @@ export default {
           });
           badgeCount++;
         }
+      }
+
+      // 특정 챌린지 완료 뱃지
+      if (course_id == 9 && challenge_id == 1) {
+        isBadgeNew = true;
+        Badge.create({
+          id: specificChallengeBadges[0].getId(),
+          user_id: id
+        });
+        badgeCount++;
+      } else if (course_id == 7 && challenge_id == 1) {
+        isBadgeNew = true;
+        Badge.create({
+          id: specificChallengeBadges[1].getId(),
+          user_id: id
+        });
+        badgeCount++;
+      } else if (course_id == 11 && challenge_id == 1) {
+        isBadgeNew = true;
+        Badge.create({
+          id: specificChallengeBadges[2].getId(),
+          user_id: id
+        });
+        badgeCount++;
+      } else if (course_id == 14 && challenge_id == 7) {
+        isBadgeNew = true;
+        Badge.create({
+          id: specificChallengeBadges[3].getId(),
+          user_id: id
+        });
+        badgeCount++;
+      } else if (course_id == 1 && challenge_id == 6) {
+        isBadgeNew = true;
+        Badge.create({
+          id: specificChallengeBadges[4].getId(),
+          user_id: id
+        });
+        badgeCount++;
       }
 
       // 유저 정보 업데이트
