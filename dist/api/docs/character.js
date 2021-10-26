@@ -155,16 +155,17 @@
  * }
  *
  * @apiErrorExample Error-Response:
+ * 400 잘못된 헤더
+ * {
+ *  "status": 404,
+ *  "message": "헤더를 확인해주세요"
+ * }
+ *
  * 401 존재하지 않는 유저
  * {
  *  "status": 401,
  *  "message": "유저가 존재하지 않습니다."
  * }
  *
- * 404 잘못된 헤더
- * {
- *  "status": 404,
- *  "message": "헤더를 확인해주세요"
- * }
  */ 
 //# sourceMappingURL=character.js.map

@@ -8,7 +8,7 @@ const auth_1 = __importDefault(require("../middleware/auth"));
 const challengeService_1 = __importDefault(require("../service/challengeService"));
 const router = express_1.default.Router();
 router.get("/", auth_1.default, async (req, res) => {
-    const result = await challengeService_1.default.today(req.body.user.id);
+    const result = await challengeService_1.default.today(req.body.user.id, req.header("client"));
     res.status(result.status).json(result);
 });
 router.put("/:courseId/:challengeId", auth_1.default, async (req, res) => {

@@ -10,6 +10,9 @@ const Skin_1 = require("../dummy/Skin");
 exports.default = {
     home: async (id, client) => {
         try {
+            if (!client) {
+                return errors_1.invalidClient;
+            }
             // 닉네임, 레벨, 해피지수, 현재 코스, 현재 챌린지, 현재 코스 진행률, 
             // 캐릭터 타입, 캐릭터 카드 아이디, 캐릭터 스킨, 스타일 업데이트 여부, 뱃지 업데이트 여부
             const user = await User_1.User.findOne({

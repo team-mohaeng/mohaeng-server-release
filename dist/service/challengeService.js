@@ -18,8 +18,11 @@ const Skin_2 = require("../models/Skin");
 const Character_1 = require("../models/Character");
 const Image_1 = require("../dummy/Image");
 exports.default = {
-    today: async (id) => {
+    today: async (id, client) => {
         try {
+            if (!client) {
+                return errors_1.invalidClient;
+            }
             // 닉네임, 현재 진행 중인 코스 아이디, 현재 진행 중인 챌린지 아이디, 챌린지 수행 여부, 코스 변경 패널티 여부
             // 완료한 챌린지 개수, 연속 수행한 챌린지 개수, 현재 유저의 캐릭터 타입, 현재 유저의 캐릭터 카드
             const user = await User_1.User.findOne({
@@ -158,9 +161,6 @@ exports.default = {
                 month = (0, mohaengDateFormatter_1.getMonth)(completeDate);
                 date = (0, mohaengDateFormatter_1.getDay)(completeDate);
             }
-            /*
-            캐릭터 분기처리 해야함
-            */
             const todayCourse = {
                 id: course.getId(),
                 situation: situation,
@@ -173,7 +173,7 @@ exports.default = {
                 date: date,
                 challenges: todayChallenges
             };
-            const imageURLs = Image_1.images[user.character_card - 1].getImageURLs();
+            const imageURLs = (client == "ios") ? Image_1.images[user.character_card - 1].getIosImageURLs() : Image_1.images[user.character_card - 1].getAosImageURLs();
             const responseDTO = {
                 status: 200,
                 data: {
