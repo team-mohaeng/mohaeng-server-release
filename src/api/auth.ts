@@ -11,7 +11,7 @@ import auth from "../middleware/auth";
 import apple from "../middleware/apple";
 import kakao from "../middleware/kakao";
 import google from "../middleware/google";
-import { serverError } from "../errors";
+import { notExistToken, serverError } from "../errors";
 
 
 const router = express.Router();
@@ -40,11 +40,17 @@ async (req, res) => {
     nickname,
   } = req.body;
 
+  if (!req.header("token")) {
+    res.status(notExistToken.status).json(notExistToken);
+  }
+
   const requestDTO: SignUpRequestDTO = {
     email: email,
     password: password,
     nickname: nickname,
+    token: req.header("token")
   };
+
   const result = await authService.signUp(requestDTO);
   res.status(result.status).json(result);
 })
@@ -55,10 +61,16 @@ router.post("/signin", async (req, res) => {
     password,
   } = req.body;
 
+  if (!req.header("token")) {
+    res.status(notExistToken.status).json(notExistToken);
+  }
+
   const requestDTO: SignInRequestDTO = {
     email: email,
     password: password,
+    token: req.header("token")
   };
+  
   const result = await authService.signIn(requestDTO);
   res.status(result.status).json(result);
 })

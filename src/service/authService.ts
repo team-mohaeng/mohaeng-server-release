@@ -24,7 +24,7 @@ import { DeleteAccountResponseDTO } from '../dto/Auth/Delete/DeleteAccountRespon
 export default {
   signUp: async (dto: SignUpRequestDTO) => {
     try{
-      const { email, password, nickname } = dto;
+      const { email, password, nickname, token } = dto;
 
       const userEmail = await User.findOne({ attributes: ['email'], where: {email: email} });
       if (userEmail) {
@@ -45,6 +45,7 @@ export default {
         email: email,
         password: encryptedPassword,
         nickname: nickname,
+        token: token
       });
 
       const payload = {
@@ -82,7 +83,7 @@ export default {
 
   signIn: async (dto: SignInRequestDTO) => {
     try{
-      const { email, password } = dto;
+      const { email, password, token } = dto;
       const user = await User.findOne({ attributes: ['id', 'password'], where: { email: email} });
       if (!user) {
         return notMatchSignIn;
@@ -93,7 +94,7 @@ export default {
         return notMatchSignIn;
       }
 
-      //user.update -> firebase 토큰 추가 해주기
+      User.update({ token: token }, { where: {id: user.id }});
 
       const payload = {
         user: {
