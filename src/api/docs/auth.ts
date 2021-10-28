@@ -8,7 +8,7 @@
  * @apiHeaderExample {json} Header-Example:
  * {
  *  "Content-Type": "application/json"
- *  "token": "fcm token"
+ *  "token": "디바이스 토큰"
  * }
  * 
  * @apiParamExample {json} Request-Example:
@@ -66,12 +66,6 @@
  *  "message": "토큰이 없습니다. 토큰을 함께 보내주세요."
  * }
  * 
- * 403 토큰 유효성 검증 실패
- * {
- *  "status": 403,
- *  "message": "유효성 인증에 실패하였습니다."
- * }
- * 
  * 500 서버 에러
  * {
  *  "status": 500,
@@ -89,7 +83,7 @@
  * @apiHeaderExample {json} Header-Example:
  * {
  *  "Content-Type": "application/json"
- *  "token": "fcm token"
+ *  "token": "디바이스 토큰"
  * }
  * 
  * @apiParamExample {json} Request-Example:
@@ -120,12 +114,6 @@
  * {
  *  "status": 403,
  *  "message": "토큰이 없습니다. 토큰을 함께 보내주세요."
- * }
- * 
- * 403 토큰 유효성 검증 실패
- * {
- *  "status": 403,
- *  "message": "유효성 인증에 실패하였습니다."
  * }
  * 
  * 500 서버 에러
