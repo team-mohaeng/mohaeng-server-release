@@ -1,5 +1,10 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+const upload_1 = require("../modules/upload");
+const config_1 = __importDefault(require("../config"));
 const User_1 = require("../models/User");
 const Feed_1 = require("../models/Feed");
 const Badge_1 = require("../models/Badge");
@@ -198,7 +203,7 @@ exports.default = {
             if (!user) {
                 return errors_1.notExistUser;
             }
-            const feed = await Feed_1.Feed.findOne({ attributes: ["id", "user_id", "create_time"], where: { id: id } });
+            const feed = await Feed_1.Feed.findOne({ attributes: ["id", "user_id", "image", "create_time"], where: { id: id } });
             if (!feed) {
                 return errors_1.notExistFeed;
             }
@@ -231,6 +236,15 @@ exports.default = {
             else {
                 return errors_1.notAuthorized;
             }
+            const filename = feed.image.split("/")[5];
+            upload_1.s3.deleteObject({
+                Bucket: config_1.default.awsBucket,
+                Key: "images/origin/" + filename
+            }, (err) => {
+                if (err) {
+                    throw err;
+                }
+            });
             const responseDTO = {
                 status: 200,
                 message: "피드를 삭제했습니다."

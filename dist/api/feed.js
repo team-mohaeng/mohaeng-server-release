@@ -6,9 +6,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const feedService_1 = __importDefault(require("../service/feedService"));
 const auth_1 = __importDefault(require("../middleware/auth"));
-const upload_1 = __importDefault(require("../modules/upload"));
+const upload_1 = require("../modules/upload");
 const router = express_1.default.Router();
-router.post("/", upload_1.default.single('image'), auth_1.default, async (req, res) => {
+router.post("/", upload_1.upload.single('image'), auth_1.default, async (req, res) => {
     let image;
     if (req.file) {
         image = req.file.location;
