@@ -1,3 +1,5 @@
+import { s3 } from "../modules/upload"
+import config from "../config"
 import { CreateFeedRequestDTO } from "../dto/Feed/Create/request/CreateFeedRequestDTO";
 import { CreateFeedResponseDTO, FeedResponseDTO, LevelUpResponseDTO } from "../dto/Feed/Create/response/CreateFeedResponseDTO";
 import { DeleteFeedResponseDTO } from "../dto/Feed/Delete/DeleteFeedResponseDTO";
@@ -21,7 +23,6 @@ import { characterCards } from "../dummy/CharacterCard";
 import { iosSkins } from "../dummy/Skin";
 import { getYear, getMonth, getYesterday, getDay } from "../formatter/mohaengDateFormatter";
 import { alreadyExsitEmoji, feedLengthCheck, notAuthorized, notExistFeedContent, notExistUser, notExistEmoji, notExistFeed, serverError, wrongEmojiId, alreadyReported, invalidReport } from "../errors";
-import { ConfigurationServicePlaceholders } from "aws-sdk/lib/config_service_placeholders";
 
 const sequelize = require("sequelize");
 const Op = sequelize.Op;
@@ -228,7 +229,7 @@ export default {
       if (!user) {
         return notExistUser;
       }
-      const feed = await Feed.findOne({ attributes: ["id", "user_id", "create_time"], where: { id: id }}); 
+      const feed = await Feed.findOne({ attributes: ["id", "user_id", "image", "create_time"], where: { id: id }}); 
       if(!feed) {
         return notExistFeed;
       }
@@ -268,6 +269,15 @@ export default {
       else {
         return notAuthorized;
       }
+
+      const filename = feed.image.split("/")[5];
+      s3.deleteObject({
+        Bucket: config.awsBucket,
+        Key: "images/origin/"+filename
+      }, (err) => {
+        if (err) { throw err; }
+      })
+      
       
       const responseDTO: DeleteFeedResponseDTO = {
         status: 200,
