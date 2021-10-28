@@ -28,19 +28,27 @@ router.post("/signup", [
         });
     }
     const { email, password, nickname, } = req.body;
+    if (!req.header("token")) {
+        res.status(errors_1.notExistToken.status).json(errors_1.notExistToken);
+    }
     const requestDTO = {
         email: email,
         password: password,
         nickname: nickname,
+        token: req.header("token")
     };
     const result = await authService_1.default.signUp(requestDTO);
     res.status(result.status).json(result);
 });
 router.post("/signin", async (req, res) => {
     const { email, password, } = req.body;
+    if (!req.header("token")) {
+        res.status(errors_1.notExistToken.status).json(errors_1.notExistToken);
+    }
     const requestDTO = {
         email: email,
         password: password,
+        token: req.header("token")
     };
     const result = await authService_1.default.signIn(requestDTO);
     res.status(result.status).json(result);

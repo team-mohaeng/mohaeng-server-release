@@ -14,7 +14,7 @@ const errors_1 = require("../errors");
 exports.default = {
     signUp: async (dto) => {
         try {
-            const { email, password, nickname } = dto;
+            const { email, password, nickname, token } = dto;
             const userEmail = await User_1.User.findOne({ attributes: ['email'], where: { email: email } });
             if (userEmail) {
                 return errors_1.alreadyExistEmail;
@@ -31,6 +31,7 @@ exports.default = {
                 email: email,
                 password: encryptedPassword,
                 nickname: nickname,
+                token: token
             });
             const payload = {
                 user: {
@@ -59,7 +60,7 @@ exports.default = {
     },
     signIn: async (dto) => {
         try {
-            const { email, password } = dto;
+            const { email, password, token } = dto;
             const user = await User_1.User.findOne({ attributes: ['id', 'password'], where: { email: email } });
             if (!user) {
                 return errors_1.notMatchSignIn;
@@ -68,7 +69,7 @@ exports.default = {
             if (!isMatch) {
                 return errors_1.notMatchSignIn;
             }
-            //user.update -> firebase 토큰 추가 해주기
+            User_1.User.update({ token: token }, { where: { id: user.id } });
             const payload = {
                 user: {
                     id: user.id,
