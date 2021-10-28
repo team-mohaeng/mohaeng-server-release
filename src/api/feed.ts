@@ -4,7 +4,7 @@ import { AddEmojiRequestDTO } from "../dto/Feed/Emoji/request/AddEmojiRequestDTO
 import { DeleteEmojiRequestDTO } from "../dto/Feed/Emoji/request/DeleteEmojiRequestDTO";
 import feedService from "../service/feedService";
 import auth from "../middleware/auth";
-import upload from "../modules/upload";
+import { upload } from "../modules/upload";
 
 const router = express.Router();
 
