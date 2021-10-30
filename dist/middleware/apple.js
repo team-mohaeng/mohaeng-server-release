@@ -17,8 +17,8 @@ exports.default = async (req, res, next) => {
         method: "GET",
         url: "https://appleid.apple.com/auth/keys",
     });
-    const key = result.data;
-    const jwtClaims = verifyIdToken(key, idToken);
+    const data = result.data;
+    const jwtClaims = verifyIdToken(data, idToken);
     jwtClaims
         .then((token) => {
         const sub = token.sub;
@@ -31,12 +31,14 @@ exports.default = async (req, res, next) => {
     });
 };
 //Decryption of id'u token by public key and rs256 algorithm
-async function verifyIdToken(key, idToken) {
-    const keys = key.keys[0];
+async function verifyIdToken(data, idToken) {
+    const decodedToken = jsonwebtoken_1.default.decode(idToken, { complete: true });
+    const keys = data.keys;
+    const key = keys.find(k => k.kid === decodedToken.header.kid);
     const publicKey = new NodeRSA();
-    publicKey.importKey({ n: Buffer.from(keys.n, 'base64'), e: Buffer.from(keys.e, 'base64') }, 'components-public');
+    publicKey.importKey({ n: Buffer.from(key.n, 'base64'), e: Buffer.from(key.e, 'base64') }, 'components-public');
     const applePublicKey = publicKey.exportKey(['public']);
-    const jwtClaims = jsonwebtoken_1.default.verify(idToken, applePublicKey, { algorithms: 'RS256' });
+    const jwtClaims = jsonwebtoken_1.default.verify(idToken, applePublicKey, { algorithms: ['RS256'] });
     return jwtClaims;
 }
 ;
