@@ -37,25 +37,3 @@ async function verifyIdToken(data, idToken) { //id_token, client_id
     const jwtClaims = jwt.verify(idToken, applePublicKey, { algorithms: ['RS256'] });
     return jwtClaims;
 };
-
-
-/*
-import jwt from "jsonwebtoken";
-import { invalidToken, notExistToken } from "../errors";
-
-export default async(req, res, next) => {
-  const idToken = req.header("idToken");
-  if (!idToken) {
-    res.status(notExistToken.status).json(notExistToken);
-  }
-  try {
-    const token = jwt.decode(idToken);
-    const sub = token.sub
-    req.body.sub = sub;
-    next();
-  } catch (err) {
-    console.log(err);
-    res.status(invalidToken.status).json(invalidToken);
-  }
-};
-*/
