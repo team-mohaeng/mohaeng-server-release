@@ -46,6 +46,7 @@ exports.default = {
                 where: { user_id: id },
                 order: ['challenge_id']
             });
+            Course_1.courses.sort((a, b) => (a.getId() < b.getId() ? -1 : 1));
             // 현재 진행 중인 코스
             const course = Course_1.courses[courseId];
             // 현재 코스의 챌린지들
@@ -226,6 +227,7 @@ exports.default = {
             if (user.current_course_id != course_id || user.current_challenge_id != challenge_id) {
                 return errors_1.invalidCourseChallengeId;
             }
+            Course_1.courses.sort((a, b) => (a.getId() < b.getId() ? -1 : 1));
             const course = Course_1.courses[course_id - 1]; // 현재 코스
             const challenge = course.getChallenges()[challenge_id - 1]; // 현재 완료한 챌린지
             let userHappy = Number(user.affinity); // 유저에 업데이트될 해피지수
