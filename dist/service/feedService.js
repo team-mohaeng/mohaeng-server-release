@@ -359,7 +359,7 @@ exports.default = {
             if (!user) {
                 return errors_1.notExistUser;
             }
-            User_1.User.update({ is_feed_new: false }, { where: { id: userId } });
+            await User_1.User.update({ is_feed_new: false }, { where: { id: userId } });
             const feedResponse = new Array();
             const yearNumber = +year;
             const monthNumber = +month;
