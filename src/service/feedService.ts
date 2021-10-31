@@ -407,7 +407,7 @@ export default {
       if (!user) {
         return notExistUser;
       }
-      User.update({ is_feed_new: false }, { where: { id: userId }})
+      await User.update({ is_feed_new: false }, { where: { id: userId }})
       
       const feedResponse: Array<FeedDTO> = new Array<FeedDTO>();
       const yearNumber = +year;
