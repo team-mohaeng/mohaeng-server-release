@@ -3,6 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const axios_1 = __importDefault(require("axios"));
 const upload_1 = require("../modules/upload");
 const config_1 = __importDefault(require("../config"));
 const User_1 = require("../models/User");
@@ -273,7 +274,7 @@ exports.default = {
             if (emojiExist) {
                 return errors_1.alreadyExsitEmoji;
             }
-            const feed = await Feed_1.Feed.findOne({ attributes: ["id"], where: { id: feedId } });
+            const feed = await Feed_1.Feed.findOne({ attributes: ["id", "user_id"], where: { id: feedId } });
             if (!feed) {
                 return errors_1.notExistFeed;
             }
@@ -316,6 +317,16 @@ exports.default = {
             }
             if (isBadgeNew) {
                 User_1.User.update({ is_badge_new: true, badge_count: user.badge_count + badgeCount }, { where: { id: userId } });
+            }
+            // 이모지 붙인 것이 자기자신이 아닐 경우 푸시알림 전송
+            if (Number(feed.user_id) != Number(user.id)) {
+                axios_1.default.request({
+                    method: 'GET',
+                    url: process.env.PUSH_URL,
+                    headers: {
+                        'feed-user-id': feed.user_id
+                    }
+                });
             }
             const requestDTO = {
                 status: 200,

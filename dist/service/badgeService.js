@@ -49,7 +49,7 @@ exports.default = {
                             id: badge.getId(),
                             name: badge.getName(),
                             info: badge.getHowObtain(),
-                            image: badge.getImageURL(),
+                            image: null,
                             hasBadge: false
                         };
                         badgeArray.push(badgeInfo);
