@@ -668,7 +668,7 @@
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "200 OK 달성한 뱃지 조회 성공\n{\n \"status\": 200,\n \"data\": {\n   \"badges\": [\n   {\n     \"id\": 1,\n     \"name\": \"내 건강 챙기미\",\n     \"info\": \"건강 코스 3개\",\n     \"image\": \"imageUrl\",\n     \"hasBadge\": false\n   },\n   {\n     \"id\": 2,\n     \"name\": \"아이마이미마인\",\n     \"info\": \"\",\n     \"image\": \"imageUrl\",\n     \"hasBadge\": true\n   },\n   {\n     \"id\": 3,\n     \"name\": \"바른생활 모범생\",\n     \"info\": \"생활습관 코스 3개\",\n     \"image\": \"imageUrl\",\n     \"hasBadge\": false\n   }\n  ...\n   ]\n }\n}",
+          "content": "200 OK 달성한 뱃지 조회 성공\n{\n \"status\": 200,\n \"data\": {\n   \"badges\": [\n   {\n     \"id\": 1,\n     \"name\": \"내 건강 챙기미\",\n     \"info\": \"건강 코스 3개\",\n     \"image\": null,\n     \"hasBadge\": false\n   },\n   {\n     \"id\": 2,\n     \"name\": \"아이마이미마인\",\n     \"info\": \"\",\n     \"image\": \"imageUrl\",\n     \"hasBadge\": true\n   },\n   {\n     \"id\": 3,\n     \"name\": \"바른생활 모범생\",\n     \"info\": \"생활습관 코스 3개\",\n     \"image\": null,\n     \"hasBadge\": false\n   }\n  ...\n   ]\n }\n}",
           "type": "json"
         }
       ]

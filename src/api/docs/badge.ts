@@ -29,7 +29,7 @@
  *      "id": 1,
  *      "name": "내 건강 챙기미",
  *      "info": "건강 코스 3개",
- *      "image": "imageUrl",
+ *      "image": null,
  *      "hasBadge": false
  *    },
  *    {
@@ -43,7 +43,7 @@
  *      "id": 3,
  *      "name": "바른생활 모범생",
  *      "info": "생활습관 코스 3개",
- *      "image": "imageUrl",
+ *      "image": null,
  *      "hasBadge": false
  *    }
  *   ...
