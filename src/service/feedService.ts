@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { s3 } from "../modules/upload"
 import config from "../config"
 import { CreateFeedRequestDTO } from "../dto/Feed/Create/request/CreateFeedRequestDTO";
@@ -311,7 +312,7 @@ export default {
         return alreadyExsitEmoji;
       }
 
-      const feed = await Feed.findOne({ attributes: ["id"], where: { id: feedId }});
+      const feed = await Feed.findOne({ attributes: ["id", "user_id"], where: { id: feedId }});
       if (!feed) {
         return notExistFeed;
       }
@@ -361,12 +362,22 @@ export default {
         User.update({ is_badge_new: true, badge_count: user.badge_count+badgeCount }, { where: { id: userId }});
       }
 
+      // 이모지 붙인 것이 자기자신이 아닐 경우 푸시알림 전송
+      if (Number(feed.user_id) != Number(user.id)) {
+        axios.request({
+          method: 'GET',
+          url: process.env.PUSH_URL,
+          headers: {
+            'feed-user-id': feed.user_id
+          }
+        });
+      }
+
       const requestDTO: AddEmojiResponseDTO = {
         status: 200,
         message: "이모지를 추가하였습니다."
       };
       return requestDTO;
-
     } catch (err) {
       console.error(err);
       return serverError;
