@@ -61,14 +61,7 @@ export const characterCards = [
   new CharacterCard(58, "https://sopt28-test.s3.ap-northeast-2.amazonaws.com/p_hedgehog4.png", "https://sopt28-test.s3.ap-northeast-2.amazonaws.com/hedgehog4.png"),
   new CharacterCard(59, "https://sopt28-test.s3.ap-northeast-2.amazonaws.com/p_hedgehog5.png", "https://sopt28-test.s3.ap-northeast-2.amazonaws.com/hedgehog5.png"),
   new CharacterCard(60, "https://sopt28-test.s3.ap-northeast-2.amazonaws.com/p_hedgehog6.png", "https://sopt28-test.s3.ap-northeast-2.amazonaws.com/hedgehog6.png"),
-<<<<<<< HEAD
-  new CharacterCard(61, "", ""),
-  new CharacterCard(62, "", ""),
-  new CharacterCard(63, "", ""),
-]
-=======
   new CharacterCard(61, "https://sopt28-test.s3.ap-northeast-2.amazonaws.com/p_hedgehog7.png", "https://sopt28-test.s3.ap-northeast-2.amazonaws.com/hedgehog7.png"),
   new CharacterCard(62, "https://sopt28-test.s3.ap-northeast-2.amazonaws.com/p_hedgehog8.png", "https://sopt28-test.s3.ap-northeast-2.amazonaws.com/hedgehog8.png"),
   new CharacterCard(63, "https://sopt28-test.s3.ap-northeast-2.amazonaws.com/p_hedgehog9.png", "https://sopt28-test.s3.ap-northeast-2.amazonaws.com/hedgehog9.png"),
 ]
->>>>>>> 4434ced9cc7dd75e6808cc8b9643db8c93d35ea2
