@@ -579,5 +579,39 @@
  *  "status": 500,
  *  "message": "서버 에러입니다. 서버 파트에게 문의해주세요 *^^*"
  * }
+ */
+/**
+ * @api {post} /api/email 이메일 중복 확인
+ *
+ * @apiVersion 1.0.0
+ * @apiName checkEmail
+ * @apiGroup 로그인/회원가입
+ *
+ * * @apiHeaderExample {json} Header-Example:
+ * {
+ *  "Content-Type": "application/json"
+ * }
+ *
+ * @apiSuccess {string} message
+ *
+ * @apiSuccessExample {json} Success-Response:
+ * 200 OK
+ * {
+ *  "status": 200,
+ *  "message": "사용 가능한 이메일입니다."
+ * }
+ *
+ * @apiErrorExample Error-Response:
+ * 404 유효하지 않은 유저
+ * {
+ *  "status": 404,
+ *  "message": "중복된 이메일입니다."
+ * }
+ *
+ * 500 서버 에러
+ * {
+ *  "status": 500,
+ *  "message": "서버 에러입니다. 서버 파트에게 문의해주세요 *^^*"
+ * }
  */ 
 //# sourceMappingURL=auth.js.map

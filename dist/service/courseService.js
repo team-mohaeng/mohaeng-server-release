@@ -133,7 +133,7 @@ exports.default = {
                 const date = (0, mohaengDateFormatter_1.getDay)(completeDate);
                 responseCourses.push({
                     index: responseId++,
-                    id: courseId+1,
+                    id: courseId + 1,
                     situation: 2,
                     property: course.getProperty(),
                     title: course.getTitle(),

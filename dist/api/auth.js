@@ -178,5 +178,15 @@ router.delete("/delete", auth_1.default, async (req, res) => {
         return errors_1.serverError;
     }
 });
+router.post("/email", async (req, res) => {
+    try {
+        const result = await authService_1.default.email(req.body.email);
+        res.status(result.status).json(result);
+    }
+    catch (err) {
+        console.log(err);
+        return errors_1.serverError;
+    }
+});
 module.exports = router;
 //# sourceMappingURL=auth.js.map

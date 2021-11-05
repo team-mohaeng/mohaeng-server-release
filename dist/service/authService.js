@@ -241,5 +241,28 @@ exports.default = {
             return errors_1.serverError;
         }
     },
+    email: async (email) => {
+        try {
+            const user = await User_1.User.findOne({ attributes: ['email'], where: { email: email } });
+            let responseDTO;
+            if (user) {
+                responseDTO = {
+                    status: 404,
+                    message: "중복된 이메일입니다."
+                };
+            }
+            else {
+                responseDTO = {
+                    status: 200,
+                    message: "사용 가능한 이메일입니다."
+                };
+            }
+            return responseDTO;
+        }
+        catch (err) {
+            console.error(err);
+            return errors_1.serverError;
+        }
+    }
 };
 //# sourceMappingURL=authService.js.map
