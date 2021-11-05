@@ -207,7 +207,15 @@ router.delete("/delete", auth, async (req, res) => {
   }
 })
 
-
+router.post("/email", async(req, res) => {
+  try {
+    const result = await authService.email(req.body.email);
+    res.status(result.status).json(result);
+  } catch (err) {
+    console.log(err);
+    return serverError
+  }
+})
 
 module.exports = router;
 
