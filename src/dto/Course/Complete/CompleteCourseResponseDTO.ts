@@ -9,6 +9,7 @@ export interface WrapCompleteCourseResponseDTO {
 }
 
 export interface TotalCompleteCourseResponseDTO {
+  index: number;
   id: number;
   situation: number;
   property: number;
