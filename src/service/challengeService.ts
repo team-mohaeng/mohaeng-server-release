@@ -277,6 +277,9 @@ export default {
         if (userHappy + challenge.getHappy() > levels[userLevel - 1].getFullHappy()) {
           const cardId = levels[userLevel - 1].getCardId();
           const characterId = Number((cardId - 1) / 9) + 1;
+          console.log(cardId - 1);
+          console.log(Number((cardId - 1) / 9));
+          console.log(Number((cardId - 1) / 9) + 1);
           console.log("character id: " + characterId);
           levelUp = true;
           if (userLevel + 1 == 68) {  // 만렙이면
