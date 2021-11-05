@@ -1831,8 +1831,15 @@ define({ "api": [
             "group": "Success 200",
             "type": "Number",
             "optional": false,
-            "field": "id",
+            "field": "index",
             "description": "<p>코스 인덱싱 아이디 (코스 고유 아이디 아님)</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>코스 고유 아이디</p>"
           },
           {
             "group": "Success 200",
@@ -1909,7 +1916,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "202 완료한 코스가 없을 때\n{\n \"status\": 202,\n \"data\": {\n   \"isProgress\": true,\n   \"courses\": [],\n }\n}\n\n200 완료한 코스가 있을 때\n{\n \"status\": 200,\n \"data\": {\n   \"isProgress\": true,\n   \"courses\": [\n     {\n       \"id\": 1,\n       \"situation\": 2,\n       \"property\": 3,\n       \"title\": \"나 돌아갈래\",\n       \"totalDays\": 7,\n       \"year\": \"2021\",\n       \"month\": \"09\",\n       \"date\": \"26\",\n       \"challenges\": [\n         {\n           \"day\": 1,\n           \"situation\": 2,\n           \"title\": \"교복 입은 사진 찾아보기\",\n           \"year\": \"2021\",\n           \"month\": \"09\",\n           \"date\": \"20\",\n         },\n         // ...\n       ]\n     },\n     // ...\n   ]\n }\n}",
+          "content": "202 완료한 코스가 없을 때\n{\n \"status\": 202,\n \"data\": {\n   \"isProgress\": true,\n   \"courses\": [],\n }\n}\n\n200 완료한 코스가 있을 때\n{\n \"status\": 200,\n \"data\": {\n   \"isProgress\": true,\n   \"courses\": [\n     {\n       \"index\": 1,\n       \"id\": 4,\n       \"situation\": 2,\n       \"property\": 3,\n       \"title\": \"나 돌아갈래\",\n       \"totalDays\": 7,\n       \"year\": \"2021\",\n       \"month\": \"09\",\n       \"date\": \"26\",\n       \"challenges\": [\n         {\n           \"day\": 1,\n           \"situation\": 2,\n           \"title\": \"교복 입은 사진 찾아보기\",\n           \"year\": \"2021\",\n           \"month\": \"09\",\n           \"date\": \"20\",\n         },\n         // ...\n       ]\n     },\n     // ...\n   ]\n }\n}",
           "type": "json"
         }
       ]
