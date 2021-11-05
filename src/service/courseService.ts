@@ -150,7 +150,8 @@ export default {
         const month = getMonth(completeDate);
         const date = getDay(completeDate);
         responseCourses.push({
-          id: responseId++,
+          index: responseId++,
+          id: courseId,
           situation: 2,
           property: course.getProperty(),
           title: course.getTitle(),
