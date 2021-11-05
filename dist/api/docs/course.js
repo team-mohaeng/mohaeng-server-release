@@ -71,7 +71,8 @@
  *
  * @apiSuccess {Boolean} isProgress 유저가 현재 진행하고 있는 코스가 존재하는지 여부
  * @apiSuccess {Object[]} courses 완료한 코스 목록
- * @apiSuccess {Number} id 코스 인덱싱 아이디 (코스 고유 아이디 아님)
+ * @apiSuccess {Number} index 코스 인덱싱 아이디 (코스 고유 아이디 아님)
+ * @apiSuccess {Number} id 코스 고유 아이디
  * @apiSuccess {Number} situation 코스 진행 상태 (항상 완료 상태인 2)
  * @apiSuccess {Number} property 코스 속성 (1 ~ 7 -> 자세한 목록은 추후 슬랙에 공지)
  * @apiSuccess {String} title 코스 제목
@@ -105,7 +106,8 @@
  *    "isProgress": true,
  *    "courses": [
  *      {
- *        "id": 1,
+ *        "index": 1,
+ *        "id": 4,
  *        "situation": 2,
  *        "property": 3,
  *        "title": "나 돌아갈래",

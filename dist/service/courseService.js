@@ -132,7 +132,8 @@ exports.default = {
                 const month = (0, mohaengDateFormatter_1.getMonth)(completeDate);
                 const date = (0, mohaengDateFormatter_1.getDay)(completeDate);
                 responseCourses.push({
-                    id: responseId++,
+                    index: responseId++,
+                    id: courseId+1,
                     situation: 2,
                     property: course.getProperty(),
                     title: course.getTitle(),
