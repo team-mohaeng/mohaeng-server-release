@@ -68,15 +68,15 @@ exports.notExistFeedContent = {
 };
 exports.feedLengthCheck = {
     status: 404,
-    message: "피드 내용은 40자 이하로 작성해주세요."
+    message: "안부 내용은 40자 이하로 작성해주세요."
 };
 exports.notAuthorized = {
     status: 403,
-    message: "작성자만 피드를 삭제할 수 있습니다."
+    message: "작성자만 안부를 삭제할 수 있습니다."
 };
 exports.notExistFeed = {
     status: 404,
-    message: "피드가 존재하지 않습니다."
+    message: "안부가 존재하지 않습니다."
 };
 exports.wrongEmojiId = {
     status: 404,
@@ -88,7 +88,7 @@ exports.alreadyExsitEmoji = {
 };
 exports.notExistEmoji = {
     status: 404,
-    message: "피드에 붙여진 이모지가 아닙니다."
+    message: "안부에 붙여진 이모지가 아닙니다."
 };
 exports.notExistSkin = {
     status: 404,

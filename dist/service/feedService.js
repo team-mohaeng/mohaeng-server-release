@@ -453,14 +453,17 @@ exports.default = {
             if (!user) {
                 return errors_1.notExistUser;
             }
+            const feed = await Feed_1.Feed.findOne({ attributes: ["id"], where: { user_id: userId,
+                    create_time: { [Op.between]: [`${(0, mohaengDateFormatter_1.getYear)(new Date())}-${(0, mohaengDateFormatter_1.getMonth)(new Date())}-${(0, mohaengDateFormatter_1.getDay)(new Date())}`, `${(0, mohaengDateFormatter_1.getYear)(new Date())}-${(0, mohaengDateFormatter_1.getMonth)(new Date())}-${(0, mohaengDateFormatter_1.getDay)(new Date())} 23:59:59`] } }
+            });
             //안부 작성 가능 여부
             let hasFeed;
             //피드 작성 가능
-            if (!user.is_feed_new && user.is_completed) {
+            if (!feed && user.is_completed) {
                 hasFeed = 0;
             }
             //피드 이미 작성
-            else if (user.is_feed_new) {
+            else if (feed) {
                 hasFeed = 1;
             }
             //코스 수행 전
