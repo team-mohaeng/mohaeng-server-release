@@ -515,14 +515,19 @@ export default {
         return notExistUser;
       }
 
+      const feed = await Feed.findOne({ attributes: ["id"], where: { user_id: userId, 
+        create_time: {[Op.between]:
+        [`${getYear(new Date())}-${getMonth(new Date())}-${getDay(new Date())}`, `${getYear(new Date())}-${getMonth(new Date())}-${getDay(new Date())} 23:59:59`]}}
+      });
+
       //안부 작성 가능 여부
       let hasFeed;
       //피드 작성 가능
-      if (!user.is_feed_new && user.is_completed) {
+      if (!feed && user.is_completed) {
         hasFeed = 0;
       }
       //피드 이미 작성
-      else if (user.is_feed_new) {
+      else if (feed) {
         hasFeed = 1;
       }
       //코스 수행 전
