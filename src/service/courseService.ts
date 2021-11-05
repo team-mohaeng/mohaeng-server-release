@@ -151,7 +151,7 @@ export default {
         const date = getDay(completeDate);
         responseCourses.push({
           index: responseId++,
-          id: courseId,
+          id: courseId+1,
           situation: 2,
           property: course.getProperty(),
           title: course.getTitle(),
