@@ -276,7 +276,7 @@ export default {
         // 레벨업시 캐릭터 카드 부여 처리
         if (userHappy + challenge.getHappy() > levels[userLevel - 1].getFullHappy()) {
           const cardId = levels[userLevel - 1].getCardId();
-          const characterId = Number((cardId - 1) / 9) + 1;
+          const characterId = Math.floor(Number((cardId - 1) / 9)) + 1;
           console.log(cardId - 1);
           console.log(Number((cardId - 1) / 9));
           console.log(Number((cardId - 1) / 9) + 1);
