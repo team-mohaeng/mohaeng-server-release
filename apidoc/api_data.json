@@ -169,6 +169,54 @@
     "groupTitle": "로그인/회원가입"
   },
   {
+    "type": "post",
+    "url": "/api/email",
+    "title": "이메일 중복 확인",
+    "version": "1.0.0",
+    "name": "checkEmail",
+    "group": "로그인/회원가입",
+    "header": {
+      "examples": [
+        {
+          "title": "Header-Example:",
+          "content": "{\n \"Content-Type\": \"application/json\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": false,
+            "field": "message",
+            "description": ""
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "200 OK\n{\n \"status\": 200,\n \"message\": \"사용 가능한 이메일입니다.\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "404 유효하지 않은 유저\n{\n \"status\": 404,\n \"message\": \"중복된 이메일입니다.\"\n}\n\n500 서버 에러\n{\n \"status\": 500,\n \"message\": \"서버 에러입니다. 서버 파트에게 문의해주세요 *^^*\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/api/docs/auth.ts",
+    "groupTitle": "로그인/회원가입"
+  },
+  {
     "type": "delete",
     "url": "/api/delete",
     "title": "회원탈퇴",

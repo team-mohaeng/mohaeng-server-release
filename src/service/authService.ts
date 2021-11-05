@@ -17,9 +17,9 @@ import { CheckEmailResponseDTO } from '../dto/Auth/Password/response/CheckEmailR
 import { socialLogInDTO, SocialLogInResponseDTO } from '../dto/Auth/Social/response/SocialLogInResponseDTO';
 import { SocialLogInRequestDTO } from '../dto/Auth/Social/request/SocialLogInRequestDTO';
 import { SocialSignUpRequestDTO } from '../dto/Auth/Social/request/SocialSignUpRequestDTO';
-import { serverError, alreadyExistEmail, nicknameLengthCheck, alreadyExistNickname, notMatchSignIn, notExistUser, invalidEmail, alreadySignedUp } from "../errors";
 import { DeleteAccountResponseDTO } from '../dto/Auth/Delete/DeleteAccountResponse';
-
+import { EmailResponseDTO } from '../dto/Auth/Email/EmailResponseDTO';
+import { serverError, alreadyExistEmail, nicknameLengthCheck, alreadyExistNickname, notMatchSignIn, notExistUser, invalidEmail, alreadySignedUp } from "../errors";
 
 export default {
   signUp: async (dto: SignUpRequestDTO) => {
@@ -308,4 +308,26 @@ export default {
       return serverError;
     }
   },
+  email: async (email: string) => {
+    try {
+      const user = await User.findOne({ attributes: ['email'], where: { email: email }});
+      let responseDTO: EmailResponseDTO;
+      if (user) {
+        responseDTO = {
+          status: 404,
+          message: "중복된 이메일입니다."
+        }
+      }
+      else {
+        responseDTO = {
+          status: 200,
+          message: "사용 가능한 이메일입니다."
+        }
+      }
+      return responseDTO;
+    } catch (err) {
+      console.error(err);
+      return serverError
+    }
+  }
 }
