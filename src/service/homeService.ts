@@ -6,7 +6,7 @@ import HomeResponseDTO, { UserCourseResponseDTO } from '../dto/Home/HomeResponse
 import { courses } from '../dummy/Course';
 import { levels } from '../dummy/Level';
 import { images } from '../dummy/Image';
-import { aosSkins, iosSkins, skins } from '../dummy/Skin';
+import { aosSkins, iosSkins } from '../dummy/Skin';
 
 export default {
   home: async (id: string, client: string) => {

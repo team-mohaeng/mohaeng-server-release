@@ -10,7 +10,7 @@ router.get("/", auth, async (req, res) => {
 });
 
 router.put("/:courseId/:challengeId", auth, async (req, res) => {
-  const result = await challengeService.certification(req.body.user.id, req.params.courseId, req.params.challengeId);
+  const result = await challengeService.certification(req.body.user.id, req.params.courseId, req.params.challengeId, req.header("client"));
   res.status(result.status).json(result);
 });
 
