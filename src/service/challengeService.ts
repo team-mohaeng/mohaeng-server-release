@@ -2,7 +2,7 @@ import { SERVER_ERROR_MESSAGE } from "../constant";
 import { courses } from '../dummy/Course';
 import { challengeBadges, challengeCountBadges, courseBadges, specificChallengeBadges } from '../dummy/Badge';
 import { levels } from '../dummy/Level';
-import { skins } from '../dummy/Skin';
+import { aosSkins, iosSkins } from '../dummy/Skin';
 import { invalidCourseChallengeId, alreadyCompleteChallenge, notExistChallengeId, notExistCourseId, notExistProgressCourse, notExistUser, invalidClient } from "../errors";
 import { getDay, getMonth, getYear } from '../formatter/mohaengDateFormatter';
 import { IFail } from "../interfaces/IFail";
@@ -214,8 +214,12 @@ export default {
       return serverError;
     }
   },
-  certification: async (id: string, courseId: string, challengeId: string) => {
+  certification: async (id: string, courseId: string, challengeId: string, client: string) => {
     try {
+      if (!client) {
+        return invalidClient;
+      }
+
       let user_id = Number(id);
       let course_id = Number(courseId);
       let challenge_id = Number(challengeId);
@@ -294,7 +298,7 @@ export default {
               id: cardId,
               user_id: user_id
             });
-            styleImg = skins[cardId - 64].getImageURL();
+            styleImg = (client == "ios")? iosSkins[cardId-64].getImageURL(): aosSkins[cardId-64].getImageURL();
           } else {
             Character.create({
               user_id: user_id,
@@ -353,7 +357,7 @@ export default {
                 id: cardId,
                 user_id: user_id
               });
-              styleImg = skins[cardId - 64].getImageURL();
+              styleImg = (client == "ios")? iosSkins[cardId-64].getImageURL(): aosSkins[cardId-64].getImageURL();
             } else {
               Character.create({
                 user_id: user_id,
