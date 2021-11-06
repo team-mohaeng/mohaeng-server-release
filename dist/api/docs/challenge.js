@@ -159,7 +159,8 @@
  * @apiHeaderExample {json} Header-Example:
  * {
  *  "Content-Type": "application/json",
- *  "Bearer": "{jwt}"
+ *  "Bearer": "{jwt}",
+ *  "client": "ios" or "aos"
  * }
  *
  * @apiSuccess {String} characterImg 인증 팝업창에 나타날 캐릭터 이미지
@@ -275,6 +276,12 @@
  * }
  *
  * @apiErrorExample Error-Response:
+ * 400 헤더 오류
+ * {
+ *  "status": 400,
+ *  "message": "헤더를 확인해주세요."
+ * }
+ * 
  * 400 현재 진행 중인 코스 또는 챌린지가 아닐 때
  * {
  *  "status": 400,

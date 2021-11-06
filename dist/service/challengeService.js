@@ -196,8 +196,12 @@ exports.default = {
             return serverError;
         }
     },
-    certification: async (id, courseId, challengeId) => {
+    certification: async (id, courseId, challengeId, client) => {
         try {
+            if (!client) {
+                return errors_1.invalidClient;
+            }
+
             let user_id = Number(id);
             let course_id = Number(courseId);
             let challenge_id = Number(challengeId);
@@ -267,7 +271,7 @@ exports.default = {
                             id: cardId,
                             user_id: user_id
                         });
-                        styleImg = Skin_1.skins[cardId - 64].getImageURL();
+                        styleImg = (client == "ios") ? Skin_1.iosSkins[cardId - 64].getImageURL() : Skin_1.aosSkins[cardId - 64].getImageURL();
                     }
                     else {
                         Character_1.Character.create({
@@ -324,7 +328,7 @@ exports.default = {
                                 id: cardId,
                                 user_id: user_id
                             });
-                            styleImg = Skin_1.skins[cardId - 64].getImageURL();
+                            styleImg = (client == "ios") ? Skin_1.iosSkins[cardId - 64].getImageURL() : Skin_1.aosSkins[cardId - 64].getImageURL();
                         }
                         else {
                             Character_1.Character.create({

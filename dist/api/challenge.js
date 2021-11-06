@@ -12,7 +12,7 @@ router.get("/", auth_1.default, async (req, res) => {
     res.status(result.status).json(result);
 });
 router.put("/:courseId/:challengeId", auth_1.default, async (req, res) => {
-    const result = await challengeService_1.default.certification(req.body.user.id, req.params.courseId, req.params.challengeId);
+    const result = await challengeService_1.default.certification(req.body.user.id, req.params.courseId, req.params.challengeId, req.header("client"));
     res.status(result.status).json(result);
 });
 module.exports = router;
