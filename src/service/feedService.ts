@@ -107,7 +107,7 @@ export default {
         //카드
         if (cardId < 64) {
           image = characterCards[cardId-1].getImageURL();
-          const characterType = (cardId-1)/9 + 1;
+          const characterType = Number((cardId - 1)/9) + 1;
           Character.create({ user_id: +id, character_type: characterType, character_card: cardId });
         }
         //스킨
