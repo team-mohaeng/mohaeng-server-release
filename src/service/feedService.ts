@@ -22,7 +22,7 @@ import { levels }  from "../dummy/Level"
 import { courses } from '../dummy/Course';
 import { characterCards } from "../dummy/CharacterCard";
 import { iosSkins } from "../dummy/Skin";
-import { getYear, getMonth, getYesterday, getDay } from "../formatter/mohaengDateFormatter";
+import { getYear, getMonth, getYesterday, getDay, getTomorrow } from "../formatter/mohaengDateFormatter";
 import { alreadyExsitEmoji, feedLengthCheck, notAuthorized, notExistFeedContent, notExistUser, notExistEmoji, notExistFeed, serverError, wrongEmojiId, alreadyReported, invalidReport } from "../errors";
 
 const sequelize = require("sequelize");
@@ -517,7 +517,7 @@ export default {
 
       const feed = await Feed.findOne({ attributes: ["id"], where: { user_id: userId, 
         create_time: {[Op.between]:
-        [`${getYear(new Date())}-${getMonth(new Date())}-${getDay(new Date())}`, `${getYear(new Date())}-${getMonth(new Date())}-${getDay(new Date())} 23:59:59`]}}
+        [`${getYear(new Date())}-${getMonth(new Date())}-${getDay(new Date())} 05:00:00`, `${getYear(new Date())}-${getMonth(new Date())}-${getTomorrow(new Date())} 4:59:59`]}}
       });
 
       //안부 작성 가능 여부
