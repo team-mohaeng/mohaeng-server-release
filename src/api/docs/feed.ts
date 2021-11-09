@@ -9,6 +9,7 @@
  * {
  *  "Content-Type": "application/json"
  *  "Bearer": "jwt"
+ *  "client": "aos" / "ios"
  * }
  * 
  * @apiParamExample {form-data} Request-Example:
@@ -17,9 +18,6 @@
  * 
  * KEY, VALUE
  * image(File), "imageURL"
- * 
- * 사진참고
- * https://mohaeng.s3.ap-northeast-2.amazonaws.com/%EC%A0%9C%EB%AA%A9+%EC%97%86%EC%9D%8C.png
  * 
  * @apiSuccess {Number} happy
  * @apiSuccess {Number} userHappy

@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { SERVER_ERROR_MESSAGE } from '../constant';
 import { notExistUser } from '../errors';
 import { IFail } from '../interfaces/IFail';
@@ -34,7 +35,7 @@ export default {
         }
 
         userMessageDTO.push({
-          date: userMessage.date,
+          date: new Date(moment(userMessage.date).add(9, 'hours').format()),
           message: mentList,
           isNew: userMessage.is_new,
         });

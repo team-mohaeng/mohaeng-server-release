@@ -21,15 +21,15 @@ import { Skin } from "../models/Skin";
 import { levels }  from "../dummy/Level"
 import { courses } from '../dummy/Course';
 import { characterCards } from "../dummy/CharacterCard";
-import { iosSkins } from "../dummy/Skin";
 import { getYear, getMonth, getYesterday, getDay, getTomorrow } from "../formatter/mohaengDateFormatter";
+import { iosSkins, aosSkins } from "../dummy/Skin";
 import { alreadyExsitEmoji, feedLengthCheck, notAuthorized, notExistFeedContent, notExistUser, notExistEmoji, notExistFeed, serverError, wrongEmojiId, alreadyReported, invalidReport } from "../errors";
 
 const sequelize = require("sequelize");
 const Op = sequelize.Op;
 
 export default {
-  create:async(id: string, dto: CreateFeedRequestDTO) => {
+  create:async(id: string, dto: CreateFeedRequestDTO, client: string) => {
     try{
       const { mood, content, image, isPrivate } = dto;
       const user = await User.findOne({ where: { id: id }});
@@ -85,9 +85,6 @@ export default {
         happy = 0;
         user.affinity = 0;
       }
-      else {
-        happy = 10;
-      }
 
       user.affinity = user.affinity + happy;
 
@@ -110,12 +107,12 @@ export default {
         //카드
         if (cardId < 64) {
           image = characterCards[cardId-1].getImageURL();
-          const characterType = cardId/9 + 1;
+          const characterType = Number((cardId - 1)/9) + 1;
           Character.create({ user_id: +id, character_type: characterType, character_card: cardId });
         }
         //스킨
         else {
-          image = iosSkins[cardId-64].getImageURL();
+          image = (client == "ios") ? iosSkins[cardId-64].getImageURL() : aosSkins[cardId-64].getImageURL();
           Skin.create({ id: cardId, user_id: +id });
         }
         levelUpResponse = {
@@ -203,7 +200,7 @@ export default {
           where: { id: id }
         });
       }
-
+      
       const feedResponse: FeedResponseDTO = {
         happy: happy,
         userHappy: user.affinity,
