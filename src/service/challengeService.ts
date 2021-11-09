@@ -52,7 +52,6 @@ export default {
         order: ['challenge_id']
       });
 
-      // courses.sort((a, b) => (a.getId() < b.getId() ? -1 : 1));
       // 현재 진행 중인 코스
       const course = courses[courseId];
       // 현재 코스의 챌린지들
@@ -224,7 +223,6 @@ export default {
       let course_id = Number(courseId);
       let challenge_id = Number(challengeId);
 
-      // courses.sort((a, b) => (a.getId() < b.getId() ? -1 : 1));
       // 코스 아이디나 챌린지 아이디가 유효하지 않은 경우
       if (courses.length < course_id) {
         return notExistCourseId;
