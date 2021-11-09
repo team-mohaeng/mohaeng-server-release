@@ -24,7 +24,7 @@ router.post("/", upload.single('image'), auth, async (req, res) => {
     image: image,
     isPrivate: isPrivate
   }
-  const result = await feedService.create(req.body.user.id, requestDTO);
+  const result = await feedService.create(req.body.user.id, requestDTO, req.header("client"));
   res.status(result.status).json(result);
 })
 
