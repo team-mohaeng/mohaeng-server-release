@@ -70,6 +70,7 @@ exports.default = {
                     courses: beforeCourses.concat(afterCourses),
                 },
             };
+            Course_1.courses.sort((a, b) => (a.getId() < b.getId() ? -1 : 1));
             return responseDTO;
         }
         catch (err) {
@@ -105,7 +106,6 @@ exports.default = {
             }
             let responseCourses = [];
             let responseId = 1;
-            Course_1.courses.sort((a, b) => (a.getId() < b.getId() ? -1 : 1));
             for (let i = 0; i < completeCourses.length; ++i) {
                 let responseChallenges = [];
                 const dates = completeCourses[i].challenge_dates.split(",");
@@ -179,7 +179,6 @@ exports.default = {
             if ((cid + 1) > Course_1.courses.length || (cid + 1) < 0) {
                 return errors_1.notExistCourseId;
             }
-            Course_1.courses.sort((a, b) => (a.getId() < b.getId() ? -1 : 1));
             let challenges = Course_1.courses[cid].getChallenges();
             let isPenalty = false;
             // 코스 변경인 경우
