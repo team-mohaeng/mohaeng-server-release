@@ -22,10 +22,3 @@ export function getYesterday(date: Date) {
 ​
   return yesterday.toString();
 }
-
-export function getTomorrow(date: Date) {
-  let tomorrow = (date.getDate()+1).toString();
-  tomorrow = parseInt(tomorrow) >= 10 ? tomorrow: '0' + tomorrow;
-​
-  return tomorrow.toString();
-}
