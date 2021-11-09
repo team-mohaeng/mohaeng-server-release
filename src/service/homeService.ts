@@ -27,6 +27,7 @@ export default {
         return notExistUser;
       }
 
+      // courses.sort((a, b) => (a.getId() < b.getId() ? -1 : 1));
       let courseResponseDTO: UserCourseResponseDTO = {};
       if (user.current_course_id != null && user.current_challenge_id != null && user.current_progress_percent != null) {
         const courseId = user.current_course_id - 1;

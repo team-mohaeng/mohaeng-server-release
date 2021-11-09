@@ -82,6 +82,7 @@ export default {
         },
       };
 
+      courses.sort((a, b) => (a.getId() < b.getId() ? -1 : 1));
       return responseDTO;
     } catch (err) {
       console.error(err.message);
