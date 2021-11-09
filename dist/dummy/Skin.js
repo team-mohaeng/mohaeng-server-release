@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.aosSkins = exports.iosSkins = exports.skins = void 0;
+exports.aosSkins = exports.iosSkins = void 0;
 const Skin_1 = require("../class/Skin");
 exports.iosSkins = [
     new Skin_1.Skin(64, "https://sopt28-test.s3.ap-northeast-2.amazonaws.com/ios1.png"),

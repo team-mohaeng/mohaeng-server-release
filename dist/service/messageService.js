@@ -1,5 +1,9 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+const moment_1 = __importDefault(require("moment"));
 const constant_1 = require("../constant");
 const errors_1 = require("../errors");
 const User_1 = require("../models/User");
@@ -28,7 +32,7 @@ exports.default = {
                     mentList.push(ments[j].replace(/ㅁㅁㅁ/gi, user.nickname));
                 }
                 userMessageDTO.push({
-                    date: userMessage.date,
+                    date: new Date((0, moment_1.default)(userMessage.date).add(9, 'hours').format()),
                     message: mentList,
                     isNew: userMessage.is_new,
                 });

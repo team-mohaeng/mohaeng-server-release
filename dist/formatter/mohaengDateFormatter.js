@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getYesterday = exports.getDay = exports.getMonth = exports.getYear = void 0;
+exports.getTomorrow = exports.getYesterday = exports.getDay = exports.getMonth = exports.getYear = void 0;
 function getYear(date) {
     return date.getFullYear().toString();
 }
@@ -23,4 +23,10 @@ function getYesterday(date) {
     return yesterday.toString();
 }
 exports.getYesterday = getYesterday;
+function getTomorrow(date) {
+    let tomorrow = (date.getDate() + 1).toString();
+    tomorrow = parseInt(tomorrow) >= 10 ? tomorrow : '0' + tomorrow;
+    return tomorrow.toString();
+}
+exports.getTomorrow = getTomorrow;
 //# sourceMappingURL=mohaengDateFormatter.js.map

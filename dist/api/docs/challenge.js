@@ -8,7 +8,7 @@
  * @apiHeaderExample {json} Header-Example:
  * {
  *  "Content-Type": "application/json",
- *  "Bearer": "{jwt}"
+ *  "Bearer": "{jwt}",
  *  "client": "ios" or "aos"
  * }
  *
@@ -281,7 +281,7 @@
  *  "status": 400,
  *  "message": "헤더를 확인해주세요."
  * }
- * 
+ *
  * 400 현재 진행 중인 코스 또는 챌린지가 아닐 때
  * {
  *  "status": 400,

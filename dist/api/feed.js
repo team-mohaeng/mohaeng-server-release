@@ -24,7 +24,7 @@ router.post("/", upload_1.upload.single('image'), auth_1.default, async (req, re
         image: image,
         isPrivate: isPrivate
     };
-    const result = await feedService_1.default.create(req.body.user.id, requestDTO);
+    const result = await feedService_1.default.create(req.body.user.id, requestDTO, req.header("client"));
     res.status(result.status).json(result);
 });
 router.delete("/:id", auth_1.default, async (req, res) => {

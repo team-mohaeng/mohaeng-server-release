@@ -201,7 +201,6 @@ exports.default = {
             if (!client) {
                 return errors_1.invalidClient;
             }
-
             let user_id = Number(id);
             let course_id = Number(courseId);
             let challenge_id = Number(challengeId);

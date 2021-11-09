@@ -16,13 +16,13 @@ const Skin_1 = require("../models/Skin");
 const Level_1 = require("../dummy/Level");
 const Course_1 = require("../dummy/Course");
 const CharacterCard_1 = require("../dummy/CharacterCard");
-const Skin_2 = require("../dummy/Skin");
 const mohaengDateFormatter_1 = require("../formatter/mohaengDateFormatter");
+const Skin_2 = require("../dummy/Skin");
 const errors_1 = require("../errors");
 const sequelize = require("sequelize");
 const Op = sequelize.Op;
 exports.default = {
-    create: async (id, dto) => {
+    create: async (id, dto, client) => {
         try {
             const { mood, content, image, isPrivate } = dto;
             const user = await User_1.User.findOne({ where: { id: id } });
@@ -70,9 +70,6 @@ exports.default = {
                 happy = 0;
                 user.affinity = 0;
             }
-            else {
-                happy = 10;
-            }
             user.affinity = user.affinity + happy;
             //level의 happy지수보다 user의 해피지수가 높다면 levelup
             let levelUp = false;
@@ -92,12 +89,12 @@ exports.default = {
                 //카드
                 if (cardId < 64) {
                     image = CharacterCard_1.characterCards[cardId - 1].getImageURL();
-                    const characterType = cardId / 9 + 1;
+                    const characterType = Number((cardId - 1) / 9) + 1;
                     Character_1.Character.create({ user_id: +id, character_type: characterType, character_card: cardId });
                 }
                 //스킨
                 else {
-                    image = Skin_2.iosSkins[cardId - 64].getImageURL();
+                    image = (client == "ios") ? Skin_2.iosSkins[cardId - 64].getImageURL() : Skin_2.aosSkins[cardId - 64].getImageURL();
                     Skin_1.Skin.create({ id: cardId, user_id: +id });
                 }
                 levelUpResponse = {
@@ -454,7 +451,7 @@ exports.default = {
                 return errors_1.notExistUser;
             }
             const feed = await Feed_1.Feed.findOne({ attributes: ["id"], where: { user_id: userId,
-                    create_time: { [Op.between]: [`${(0, mohaengDateFormatter_1.getYear)(new Date())}-${(0, mohaengDateFormatter_1.getMonth)(new Date())}-${(0, mohaengDateFormatter_1.getDay)(new Date())}`, `${(0, mohaengDateFormatter_1.getYear)(new Date())}-${(0, mohaengDateFormatter_1.getMonth)(new Date())}-${(0, mohaengDateFormatter_1.getDay)(new Date())} 23:59:59`] } }
+                    create_time: { [Op.between]: [`${(0, mohaengDateFormatter_1.getYear)(new Date())}-${(0, mohaengDateFormatter_1.getMonth)(new Date())}-${(0, mohaengDateFormatter_1.getDay)(new Date())} 05:00:00`, `${(0, mohaengDateFormatter_1.getYear)(new Date())}-${(0, mohaengDateFormatter_1.getMonth)(new Date())}-${(0, mohaengDateFormatter_1.getTomorrow)(new Date())} 4:59:59`] } }
             });
             //안부 작성 가능 여부
             let hasFeed;
