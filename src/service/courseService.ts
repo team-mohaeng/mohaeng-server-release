@@ -82,6 +82,7 @@ export default {
         },
       };
 
+      courses.sort((a, b) => (a.getId() < b.getId() ? -1 : 1));
       return responseDTO;
     } catch (err) {
       console.error(err.message);
@@ -119,7 +120,6 @@ export default {
 
       let responseCourses: TotalCompleteCourseResponseDTO[] = [];
       let responseId = 1;
-      courses.sort((a, b) => (a.getId() < b.getId() ? -1 : 1));
 
       for (let i = 0; i < completeCourses.length; ++i) {
         let responseChallenges: TotalCompleteChallengeResponseDTO[] = [];
@@ -202,7 +202,6 @@ export default {
         return notExistCourseId;
       }
 
-      courses.sort((a, b) => (a.getId() < b.getId() ? -1 : 1));
       let challenges = courses[cid].getChallenges();
       let isPenalty = false;
       // 코스 변경인 경우
