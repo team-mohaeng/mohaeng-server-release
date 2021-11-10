@@ -21,7 +21,7 @@ import { Skin } from "../models/Skin";
 import { levels }  from "../dummy/Level"
 import { courses } from '../dummy/Course';
 import { characterCards } from "../dummy/CharacterCard";
-import { getYear, getMonth, getYesterday, getDay, getTomorrow } from "../formatter/mohaengDateFormatter";
+import { getYear, getMonth, getYesterday, getDay} from "../formatter/mohaengDateFormatter";
 import { iosSkins, aosSkins } from "../dummy/Skin";
 import { alreadyExsitEmoji, feedLengthCheck, notAuthorized, notExistFeedContent, notExistUser, notExistEmoji, notExistFeed, serverError, wrongEmojiId, alreadyReported, invalidReport } from "../errors";
 
@@ -512,11 +512,24 @@ export default {
         return notExistUser;
       }
 
-      const feed = await Feed.findOne({ attributes: ["id"], where: { user_id: userId, 
-        create_time: {[Op.between]:
-        [`${getYear(new Date())}-${getMonth(new Date())}-${getDay(new Date())} 05:00:00`, `${getYear(new Date())}-${getMonth(new Date())}-${getTomorrow(new Date())} 4:59:59`]}}
-      });
+      let feed;
+      const today = new Date();
 
+      //12시 지났을 때 - 어제 새벽 5시부터 지금까지 피드 있는지 확인
+      if (0 <= today.getHours() || today.getHours() < 5) {
+        feed = await Feed.findOne({ attributes: ["id"], where: { user_id: userId, 
+          create_time: {[Op.between]:
+          [`${getYear(new Date())}-${getMonth(new Date())}-${getYesterday(new Date())} 05:00:00`, new Date()]}}
+        });
+      }
+      //12시 이전일 때 - 오늘 새벽 5시부터 지금까지 피드 있는지 확인
+      else {
+        feed = await Feed.findOne({ attributes: ["id"], where: { user_id: userId, 
+          create_time: {[Op.between]:
+          [`${getYear(new Date())}-${getMonth(new Date())}-${getDay(new Date())} 05:00:00`, new Date()]}}
+        });
+      }
+      
       //안부 작성 가능 여부
       let hasFeed;
       //피드 작성 가능
