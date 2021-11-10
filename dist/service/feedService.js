@@ -450,9 +450,20 @@ exports.default = {
             if (!user) {
                 return errors_1.notExistUser;
             }
-            const feed = await Feed_1.Feed.findOne({ attributes: ["id"], where: { user_id: userId,
-                    create_time: { [Op.between]: [`${(0, mohaengDateFormatter_1.getYear)(new Date())}-${(0, mohaengDateFormatter_1.getMonth)(new Date())}-${(0, mohaengDateFormatter_1.getDay)(new Date())} 05:00:00`, `${(0, mohaengDateFormatter_1.getYear)(new Date())}-${(0, mohaengDateFormatter_1.getMonth)(new Date())}-${(0, mohaengDateFormatter_1.getTomorrow)(new Date())} 4:59:59`] } }
-            });
+            let feed;
+            const today = new Date();
+            //12시 지났을 때 - 어제 새벽 5시부터 지금까지 피드 있는지 확인
+            if (0 <= today.getHours() || today.getHours() < 5) {
+                feed = await Feed_1.Feed.findOne({ attributes: ["id"], where: { user_id: userId,
+                        create_time: { [Op.between]: [`${(0, mohaengDateFormatter_1.getYear)(new Date())}-${(0, mohaengDateFormatter_1.getMonth)(new Date())}-${(0, mohaengDateFormatter_1.getYesterday)(new Date())} 05:00:00`, new Date()] } }
+                });
+            }
+            //12시 이전일 때 - 오늘 새벽 5시부터 지금까지 피드 있는지 확인
+            else {
+                feed = await Feed_1.Feed.findOne({ attributes: ["id"], where: { user_id: userId,
+                        create_time: { [Op.between]: [`${(0, mohaengDateFormatter_1.getYear)(new Date())}-${(0, mohaengDateFormatter_1.getMonth)(new Date())}-${(0, mohaengDateFormatter_1.getDay)(new Date())} 05:00:00`, new Date()] } }
+                });
+            }
             //안부 작성 가능 여부
             let hasFeed;
             //피드 작성 가능
