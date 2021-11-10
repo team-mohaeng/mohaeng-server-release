@@ -452,6 +452,7 @@ exports.default = {
             }
             let feed;
             const today = new Date();
+            console.log(today.getHours());
             //12시 지났을 때 - 어제 새벽 5시부터 지금까지 피드 있는지 확인
             if (0 <= today.getHours() || today.getHours() < 5) {
                 feed = await Feed_1.Feed.findOne({ attributes: ["id"], where: { user_id: userId,
@@ -459,7 +460,8 @@ exports.default = {
                 });
             }
             //12시 이전일 때 - 오늘 새벽 5시부터 지금까지 피드 있는지 확인
-            else {
+            if (today.getHours() >= 5) {
+                console.log("zㅋㅋ");
                 feed = await Feed_1.Feed.findOne({ attributes: ["id"], where: { user_id: userId,
                         create_time: { [Op.between]: [`${(0, mohaengDateFormatter_1.getYear)(new Date())}-${(0, mohaengDateFormatter_1.getMonth)(new Date())}-${(0, mohaengDateFormatter_1.getDay)(new Date())} 05:00:00`, new Date()] } }
                 });
