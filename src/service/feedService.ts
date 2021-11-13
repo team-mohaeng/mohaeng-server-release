@@ -107,7 +107,7 @@ export default {
         //카드
         if (cardId < 64) {
           image = characterCards[cardId-1].getImageURL();
-          const characterType = Number((cardId - 1)/9) + 1;
+          const characterType = Math.floor(Number((cardId - 1) / 9)) + 1;
           Character.create({ user_id: +id, character_type: characterType, character_card: cardId });
         }
         //스킨
@@ -514,7 +514,6 @@ export default {
 
       let feed;
       const today = new Date();
-      console.log(today.getHours());
       //12시 지났을 때 - 어제 새벽 5시부터 지금까지 피드 있는지 확인
       if (0 <= today.getHours() || today.getHours() < 5) {
         feed = await Feed.findOne({ attributes: ["id"], where: { user_id: userId, 
@@ -524,7 +523,6 @@ export default {
       }
       //12시 이전일 때 - 오늘 새벽 5시부터 지금까지 피드 있는지 확인
       if (today.getHours() >= 5) {
-        console.log("zㅋㅋ");
         feed = await Feed.findOne({ attributes: ["id"], where: { user_id: userId, 
           create_time: {[Op.between]:
           [`${getYear(new Date())}-${getMonth(new Date())}-${getDay(new Date())} 05:00:00`, new Date()]}}
