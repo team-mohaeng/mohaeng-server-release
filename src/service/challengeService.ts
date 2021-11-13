@@ -257,7 +257,7 @@ export default {
       let userHappy = Number(user.affinity); // 유저에 업데이트될 해피지수
       let userLevel = Number(user.level); // 유저에 업데이트될 레벨
       let levelUp = false;  // 레벨업 여부
-      let canGetHappy = !user.challenge_penalty && (userLevel < 40);  // 패널티가 없고 만렙이 아닐 경우만 해피지수를 얻을 수 있음
+      let canGetHappy = !user.challenge_penalty && (userLevel < 68);  // 패널티가 없고 만렙이 아닐 경우만 해피지수를 얻을 수 있음
       let happy = 0;  // 유저가 해당 단계에 받는 얻는 해피지수
 
       let completeCourse = false; // 챌린지 인증 시 코스 완료 여부
@@ -272,15 +272,13 @@ export default {
       let challengeCompletionDTO: CertificationChallengeCompletionResponseDTO = {};
       let courseCompletionDTO: CertificationCourseCompletionResponseDTO = {};
       let levelUpDTO: CertificationLevelUpResponseDTO = {};
-
+      
       if (canGetHappy) {
         // 현재 affinity에 userHappy를 더하면 레벨이 올라가는지 확인
         // 레벨업시 캐릭터 카드 부여 처리
         if (userHappy + challenge.getHappy() > levels[userLevel - 1].getFullHappy()) {
           const cardId = levels[userLevel - 1].getCardId();
           const characterId = Math.floor(Number((cardId - 1) / 9)) + 1;
-          console.log("카드 아이디: " + cardId);
-          console.log("캐릭터 타입 아이디: " + characterId);
 
           levelUp = true;
           if (userLevel + 1 == 68) {  // 만렙이면
