@@ -257,7 +257,7 @@ export default {
       let userHappy = Number(user.affinity); // 유저에 업데이트될 해피지수
       let userLevel = Number(user.level); // 유저에 업데이트될 레벨
       let levelUp = false;  // 레벨업 여부
-      let canGetHappy = !user.challenge_penalty && (userLevel < 40);  // 패널티가 없고 만렙이 아닐 경우만 해피지수를 얻을 수 있음
+      let canGetHappy = !user.challenge_penalty && (userLevel < 68);  // 패널티가 없고 만렙이 아닐 경우만 해피지수를 얻을 수 있음
       let happy = 0;  // 유저가 해당 단계에 받는 얻는 해피지수
 
       let completeCourse = false; // 챌린지 인증 시 코스 완료 여부
