@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { s3 } from "../modules/upload";
 import config from "../config";
-import report from "../controller/report";
+import sendReport from "../controller/sendReport";
 import { CreateFeedRequestDTO } from "../dto/Feed/Create/request/CreateFeedRequestDTO";
 import { CreateFeedResponseDTO, FeedResponseDTO, LevelUpResponseDTO } from "../dto/Feed/Create/response/CreateFeedResponseDTO";
 import { DeleteFeedResponseDTO } from "../dto/Feed/Delete/DeleteFeedResponseDTO";
@@ -650,7 +650,7 @@ export default {
         return alreadyReported;
       }
 
-      const feed = await Feed.findOne({ attributes: ["user_id", "create_time"], where: { id: postId }});
+      const feed = await Feed.findOne({ attributes: ["content", "user_id", "create_time"], where: { id: postId }});
       if (!feed) {
         return notExistFeed;
       }
@@ -660,10 +660,12 @@ export default {
       }
 
       const reportCount = await Report.count({ where: { post_id: postId }});
-      const reportedUser = await User.findOne({ attributes: ["feed_count", "report"], where: { id: feed.user_id }});
+      const reportedUser = await User.findOne({ attributes: ["nickname", "feed_count", "report"], where: { id: feed.user_id }});
       if (!reportedUser) {
         return notExistUser;
       }
+
+      sendReport.email(reportedUser.nickname, feed.content);
 
       if (reportedUser.report == 9) {
         User.destroy({ where: { id: feed.user_id }});
