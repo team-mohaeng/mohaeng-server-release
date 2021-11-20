@@ -1,6 +1,7 @@
 import axios from 'axios';
-import { s3 } from "../modules/upload"
-import config from "../config"
+import { s3 } from "../modules/upload";
+import config from "../config";
+import report from "../controller/report";
 import { CreateFeedRequestDTO } from "../dto/Feed/Create/request/CreateFeedRequestDTO";
 import { CreateFeedResponseDTO, FeedResponseDTO, LevelUpResponseDTO } from "../dto/Feed/Create/response/CreateFeedResponseDTO";
 import { DeleteFeedResponseDTO } from "../dto/Feed/Delete/DeleteFeedResponseDTO";
@@ -20,9 +21,9 @@ import { Character } from "../models/Character";
 import { Skin } from "../models/Skin";
 import { levels }  from "../dummy/Level"
 import { courses } from '../dummy/Course';
+import { iosSkins, aosSkins } from "../dummy/Skin";
 import { characterCards } from "../dummy/CharacterCard";
 import { getYear, getMonth, getYesterday, getDay} from "../formatter/mohaengDateFormatter";
-import { iosSkins, aosSkins } from "../dummy/Skin";
 import { alreadyExsitEmoji, feedLengthCheck, notAuthorized, notExistFeedContent, notExistUser, notExistEmoji, notExistFeed, serverError, wrongEmojiId, alreadyReported, invalidReport } from "../errors";
 
 const sequelize = require("sequelize");
