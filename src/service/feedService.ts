@@ -25,6 +25,8 @@ import { iosSkins, aosSkins } from "../dummy/Skin";
 import { characterCards } from "../dummy/CharacterCard";
 import { getYear, getMonth, getYesterday, getDay} from "../formatter/mohaengDateFormatter";
 import { alreadyExsitEmoji, feedLengthCheck, notAuthorized, notExistFeedContent, notExistUser, notExistEmoji, notExistFeed, serverError, wrongEmojiId, alreadyReported, invalidReport } from "../errors";
+import { Block } from '../models/Block';
+import { where } from 'sequelize/types';
 
 const sequelize = require("sequelize");
 const Op = sequelize.Op;
@@ -557,7 +559,14 @@ export default {
       const feedResponse: Array<FeedDTO> = new Array<FeedDTO>();
       const week = new Array("일", "월", "화", "수", "목", "금", "토");
 
-      const feeds = await Feed.findAll({ order: [["id", "DESC"]], where: { isPrivate: false }});
+      const blocks = await Block.findAll({ attributes: ["reported_id"], where: { user_id: userId }});
+      const blocklist = new Array();
+      if (blocks) {
+        blocks.forEach(block => {
+          blocklist.push(block.reported_id);
+        })
+      }
+      const feeds = await Feed.findAll({ order: [["id", "DESC"]], where: { user_id: {[Op.notIn]: [blocklist]}, isPrivate: false }});
       const emojis = await Emoji.findAll();
       let emojiCount=[0, 0, 0, 0, 0, 0, 0]; //이모지 개수 넣는 배열, emojiId 1~6, 0번째 요소는 사용X
       let emojiArray: Array<EmojiDTO> = new Array<EmojiDTO>(); //이모지 id랑 count 넣는 배열
@@ -657,6 +666,11 @@ export default {
       
       if (feed.user_id == userId) {
         return invalidReport;
+      }
+
+      const block = await Block.findOne({ where: { user_id: userId, reported_id: feed.user_id}})
+      if (!block) {
+        Block.create({ user_id: +userId, reported_id: +feed.user_id});
       }
 
       const reportCount = await Report.count({ where: { post_id: postId }});
