@@ -660,13 +660,20 @@ export default {
       }
 
       const reportCount = await Report.count({ where: { post_id: postId }});
+      const reportedUser = await User.findOne({ attributes: ["feed_count", "report"], where: { id: feed.user_id }});
+      if (!reportedUser) {
+        return notExistUser;
+      }
+
+      if (reportedUser.report == 9) {
+        User.destroy({ where: { id: feed.user_id }});
+      }
+      else {
+        User.update({ report: reportedUser.report+1}, { where: { id: feed.user_id }})
+      }
+
       if (reportCount == 2) {
         Feed.destroy({ where: { id: postId }});
-
-        const reportedUser = await User.findOne({ attributes: ["feed_count"], where: { id: feed.user_id }});
-        if (!reportedUser) {
-          return notExistUser;
-        }
 
         const todayFeed = `${getYear(feed.create_time)}`==`${getYear(new Date())}` && `${getMonth(feed.create_time)}`==`${getMonth(new Date())}` && `${getDay(feed.create_time)}`==`${getDay(new Date())}`;
         const yesterdayFeed = await Feed.findOne({
