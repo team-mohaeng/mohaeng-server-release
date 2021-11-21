@@ -492,12 +492,16 @@ exports.default = {
             const week = new Array("일", "월", "화", "수", "목", "금", "토");
             const blocks = await Block_1.Block.findAll({ attributes: ["reported_id"], where: { user_id: userId } });
             const blocklist = new Array();
-            if (blocks) {
+            let feeds;
+            if (blocks.length > 0) {
                 blocks.forEach(block => {
                     blocklist.push(block.reported_id);
                 });
+                feeds = await Feed_1.Feed.findAll({ order: [["id", "DESC"]], where: { user_id: { [Op.notIn]: [blocklist] }, isPrivate: false } });
             }
-            const feeds = await Feed_1.Feed.findAll({ order: [["id", "DESC"]], where: { user_id: { [Op.notIn]: [blocklist] }, isPrivate: false } });
+            else {
+                feeds = await Feed_1.Feed.findAll({ order: [["id", "DESC"]], where: { isPrivate: false } });
+            }
             const emojis = await Emoji_1.Emoji.findAll();
             let emojiCount = [0, 0, 0, 0, 0, 0, 0]; //이모지 개수 넣는 배열, emojiId 1~6, 0번째 요소는 사용X
             let emojiArray = new Array(); //이모지 id랑 count 넣는 배열
