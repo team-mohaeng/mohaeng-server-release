@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const axios_1 = __importDefault(require("axios"));
 const upload_1 = require("../modules/upload");
 const config_1 = __importDefault(require("../config"));
+const sendReport_1 = __importDefault(require("../controller/sendReport"));
 const User_1 = require("../models/User");
 const Feed_1 = require("../models/Feed");
 const Badge_1 = require("../models/Badge");
@@ -15,10 +16,11 @@ const Character_1 = require("../models/Character");
 const Skin_1 = require("../models/Skin");
 const Level_1 = require("../dummy/Level");
 const Course_1 = require("../dummy/Course");
+const Skin_2 = require("../dummy/Skin");
 const CharacterCard_1 = require("../dummy/CharacterCard");
 const mohaengDateFormatter_1 = require("../formatter/mohaengDateFormatter");
-const Skin_2 = require("../dummy/Skin");
 const errors_1 = require("../errors");
+const Block_1 = require("../models/Block");
 const sequelize = require("sequelize");
 const Op = sequelize.Op;
 exports.default = {
@@ -488,7 +490,14 @@ exports.default = {
             });
             const feedResponse = new Array();
             const week = new Array("일", "월", "화", "수", "목", "금", "토");
-            const feeds = await Feed_1.Feed.findAll({ order: [["id", "DESC"]], where: { isPrivate: false } });
+            const blocks = await Block_1.Block.findAll({ attributes: ["reported_id"], where: { user_id: userId } });
+            const blocklist = new Array();
+            if (blocks) {
+                blocks.forEach(block => {
+                    blocklist.push(block.reported_id);
+                });
+            }
+            const feeds = await Feed_1.Feed.findAll({ order: [["id", "DESC"]], where: { user_id: { [Op.notIn]: [blocklist] }, isPrivate: false } });
             const emojis = await Emoji_1.Emoji.findAll();
             let emojiCount = [0, 0, 0, 0, 0, 0, 0]; //이모지 개수 넣는 배열, emojiId 1~6, 0번째 요소는 사용X
             let emojiArray = new Array(); //이모지 id랑 count 넣는 배열
@@ -571,20 +580,31 @@ exports.default = {
             if (report) {
                 return errors_1.alreadyReported;
             }
-            const feed = await Feed_1.Feed.findOne({ attributes: ["user_id", "create_time"], where: { id: postId } });
+            const feed = await Feed_1.Feed.findOne({ attributes: ["content", "user_id", "create_time"], where: { id: postId } });
             if (!feed) {
                 return errors_1.notExistFeed;
             }
             if (feed.user_id == userId) {
                 return errors_1.invalidReport;
             }
+            const block = await Block_1.Block.findOne({ where: { user_id: userId, reported_id: feed.user_id } });
+            if (!block) {
+                Block_1.Block.create({ user_id: +userId, reported_id: +feed.user_id });
+            }
             const reportCount = await Report_1.Report.count({ where: { post_id: postId } });
+            const reportedUser = await User_1.User.findOne({ attributes: ["nickname", "feed_count", "report"], where: { id: feed.user_id } });
+            if (!reportedUser) {
+                return errors_1.notExistUser;
+            }
+            sendReport_1.default.email(reportedUser.nickname, feed.content);
+            if (reportedUser.report == 9) {
+                User_1.User.destroy({ where: { id: feed.user_id } });
+            }
+            else {
+                User_1.User.update({ report: reportedUser.report + 1 }, { where: { id: feed.user_id } });
+            }
             if (reportCount == 2) {
                 Feed_1.Feed.destroy({ where: { id: postId } });
-                const reportedUser = await User_1.User.findOne({ attributes: ["feed_count"], where: { id: feed.user_id } });
-                if (!reportedUser) {
-                    return errors_1.notExistUser;
-                }
                 const todayFeed = `${(0, mohaengDateFormatter_1.getYear)(feed.create_time)}` == `${(0, mohaengDateFormatter_1.getYear)(new Date())}` && `${(0, mohaengDateFormatter_1.getMonth)(feed.create_time)}` == `${(0, mohaengDateFormatter_1.getMonth)(new Date())}` && `${(0, mohaengDateFormatter_1.getDay)(feed.create_time)}` == `${(0, mohaengDateFormatter_1.getDay)(new Date())}`;
                 const yesterdayFeed = await Feed_1.Feed.findOne({
                     attributes: ["id"],

@@ -17,7 +17,7 @@ exports.default = {
 입력창에 아래의 인증번호를 입력해줘~
 < ${number} >
 
-궁금한 사항이 있으시면 모행 공식 메일 mohaeng@naver.com 로 문의 주시길 바랍니다.
+궁금한 사항이 있으시면 모행 공식 메일 mohaeng_official@naver.com 로 문의 주시길 바랍니다.
 감사합니다!
 `
         };

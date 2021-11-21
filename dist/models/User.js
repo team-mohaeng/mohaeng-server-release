@@ -114,6 +114,10 @@ User.init({
         type: sequelize_1.DataTypes.INTEGER.UNSIGNED,
         defaultValue: 1,
     },
+    report: {
+        type: sequelize_1.DataTypes.INTEGER.UNSIGNED,
+        defaultValue: 0,
+    },
 }, {
     modelName: 'User',
     tableName: 'User',
