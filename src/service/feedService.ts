@@ -562,7 +562,6 @@ export default {
       const blocks = await Block.findAll({ attributes: ["reported_id"], where: { user_id: userId }});
       const blocklist = new Array();
       let feeds;
-      console.log(blocks.length);
       if (blocks.length>0) {
         blocks.forEach(block => {
           blocklist.push(block.reported_id);
