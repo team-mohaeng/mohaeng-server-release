@@ -29,6 +29,7 @@ interface UserAttributes {
   recent_challenge_date?: Date;
   challenge_success_count?: number;
   feed_success_count?: number;
+  report?: number;
 };
 
 export class User extends Model<UserAttributes>{
@@ -59,6 +60,7 @@ export class User extends Model<UserAttributes>{
   public recent_challenge_date: Date;
   public challenge_success_count: number;
   public feed_success_count: number;
+  public report: number;
 
   public static associations: {
   };
@@ -168,6 +170,10 @@ User.init(
     feed_success_count: {
       type: DataTypes.INTEGER.UNSIGNED,
       defaultValue: 1,
+    },
+    report: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      defaultValue: 0,
     },
   },
   {

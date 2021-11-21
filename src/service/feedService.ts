@@ -1,6 +1,7 @@
 import axios from 'axios';
-import { s3 } from "../modules/upload"
-import config from "../config"
+import { s3 } from "../modules/upload";
+import config from "../config";
+import sendReport from "../controller/sendReport";
 import { CreateFeedRequestDTO } from "../dto/Feed/Create/request/CreateFeedRequestDTO";
 import { CreateFeedResponseDTO, FeedResponseDTO, LevelUpResponseDTO } from "../dto/Feed/Create/response/CreateFeedResponseDTO";
 import { DeleteFeedResponseDTO } from "../dto/Feed/Delete/DeleteFeedResponseDTO";
@@ -20,10 +21,12 @@ import { Character } from "../models/Character";
 import { Skin } from "../models/Skin";
 import { levels }  from "../dummy/Level"
 import { courses } from '../dummy/Course';
+import { iosSkins, aosSkins } from "../dummy/Skin";
 import { characterCards } from "../dummy/CharacterCard";
 import { getYear, getMonth, getYesterday, getDay} from "../formatter/mohaengDateFormatter";
-import { iosSkins, aosSkins } from "../dummy/Skin";
 import { alreadyExsitEmoji, feedLengthCheck, notAuthorized, notExistFeedContent, notExistUser, notExistEmoji, notExistFeed, serverError, wrongEmojiId, alreadyReported, invalidReport } from "../errors";
+import { Block } from '../models/Block';
+import { where } from 'sequelize/types';
 
 const sequelize = require("sequelize");
 const Op = sequelize.Op;
@@ -556,7 +559,14 @@ export default {
       const feedResponse: Array<FeedDTO> = new Array<FeedDTO>();
       const week = new Array("일", "월", "화", "수", "목", "금", "토");
 
-      const feeds = await Feed.findAll({ order: [["id", "DESC"]], where: { isPrivate: false }});
+      const blocks = await Block.findAll({ attributes: ["reported_id"], where: { user_id: userId }});
+      const blocklist = new Array();
+      if (blocks) {
+        blocks.forEach(block => {
+          blocklist.push(block.reported_id);
+        })
+      }
+      const feeds = await Feed.findAll({ order: [["id", "DESC"]], where: { user_id: {[Op.notIn]: [blocklist]}, isPrivate: false }});
       const emojis = await Emoji.findAll();
       let emojiCount=[0, 0, 0, 0, 0, 0, 0]; //이모지 개수 넣는 배열, emojiId 1~6, 0번째 요소는 사용X
       let emojiArray: Array<EmojiDTO> = new Array<EmojiDTO>(); //이모지 id랑 count 넣는 배열
@@ -649,7 +659,7 @@ export default {
         return alreadyReported;
       }
 
-      const feed = await Feed.findOne({ attributes: ["user_id", "create_time"], where: { id: postId }});
+      const feed = await Feed.findOne({ attributes: ["content", "user_id", "create_time"], where: { id: postId }});
       if (!feed) {
         return notExistFeed;
       }
@@ -658,14 +668,28 @@ export default {
         return invalidReport;
       }
 
+      const block = await Block.findOne({ where: { user_id: userId, reported_id: feed.user_id}})
+      if (!block) {
+        Block.create({ user_id: +userId, reported_id: +feed.user_id});
+      }
+
       const reportCount = await Report.count({ where: { post_id: postId }});
+      const reportedUser = await User.findOne({ attributes: ["nickname", "feed_count", "report"], where: { id: feed.user_id }});
+      if (!reportedUser) {
+        return notExistUser;
+      }
+
+      sendReport.email(reportedUser.nickname, feed.content);
+
+      if (reportedUser.report == 9) {
+        User.destroy({ where: { id: feed.user_id }});
+      }
+      else {
+        User.update({ report: reportedUser.report+1}, { where: { id: feed.user_id }})
+      }
+
       if (reportCount == 2) {
         Feed.destroy({ where: { id: postId }});
-
-        const reportedUser = await User.findOne({ attributes: ["feed_count"], where: { id: feed.user_id }});
-        if (!reportedUser) {
-          return notExistUser;
-        }
 
         const todayFeed = `${getYear(feed.create_time)}`==`${getYear(new Date())}` && `${getMonth(feed.create_time)}`==`${getMonth(new Date())}` && `${getDay(feed.create_time)}`==`${getDay(new Date())}`;
         const yesterdayFeed = await Feed.findOne({
