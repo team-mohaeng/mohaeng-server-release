@@ -146,3 +146,12 @@ export const alreadySignedUp: IFail = {
   message: "이미 가입된 회원입니다."
 }
 
+export const alreadyBlocked: IFail = {
+  status: 404,
+  message: "이미 차단한 사용자입니다."
+}
+
+export const invalidBlock: IFail = {
+  status: 404,
+  message: "사용자 본인을 차단할 수 없습니다."
+}
