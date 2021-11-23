@@ -625,3 +625,56 @@
  *  "message": "서버 에러입니다. 서버 파트에게 문의해주세요 *^^*"
  * }
  */
+
+/**
+ * @api {post} /api/block 사용자 차단
+ * 
+ * @apiVersion 1.0.0
+ * @apiName block
+ * @apiGroup 안부
+ * 
+ * @apiHeaderExample {json} Header-Example:
+ * {
+ *  "Content-Type": "application/json"
+ *  "Bearer": "jwt"
+ * }
+ * 
+ * @apiParamExample {json} Request-Example:
+ * {
+ *  "nickname": "모행"
+ * }
+ * 
+ * @apiSuccess {String} message
+ * 
+ * @apiSuccessExample {json} Success-Response:
+ * 200 OK 사용자 차단
+ * {
+ *  "status": 200,
+ *  "message": "사용자를 차단하였습니다."
+ * }
+ * 
+ * @apiErrorExample Error-Response:
+ * 401 유효하지 않은 유저
+ * {
+ *  "status": 401,
+ *  "message": "유저가 존재하지 않습니다."
+ * }
+ * 
+ * 404 이미 차단한 사용자
+ * {
+ *  "status": 404,
+ *  "message": "이미 차단한 사용자입니다."
+ * }
+ * 
+ * 404 본인을 차단할 경우
+ * {
+ *  "status": 404,
+ *  "message": "사용자 본인을 차단할 수 없습니다."
+ * }
+ * 
+ * 500 서버 에러
+ * {
+ *  "status": 500,
+ *  "message": "서버 에러입니다. 서버 파트에게 문의해주세요 *^^*"
+ * }
+ */

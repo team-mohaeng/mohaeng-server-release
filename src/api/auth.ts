@@ -217,6 +217,11 @@ router.post("/email", async(req, res) => {
   }
 })
 
+router.post("/block", auth, async (req, res) => {
+  const result = await authService.block(req.body.user.id, req.body.nickname);
+  res.status(result.status).json(result);
+})
+
 module.exports = router;
 
 
