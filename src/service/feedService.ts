@@ -19,14 +19,13 @@ import { Emoji } from "../models/Emoji";
 import { Report } from "../models/Report";
 import { Character } from "../models/Character";
 import { Skin } from "../models/Skin";
-import { levels }  from "../dummy/Level"
+import { Block } from '../models/Block';
+import { levels }  from "../dummy/Level";
 import { courses } from '../dummy/Course';
 import { iosSkins, aosSkins } from "../dummy/Skin";
 import { characterCards } from "../dummy/CharacterCard";
 import { getYear, getMonth, getYesterday, getDay} from "../formatter/mohaengDateFormatter";
 import { alreadyExsitEmoji, feedLengthCheck, notAuthorized, notExistFeedContent, notExistUser, notExistEmoji, notExistFeed, serverError, wrongEmojiId, alreadyReported, invalidReport } from "../errors";
-import { Block } from '../models/Block';
-import { where } from 'sequelize/types';
 
 const sequelize = require("sequelize");
 const Op = sequelize.Op;
@@ -671,11 +670,6 @@ export default {
       
       if (feed.user_id == userId) {
         return invalidReport;
-      }
-
-      const block = await Block.findOne({ where: { user_id: userId, reported_id: feed.user_id}})
-      if (!block) {
-        Block.create({ user_id: +userId, reported_id: +feed.user_id});
       }
 
       const reportCount = await Report.count({ where: { post_id: postId }});
