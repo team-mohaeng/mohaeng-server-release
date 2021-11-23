@@ -6,6 +6,7 @@ import password from '../controller/password';
 import { User } from "../models/User";
 import { Character } from '../models/Character';
 import { Skin } from '../models/Skin';
+import { Block } from '../models/Block';
 import { SignUpRequestDTO } from "../dto/Auth/SignUp/request/SignUpRequestDTO";
 import { SignUpResponseDTO } from "../dto/Auth/SignUp/response/SignUpResponseDTO";
 import { SignInRequestDTO } from '../dto/Auth/SignIn/request/SignInRequestDTO';
@@ -19,7 +20,8 @@ import { SocialLogInRequestDTO } from '../dto/Auth/Social/request/SocialLogInReq
 import { SocialSignUpRequestDTO } from '../dto/Auth/Social/request/SocialSignUpRequestDTO';
 import { DeleteAccountResponseDTO } from '../dto/Auth/Delete/DeleteAccountResponse';
 import { EmailResponseDTO } from '../dto/Auth/Email/EmailResponseDTO';
-import { serverError, alreadyExistEmail, nicknameLengthCheck, alreadyExistNickname, notMatchSignIn, notExistUser, invalidEmail, alreadySignedUp } from "../errors";
+import { BlockResponseDTO } from '../dto/Auth/Block/BlockResponseDTO';
+import { serverError, alreadyExistEmail, nicknameLengthCheck, alreadyExistNickname, notMatchSignIn, notExistUser, invalidEmail, alreadySignedUp, alreadyBlocked,invalidBlock } from "../errors";
 
 export default {
   signUp: async (dto: SignUpRequestDTO) => {
@@ -328,6 +330,44 @@ export default {
     } catch (err) {
       console.error(err);
       return serverError
+    }
+  },
+
+  block: async(userId: string, nickname: string) => {
+    try {
+      const user = await User.findOne({ attributes: ["id"], where: { id: userId }});
+      if (!user) {
+        return notExistUser;
+      }
+
+      const reportedUser = await User.findOne({ attributes: ["id"], where: { nickname: nickname }});
+      if (!reportedUser) {
+        return notExistUser;
+      }
+
+      if (user.id == reportedUser.id) {
+        return invalidBlock;
+      }
+
+      const block = await Block.findOne({ where: { user_id: userId, reported_id: reportedUser.id}})
+
+      let responseDTO: BlockResponseDTO;
+      if (!block) {
+        Block.create({ user_id: +userId, reported_id: +reportedUser.id});
+        responseDTO = {
+          status: 200,
+          message: "사용자를 차단하였습니다."
+        }
+      }
+      else {
+        return alreadyBlocked
+      }
+
+      return responseDTO;
+
+    } catch (err) {
+      console.log(err);
+      return serverError;
     }
   }
 }
