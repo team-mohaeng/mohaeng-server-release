@@ -10,6 +10,7 @@ const password_1 = __importDefault(require("../controller/password"));
 const User_1 = require("../models/User");
 const Character_1 = require("../models/Character");
 const Skin_1 = require("../models/Skin");
+const Block_1 = require("../models/Block");
 const errors_1 = require("../errors");
 exports.default = {
     signUp: async (dto) => {
@@ -261,6 +262,38 @@ exports.default = {
         }
         catch (err) {
             console.error(err);
+            return errors_1.serverError;
+        }
+    },
+    block: async (userId, nickname) => {
+        try {
+            const user = await User_1.User.findOne({ attributes: ["id"], where: { id: userId } });
+            if (!user) {
+                return errors_1.notExistUser;
+            }
+            const reportedUser = await User_1.User.findOne({ attributes: ["id"], where: { nickname: nickname } });
+            if (!reportedUser) {
+                return errors_1.notExistUser;
+            }
+            if (user.id == reportedUser.id) {
+                return errors_1.invalidBlock;
+            }
+            const block = await Block_1.Block.findOne({ where: { user_id: userId, reported_id: reportedUser.id } });
+            let responseDTO;
+            if (!block) {
+                Block_1.Block.create({ user_id: +userId, reported_id: +reportedUser.id });
+                responseDTO = {
+                    status: 200,
+                    message: "사용자를 차단하였습니다."
+                };
+            }
+            else {
+                return errors_1.alreadyBlocked;
+            }
+            return responseDTO;
+        }
+        catch (err) {
+            console.log(err);
             return errors_1.serverError;
         }
     }

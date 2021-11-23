@@ -188,5 +188,9 @@ router.post("/email", async (req, res) => {
         return errors_1.serverError;
     }
 });
+router.post("/block", auth_1.default, async (req, res) => {
+    const result = await authService_1.default.block(req.body.user.id, req.body.nickname);
+    res.status(result.status).json(result);
+});
 module.exports = router;
 //# sourceMappingURL=auth.js.map

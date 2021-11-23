@@ -308,7 +308,7 @@ exports.default = {
                     // 레벨업시 캐릭터 카드 부여 처리
                     if (userHappy + course.getHappy() > Level_1.levels[userLevel - 1].getFullHappy()) {
                         const cardId = Level_1.levels[userLevel - 1].getCardId();
-                        const characterId = Number((cardId - 1) / 9) + 1;
+                        const characterId = Math.floor(Number((cardId - 1) / 9)) + 1;
                         levelUp = true;
                         if (userLevel + 1 == 68) {
                             happy = Level_1.levels[userLevel - 1].getFullHappy() - userHappy;

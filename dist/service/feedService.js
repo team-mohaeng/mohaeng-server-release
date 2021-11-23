@@ -14,13 +14,13 @@ const Emoji_1 = require("../models/Emoji");
 const Report_1 = require("../models/Report");
 const Character_1 = require("../models/Character");
 const Skin_1 = require("../models/Skin");
+const Block_1 = require("../models/Block");
 const Level_1 = require("../dummy/Level");
 const Course_1 = require("../dummy/Course");
 const Skin_2 = require("../dummy/Skin");
 const CharacterCard_1 = require("../dummy/CharacterCard");
 const mohaengDateFormatter_1 = require("../formatter/mohaengDateFormatter");
 const errors_1 = require("../errors");
-const Block_1 = require("../models/Block");
 const sequelize = require("sequelize");
 const Op = sequelize.Op;
 exports.default = {
@@ -590,10 +590,6 @@ exports.default = {
             }
             if (feed.user_id == userId) {
                 return errors_1.invalidReport;
-            }
-            const block = await Block_1.Block.findOne({ where: { user_id: userId, reported_id: feed.user_id } });
-            if (!block) {
-                Block_1.Block.create({ user_id: +userId, reported_id: +feed.user_id });
             }
             const reportCount = await Report_1.Report.count({ where: { post_id: postId } });
             const reportedUser = await User_1.User.findOne({ attributes: ["nickname", "feed_count", "report"], where: { id: feed.user_id } });
