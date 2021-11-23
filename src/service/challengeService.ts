@@ -278,7 +278,7 @@ export default {
         // 레벨업시 캐릭터 카드 부여 처리
         if (userHappy + challenge.getHappy() > levels[userLevel - 1].getFullHappy()) {
           const cardId = levels[userLevel - 1].getCardId();
-          const characterId = Number((cardId - 1) / 9) + 1;
+          const characterId = Math.floor(Number((cardId - 1) / 9)) + 1;
           levelUp = true;
           if (userLevel + 1 == 68) {  // 만렙이면
             happy = levels[userLevel - 1].getFullHappy() - userHappy; // 레벨업으로 받는 해피지수가 달라짐
@@ -337,7 +337,7 @@ export default {
           // 레벨업시 캐릭터 카드 부여 처리
           if (userHappy + course.getHappy() > levels[userLevel - 1].getFullHappy()) {
             const cardId = levels[userLevel - 1].getCardId();
-            const characterId = Number((cardId - 1) / 9) + 1;
+            const characterId = Math.floor(Number((cardId - 1) / 9)) + 1;
             levelUp = true;
             if (userLevel + 1 == 68) {
               happy = levels[userLevel - 1].getFullHappy() - userHappy;
