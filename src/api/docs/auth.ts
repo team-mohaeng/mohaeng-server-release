@@ -631,7 +631,7 @@
  * 
  * @apiVersion 1.0.0
  * @apiName block
- * @apiGroup 안부
+ * @apiGroup 로그인/회원가입
  * 
  * @apiHeaderExample {json} Header-Example:
  * {
