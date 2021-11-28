@@ -574,6 +574,138 @@ exports.default = {
             return errors_1.serverError;
         }
     },
+    community: async (userId, page) => {
+        try {
+            const user = await User_1.User.findOne({ where: { id: userId } });
+            if (!user) {
+                return errors_1.notExistUser;
+            }
+            let feed;
+            const today = new Date();
+            //12시 지났을 때 - 어제 새벽 5시부터 지금까지 피드 있는지 확인
+            if (0 <= today.getHours() || today.getHours() < 5) {
+                feed = await Feed_1.Feed.findOne({ attributes: ["id"], where: { user_id: userId,
+                        create_time: { [Op.between]: [`${(0, mohaengDateFormatter_1.getYear)(new Date())}-${(0, mohaengDateFormatter_1.getMonth)(new Date())}-${(0, mohaengDateFormatter_1.getYesterday)(new Date())} 05:00:00`, new Date()] } }
+                });
+            }
+            //12시 이전일 때 - 오늘 새벽 5시부터 지금까지 피드 있는지 확인
+            if (today.getHours() >= 5) {
+                feed = await Feed_1.Feed.findOne({ attributes: ["id"], where: { user_id: userId,
+                        create_time: { [Op.between]: [`${(0, mohaengDateFormatter_1.getYear)(new Date())}-${(0, mohaengDateFormatter_1.getMonth)(new Date())}-${(0, mohaengDateFormatter_1.getDay)(new Date())} 05:00:00`, new Date()] } }
+                });
+            }
+            //안부 작성 가능 여부
+            let hasFeed;
+            //피드 작성 가능
+            if (!feed && user.is_completed) {
+                hasFeed = 0;
+            }
+            //피드 이미 작성
+            else if (feed) {
+                hasFeed = 1;
+            }
+            //코스 수행 전
+            else if (!user.current_course_id) {
+                hasFeed = 2;
+            }
+            //챌린지 수행 전
+            else if (!user.is_completed) {
+                hasFeed = 2;
+            }
+            const userCount = await Feed_1.Feed.count({
+                where: { create_time: { [Op.between]: [`${(0, mohaengDateFormatter_1.getYear)(new Date())}-${(0, mohaengDateFormatter_1.getMonth)(new Date())}-${(0, mohaengDateFormatter_1.getDay)(new Date())}`, `${(0, mohaengDateFormatter_1.getYear)(new Date())}-${(0, mohaengDateFormatter_1.getMonth)(new Date())}-${(0, mohaengDateFormatter_1.getDay)(new Date())} 23:59:59`]
+                    } }
+            });
+            const feedResponse = new Array();
+            const week = new Array("일", "월", "화", "수", "목", "금", "토");
+            const blocks = await Block_1.Block.findAll({ attributes: ["reported_id"], where: { user_id: userId } });
+            const blocklist = new Array();
+            let feeds;
+            if (blocks.length > 0) {
+                blocks.forEach(block => {
+                    blocklist.push(block.reported_id);
+                });
+                feeds = await Feed_1.Feed.findAll({ order: [["id", "DESC"]], limit: 15, offset: +page * 15, where: { user_id: { [Op.notIn]: [blocklist] }, isPrivate: false } });
+            }
+            else {
+                feeds = await Feed_1.Feed.findAll({ order: [["id", "DESC"]], limit: 15, offset: +page * 15, where: { isPrivate: false } });
+            }
+            const feedId = new Array();
+            feeds.forEach(feed => {
+                feedId.push(feed.id);
+            });
+            const emojis = await Emoji_1.Emoji.findAll({ where: { feed_id: { [Op.or]: [feedId] } } });
+            let emojiCount = [0, 0, 0, 0, 0, 0, 0]; //이모지 개수 넣는 배열, emojiId 1~6, 0번째 요소는 사용X
+            let emojiArray = new Array(); //이모지 id랑 count 넣는 배열
+            let myEmoji = 0; //조회하는 유저가 피드에 추가한 이모지, 0은 이모지 추가 안한 경우
+            for (let i = 0; i < feeds.length; i++) {
+                for (let j = 0; j < emojis.length; j++) {
+                    if (feeds[i].id == emojis[j].feed_id) {
+                        const emojiId = emojis[j].emoji_id; //피드에 붙는 이모지 id
+                        if (emojiCount[emojiId] == 99) {
+                            emojiCount[emojiId] = 99;
+                        }
+                        else {
+                            emojiCount[emojiId] += 1; //count +1
+                        }
+                        if (userId == emojis[j].user_id) { //사용자가 피드에 이모지 붙였는지 여부
+                            myEmoji = +emojiId;
+                        }
+                    }
+                }
+                for (let emojiNumber = 1; emojiNumber < 7; emojiNumber++) {
+                    if (emojiCount[emojiNumber] == 0) { //이모지 개수 0개면 skip
+                        continue;
+                    }
+                    const emoji = {
+                        id: emojiNumber,
+                        count: emojiCount[emojiNumber]
+                    };
+                    emojiArray.push(emoji);
+                }
+                //신고 가능 여부
+                const isReport = (user.nickname != feeds[i].nickname) ? true : false;
+                //삭제 가능 여부
+                const isDelete = (user.nickname == feeds[i].nickname) ? true : false;
+                const myFeed = {
+                    postId: feeds[i].id,
+                    course: Course_1.courses[feeds[i].current_course_id - 1].getTitle(),
+                    challenge: feeds[i].current_challenge_id,
+                    image: feeds[i].image,
+                    mood: feeds[i].mood,
+                    content: feeds[i].content,
+                    nickname: feeds[i].nickname,
+                    year: (0, mohaengDateFormatter_1.getYear)(feeds[i].create_time),
+                    month: (0, mohaengDateFormatter_1.getMonth)(feeds[i].create_time),
+                    date: (0, mohaengDateFormatter_1.getDay)(feeds[i].create_time),
+                    day: week[feeds[i].create_time.getDay()],
+                    emoji: emojiArray,
+                    myEmoji: myEmoji,
+                    isReport: isReport,
+                    isDelete: isDelete
+                };
+                feedResponse.push(myFeed);
+                //배열 초기화
+                emojiArray = [];
+                emojiCount = [0, 0, 0, 0, 0, 0, 0];
+            }
+            const community = {
+                isNew: user.is_feed_new,
+                hasFeed: hasFeed,
+                userCount: userCount,
+                feeds: feedResponse
+            };
+            const responseDTO = {
+                status: 200,
+                data: community
+            };
+            return responseDTO;
+        }
+        catch (err) {
+            console.error(err);
+            return errors_1.serverError;
+        }
+    },
     report: async (userId, postId) => {
         try {
             const user = await User_1.User.findOne({ attributes: ["id"], where: { id: userId } });
