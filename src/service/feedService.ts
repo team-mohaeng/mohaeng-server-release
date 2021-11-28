@@ -714,8 +714,13 @@ export default {
       else {
         feeds = await Feed.findAll({ order: [["id", "DESC"]], limit: 15, offset: +page*15, where: { isPrivate: false }});
       }
+
+      const feedId = new Array();
+      feeds.forEach(feed => {
+        feedId.push(feed.id);
+      })
       
-      const emojis = await Emoji.findAll();
+      const emojis = await Emoji.findAll({ where: { feed_id: {[Op.or]: [feedId]}} });
       let emojiCount=[0, 0, 0, 0, 0, 0, 0]; //이모지 개수 넣는 배열, emojiId 1~6, 0번째 요소는 사용X
       let emojiArray: Array<EmojiDTO> = new Array<EmojiDTO>(); //이모지 id랑 count 넣는 배열
       let myEmoji = 0; //조회하는 유저가 피드에 추가한 이모지, 0은 이모지 추가 안한 경우
