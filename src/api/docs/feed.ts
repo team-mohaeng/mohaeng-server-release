@@ -428,6 +428,109 @@
  */
 
 /**
+ * @api {get} /api/feed/:page 커뮤니티 조회 페이징
+ * 
+ * @apiVersion 1.0.0
+ * @apiName communityPaging
+ * @apiGroup 안부
+ * 
+ * @apiHeaderExample {json} Header-Example:
+ * {
+ *  "Content-Type": "application/json"
+ *  "Bearer": "jwt"
+ * }
+ * 
+ * @apiSuccess {Boolean} isNew
+ * @apiSuccess {Number} hasFeed
+ * @apiSuccess {Number} userCount
+ * 하단부터 feed 정보, 내 서랍장 response와 같음
+ * @apiSuccess {Number} postId
+ * @apiSuccess {String} course
+ * @apiSuccess {Number} challenge
+ * @apiSuccess {String} image
+ * @apiSuccess {Number} mood
+ * @apiSuccess {String} content
+ * @apiSuccess {String} nickname
+ * @apiSuccess {String} year
+ * @apiSuccess {String} month
+ * @apiSuccess {String} date
+ * @apiSuccess {String} day
+ * @apiSuccess {Object[]} emoji
+ * @apiSuccess {Number} myEmoji
+ * @apiSuccess {Boolean} isReport
+ * @apiSuccess {Boolean} isDelete
+ * 
+ * @apiSuccessExample {json} Success-Response:
+ * 200 OK 커뮤니티 조회
+ * {
+ *  "status": 200,
+ *  "data": {
+ *    "isNew": false,
+ *    "hasFeed": 2,
+ *    "userCount": 0,
+ *    "feeds": [
+ *    {
+ *      "postId": 135,
+ *      "course": "중급 사진가",
+ *      "challenge": 3,
+ *      "image": "https://mohaeng.s3.ap-northeast-2.amazonaws.com/images/origin/1632731373241.jpg",
+ *      "mood": 2,
+ *      "content": "엄마 나 모행 다녀올게",
+ *      "nickname": "모행일",
+ *      "year": "2021",
+ *      "month": "09",
+ *      "date": "27",
+ *      "day": "월",
+ *      "emoji": [],
+ *      "myEmoji": 0,
+ *      "isReport": true,
+ *      "isDelete": false
+ *    },
+ *    {
+ *      "postId": 118,
+ *      "course": "초보 사진가",
+ *      "challenge": 2,
+ *      "image": "https://mohaeng.s3.ap-northeast-2.amazonaws.com/images/origin/1632731373241.jpg",
+ *      "mood": 2,
+ *      "content": "엄마 나 모행 다녀올게",
+ *      "nickname": "모행삼",
+ *      "year": "2021",
+ *      "month": "09",
+ *      "date": "22",
+ *      "day": "수",
+ *      "emoji": [
+ *        {
+ *          "id": 4,
+ *          "count": 1
+ *        },
+ *        {
+ *          "id": 6,
+ *          "count": 3
+ *        }
+ *      ],
+ *      "myEmoji": 4,
+ *      "isReport": false,
+ *      "isDelete": true
+ *    }
+ *   ]
+ *  }
+ * }
+ * 
+ * @apiErrorExample Error-Response:
+ * 401 유효하지 않은 유저
+ * {
+ *  "status": 401,
+ *  "message": "유저가 존재하지 않습니다."
+ * }
+ * 
+ * 500 서버 에러
+ * {
+ *  "status": 500,
+ *  "message": "서버 에러입니다. 서버 파트에게 문의해주세요 *^^*"
+ * }
+ */
+
+/**
  * @api {post} /api/feed/:id 안부 신고
  * 
  * @apiVersion 1.0.0
