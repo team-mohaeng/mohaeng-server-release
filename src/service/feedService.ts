@@ -26,6 +26,7 @@ import { iosSkins, aosSkins } from "../dummy/Skin";
 import { characterCards } from "../dummy/CharacterCard";
 import { getYear, getMonth, getYesterday, getDay} from "../formatter/mohaengDateFormatter";
 import { alreadyExsitEmoji, feedLengthCheck, notAuthorized, notExistFeedContent, notExistUser, notExistEmoji, notExistFeed, serverError, wrongEmojiId, alreadyReported, invalidReport } from "../errors";
+import { getSystemErrorMap } from 'util';
 
 const sequelize = require("sequelize");
 const Op = sequelize.Op;
@@ -515,20 +516,29 @@ export default {
       }
 
       let feed;
+      let userCount;
       const today = new Date();
-      //12시 지났을 때 - 어제 새벽 5시부터 지금까지 피드 있는지 확인
-      if (0 <= today.getHours() || today.getHours() < 5) {
+      //12시 지났을 때 - 어제 새벽 5시부터 지금까지 피드 있는지 확인, 안부 개수 세기
+      if (0 <= today.getHours() && today.getHours() < 5) {
         feed = await Feed.findOne({ attributes: ["id"], where: { user_id: userId, 
           create_time: {[Op.between]:
           [`${getYear(new Date())}-${getMonth(new Date())}-${getYesterday(new Date())} 05:00:00`, new Date()]}}
         });
+        userCount = await Feed.count({ where: { 
+          create_time: {[Op.between]:
+            [`${getYear(new Date())}-${getMonth(new Date())}-${getYesterday(new Date())} 05:00:00`, new Date()]
+        }}})
       }
-      //12시 이전일 때 - 오늘 새벽 5시부터 지금까지 피드 있는지 확인
+      //12시 이전일 때 - 오늘 새벽 5시부터 지금까지 피드 있는지 확인, 안부 개수 세기 
       if (today.getHours() >= 5) {
         feed = await Feed.findOne({ attributes: ["id"], where: { user_id: userId, 
           create_time: {[Op.between]:
           [`${getYear(new Date())}-${getMonth(new Date())}-${getDay(new Date())} 05:00:00`, new Date()]}}
         });
+        userCount = await Feed.count({ where: { 
+          create_time: {[Op.between]:
+            [`${getYear(new Date())}-${getMonth(new Date())}-${getDay(new Date())} 05:00:00`, new Date()]
+        }}})
       }
       
       //안부 작성 가능 여부
@@ -549,11 +559,6 @@ export default {
       else if (!user.is_completed) {
         hasFeed = 2;
       }
-
-      const userCount = await Feed.count({ 
-        where: { create_time: {[Op.between]:
-          [`${getYear(new Date())}-${getMonth(new Date())}-${getDay(new Date())}`, `${getYear(new Date())}-${getMonth(new Date())}-${getDay(new Date())} 23:59:59`]
-      }}})
       
       const feedResponse: Array<FeedDTO> = new Array<FeedDTO>();
       const week = new Array("일", "월", "화", "수", "목", "금", "토");
@@ -659,20 +664,29 @@ export default {
       }
 
       let feed;
+      let userCount;
       const today = new Date();
-      //12시 지났을 때 - 어제 새벽 5시부터 지금까지 피드 있는지 확인
-      if (0 <= today.getHours() || today.getHours() < 5) {
+      //12시 지났을 때 - 어제 새벽 5시부터 지금까지 피드 있는지 확인, 안부 개수 세기
+      if (0 <= today.getHours() && today.getHours() < 5) {
         feed = await Feed.findOne({ attributes: ["id"], where: { user_id: userId, 
           create_time: {[Op.between]:
           [`${getYear(new Date())}-${getMonth(new Date())}-${getYesterday(new Date())} 05:00:00`, new Date()]}}
         });
+        userCount = await Feed.count({ where: { 
+          create_time: {[Op.between]:
+            [`${getYear(new Date())}-${getMonth(new Date())}-${getYesterday(new Date())} 05:00:00`, new Date()]
+        }}})
       }
-      //12시 이전일 때 - 오늘 새벽 5시부터 지금까지 피드 있는지 확인
+      //12시 이전일 때 - 오늘 새벽 5시부터 지금까지 피드 있는지 확인, 안부 개수 세기
       if (today.getHours() >= 5) {
         feed = await Feed.findOne({ attributes: ["id"], where: { user_id: userId, 
           create_time: {[Op.between]:
           [`${getYear(new Date())}-${getMonth(new Date())}-${getDay(new Date())} 05:00:00`, new Date()]}}
         });
+        userCount = await Feed.count({ where: { 
+          create_time: {[Op.between]:
+            [`${getYear(new Date())}-${getMonth(new Date())}-${getDay(new Date())} 05:00:00`, new Date()]
+        }}})
       }
       
       //안부 작성 가능 여부
@@ -693,11 +707,6 @@ export default {
       else if (!user.is_completed) {
         hasFeed = 2;
       }
-
-      const userCount = await Feed.count({ 
-        where: { create_time: {[Op.between]:
-          [`${getYear(new Date())}-${getMonth(new Date())}-${getDay(new Date())}`, `${getYear(new Date())}-${getMonth(new Date())}-${getDay(new Date())} 23:59:59`]
-      }}})
       
       const feedResponse: Array<FeedDTO> = new Array<FeedDTO>();
       const week = new Array("일", "월", "화", "수", "목", "금", "토");
