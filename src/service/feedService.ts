@@ -60,16 +60,17 @@ export default {
       user.feed_count=user.feed_count+1;
       const today = new Date();
       //어제 날짜
-      const yesterday = getYesterday(today);
-      const year = getPastDate(yesterday)[0];
-      const month = getPastDate(yesterday)[1];
-      const day = getPastDate(yesterday)[2];
+      const year = yesterday.split(". ")[0];
+      const month = yesterday.split(". ")[1];
+      let day = yesterday.split(". ")[2].split(".")[0];
+      day = parseInt(day) >= 10 ? day : '0' + day;
 
       //이틀전 날짜
       const twoDaysAgo = getTwoDaysAgo(today);
-      const year2 = getPastDate(twoDaysAgo)[0];
-      const month2 = getPastDate(twoDaysAgo)[1];
-      const day2 = getPastDate(twoDaysAgo)[2];
+      const year2 = twoDaysAgo.split(". ")[0];
+      const month2 = twoDaysAgo.split(". ")[1];
+      let day2 = twoDaysAgo.split(". ")[2].split(".")[0];
+      day2 = parseInt(day) >= 10 ? day : '0' + day;
 
       let yesterdayFeed;
       //00시 - 05시 - 이틀전 피드 확인
