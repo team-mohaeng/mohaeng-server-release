@@ -49,10 +49,30 @@ exports.default = {
             });
             user.feed_count = user.feed_count + 1;
             //안부 연속 쓰기 성공 여부
-            const yesterdayFeed = await Feed_1.Feed.findOne({
-                where: { user_id: id,
-                    create_time: { [Op.between]: [`${(0, mohaengDateFormatter_1.getYear)(new Date())}-${(0, mohaengDateFormatter_1.getMonth)(new Date())}-${(0, mohaengDateFormatter_1.getYesterday)(new Date())}`, `${(0, mohaengDateFormatter_1.getYear)(new Date())}-${(0, mohaengDateFormatter_1.getMonth)(new Date())}-${(0, mohaengDateFormatter_1.getYesterday)(new Date())} 23:59:59`] } }
-            });
+            const today = new Date();
+            //어제 날짜
+            const yesterday = (0, mohaengDateFormatter_1.getYesterday)(today);
+            const year = (0, mohaengDateFormatter_1.getPastDate)(yesterday)[0];
+            const month = (0, mohaengDateFormatter_1.getPastDate)(yesterday)[1];
+            const day = (0, mohaengDateFormatter_1.getPastDate)(yesterday)[2];
+            //이틀전 날짜
+            const twoDaysAgo = (0, mohaengDateFormatter_1.getTwoDaysAgo)(today);
+            const year2 = (0, mohaengDateFormatter_1.getPastDate)(twoDaysAgo)[0];
+            const month2 = (0, mohaengDateFormatter_1.getPastDate)(twoDaysAgo)[1];
+            const day2 = (0, mohaengDateFormatter_1.getPastDate)(twoDaysAgo)[2];
+            let yesterdayFeed;
+            //00시 - 05시 - 이틀전 피드 확인
+            if (0 <= today.getHours() && today.getHours() < 5) {
+                yesterdayFeed = await Feed_1.Feed.findOne({ attributes: ["id"], where: { user_id: id,
+                        create_time: { [Op.betweesn]: [`${year2}-${month2}-${day2} 05:00:00`, `${year}-${month}-${day} 04:59:59`] } }
+                });
+            }
+            //05시 - 00시 - 어제 피드 확인
+            if (today.getHours() >= 5) {
+                yesterdayFeed = await Feed_1.Feed.findOne({ attributes: ["id"], where: { user_id: id,
+                        create_time: { [Op.between]: [`${year}-${month}-${day} 05:00:00`, `${(0, mohaengDateFormatter_1.getYear)(today)}-${(0, mohaengDateFormatter_1.getMonth)(today)}-${(0, mohaengDateFormatter_1.getDay)(today)} 04:59:59`] } }
+                });
+            }
             if (yesterdayFeed) {
                 user.feed_success_count = user.feed_success_count + 1;
             }
@@ -207,12 +227,44 @@ exports.default = {
             if (!feed) {
                 return errors_1.notExistFeed;
             }
-            const todayFeed = `${(0, mohaengDateFormatter_1.getYear)(feed.create_time)}` == `${(0, mohaengDateFormatter_1.getYear)(new Date())}` && `${(0, mohaengDateFormatter_1.getMonth)(feed.create_time)}` == `${(0, mohaengDateFormatter_1.getMonth)(new Date())}` && `${(0, mohaengDateFormatter_1.getDay)(feed.create_time)}` == `${(0, mohaengDateFormatter_1.getDay)(new Date())}`;
-            const yesterdayFeed = await Feed_1.Feed.findOne({
-                attributes: ["id"],
-                where: { user_id: userId,
-                    create_time: { [Op.between]: [`${(0, mohaengDateFormatter_1.getYear)(feed.create_time)}-${(0, mohaengDateFormatter_1.getMonth)(feed.create_time)}-${(0, mohaengDateFormatter_1.getYesterday)(feed.create_time)}`, `${(0, mohaengDateFormatter_1.getYear)(feed.create_time)}-${(0, mohaengDateFormatter_1.getMonth)(feed.create_time)}-${(0, mohaengDateFormatter_1.getYesterday)(feed.create_time)} 23:59:59`] } }
-            });
+            const today = new Date();
+            const time = parseInt(feed.create_time.toLocaleTimeString().split(/ |:/)[1]); //피드 작성 시간
+            const currentTime = today.getHours(); //현재 시간
+            let todayFeed;
+            let yesterdayFeed;
+            //어제 날짜
+            const yesterday = (0, mohaengDateFormatter_1.getYesterday)(today);
+            const year = (0, mohaengDateFormatter_1.getPastDate)(yesterday)[0];
+            const month = (0, mohaengDateFormatter_1.getPastDate)(yesterday)[1];
+            const day = (0, mohaengDateFormatter_1.getPastDate)(yesterday)[2];
+            //삭제 피드 전 날짜 (삭제한 피드의 전날 피드가 있는지 확인할 때 사용)
+            const preDay1 = (0, mohaengDateFormatter_1.getYesterday)(feed.create_time);
+            const year1 = (0, mohaengDateFormatter_1.getPastDate)(preDay1)[0];
+            const month1 = (0, mohaengDateFormatter_1.getPastDate)(preDay1)[1];
+            const day1 = (0, mohaengDateFormatter_1.getPastDate)(preDay1)[2];
+            //삭제 피드 이틀전 날짜
+            const preDay2 = (0, mohaengDateFormatter_1.getTwoDaysAgo)(feed.create_time);
+            const year2 = (0, mohaengDateFormatter_1.getPastDate)(preDay2)[0];
+            const month2 = (0, mohaengDateFormatter_1.getPastDate)(preDay2)[1];
+            const day2 = (0, mohaengDateFormatter_1.getPastDate)(preDay2)[2];
+            //삭제하려는 피드가 오늘 작성한 피드인지 확인, 전날 피드 존재 유무 확인
+            if (0 <= time && time < 5) {
+                todayFeed = (0, mohaengDateFormatter_1.getYear)(feed.create_time) == (0, mohaengDateFormatter_1.getYear)(today) && (0, mohaengDateFormatter_1.getMonth)(feed.create_time) == (0, mohaengDateFormatter_1.getMonth)(today) && (0, mohaengDateFormatter_1.getDay)(feed.create_time) == (0, mohaengDateFormatter_1.getDay)(today);
+                yesterdayFeed = await Feed_1.Feed.findOne({ attributes: ["id"], where: { user_id: userId,
+                        create_time: { [Op.between]: [`${year2}-${month2}-${day2} 05:00:00`, `${year1}-${month1}-${day1} 04:59:59`] } }
+                });
+            }
+            if (time >= 5) {
+                if (0 <= currentTime && currentTime < 5) {
+                    todayFeed = (0, mohaengDateFormatter_1.getYear)(feed.create_time) == year && (0, mohaengDateFormatter_1.getMonth)(feed.create_time) == month && (0, mohaengDateFormatter_1.getDay)(feed.create_time) == day;
+                }
+                if (currentTime >= 5) {
+                    todayFeed = (0, mohaengDateFormatter_1.getYear)(feed.create_time) == (0, mohaengDateFormatter_1.getYear)(today) && (0, mohaengDateFormatter_1.getMonth)(feed.create_time) == (0, mohaengDateFormatter_1.getMonth)(today) && (0, mohaengDateFormatter_1.getDay)(feed.create_time) == (0, mohaengDateFormatter_1.getDay)(today);
+                }
+                yesterdayFeed = await Feed_1.Feed.findOne({ attributes: ["id"], where: { user_id: userId,
+                        create_time: { [Op.between]: [`${year1}-${month1}-${day1} 05:00:00`, `${(0, mohaengDateFormatter_1.getYear)(feed.create_time)}-${(0, mohaengDateFormatter_1.getMonth)(feed.create_time)}-${(0, mohaengDateFormatter_1.getDay)(feed.create_time)} 04:59:59`] } }
+                });
+            }
             //전날 피드가 있고 오늘 작성한 피드를 삭제할 경우 -> 피드 패널티, 연속 피드 작성 실패
             if (userId == feed.user_id && todayFeed && yesterdayFeed) {
                 User_1.User.update({ is_feed_new: false, feed_count: user.feed_count - 1, feed_penalty: true, feed_success_count: 1 }, { where: { id: userId } });
@@ -455,13 +507,18 @@ exports.default = {
             let feed;
             let userCount;
             const today = new Date();
+            //어제 날짜
+            const yesterday = (0, mohaengDateFormatter_1.getYesterday)(today);
+            const year = (0, mohaengDateFormatter_1.getPastDate)(yesterday)[0];
+            const month = (0, mohaengDateFormatter_1.getPastDate)(yesterday)[1];
+            const day = (0, mohaengDateFormatter_1.getPastDate)(yesterday)[2];
             //12시 지났을 때 - 어제 새벽 5시부터 지금까지 피드 있는지 확인, 안부 개수 세기
             if (0 <= today.getHours() && today.getHours() < 5) {
                 feed = await Feed_1.Feed.findOne({ attributes: ["id"], where: { user_id: userId,
-                        create_time: { [Op.between]: [`${(0, mohaengDateFormatter_1.getYear)(new Date())}-${(0, mohaengDateFormatter_1.getMonth)(new Date())}-${(0, mohaengDateFormatter_1.getYesterday)(new Date())} 05:00:00`, new Date()] } }
+                        create_time: { [Op.between]: [`${year}-${month}-${day} 05:00:00`, new Date()] } }
                 });
                 userCount = await Feed_1.Feed.count({ where: {
-                        create_time: { [Op.between]: [`${(0, mohaengDateFormatter_1.getYear)(new Date())}-${(0, mohaengDateFormatter_1.getMonth)(new Date())}-${(0, mohaengDateFormatter_1.getYesterday)(new Date())} 05:00:00`, new Date()]
+                        create_time: { [Op.between]: [`${year}-${month}-${day} 05:00:00`, new Date()]
                         }
                     } });
             }
@@ -588,13 +645,18 @@ exports.default = {
             let feed;
             let userCount;
             const today = new Date();
+            //어제 날짜
+            const yesterday = (0, mohaengDateFormatter_1.getYesterday)(today);
+            const year = (0, mohaengDateFormatter_1.getPastDate)(yesterday)[0];
+            const month = (0, mohaengDateFormatter_1.getPastDate)(yesterday)[1];
+            const day = (0, mohaengDateFormatter_1.getPastDate)(yesterday)[2];
             //12시 지났을 때 - 어제 새벽 5시부터 지금까지 피드 있는지 확인, 안부 개수 세기
             if (0 <= today.getHours() && today.getHours() < 5) {
                 feed = await Feed_1.Feed.findOne({ attributes: ["id"], where: { user_id: userId,
-                        create_time: { [Op.between]: [`${(0, mohaengDateFormatter_1.getYear)(new Date())}-${(0, mohaengDateFormatter_1.getMonth)(new Date())}-${(0, mohaengDateFormatter_1.getYesterday)(new Date())} 05:00:00`, new Date()] } }
+                        create_time: { [Op.between]: [`${year}-${month}-${day} 05:00:00`, new Date()] } }
                 });
                 userCount = await Feed_1.Feed.count({ where: {
-                        create_time: { [Op.between]: [`${(0, mohaengDateFormatter_1.getYear)(new Date())}-${(0, mohaengDateFormatter_1.getMonth)(new Date())}-${(0, mohaengDateFormatter_1.getYesterday)(new Date())} 05:00:00`, new Date()]
+                        create_time: { [Op.between]: [`${year}-${month}-${day} 05:00:00`, new Date()]
                         }
                     } });
             }
@@ -635,10 +697,10 @@ exports.default = {
                 blocks.forEach(block => {
                     blocklist.push(block.reported_id);
                 });
-                feeds = await Feed_1.Feed.findAll({ order: [["id", "DESC"]], limit: 15, offset: +page * 15, where: { user_id: { [Op.notIn]: [blocklist] }, isPrivate: false } });
+                feeds = await Feed_1.Feed.findAll({ order: [["id", "DESC"]], limit: 15, offset: parseInt(page) * 15, where: { user_id: { [Op.notIn]: [blocklist] }, isPrivate: false } });
             }
             else {
-                feeds = await Feed_1.Feed.findAll({ order: [["id", "DESC"]], limit: 15, offset: +page * 15, where: { isPrivate: false } });
+                feeds = await Feed_1.Feed.findAll({ order: [["id", "DESC"]], limit: 15, offset: parseInt(page) * 15, where: { isPrivate: false } });
             }
             const feedId = new Array();
             feeds.forEach(feed => {
@@ -726,7 +788,7 @@ exports.default = {
             if (report) {
                 return errors_1.alreadyReported;
             }
-            const feed = await Feed_1.Feed.findOne({ attributes: ["content", "user_id", "create_time"], where: { id: postId } });
+            const feed = await Feed_1.Feed.findOne({ attributes: ["content", "user_id", "create_time", "image"], where: { id: postId } });
             if (!feed) {
                 return errors_1.notExistFeed;
             }
@@ -747,12 +809,44 @@ exports.default = {
             }
             if (reportCount == 2) {
                 Feed_1.Feed.destroy({ where: { id: postId } });
-                const todayFeed = `${(0, mohaengDateFormatter_1.getYear)(feed.create_time)}` == `${(0, mohaengDateFormatter_1.getYear)(new Date())}` && `${(0, mohaengDateFormatter_1.getMonth)(feed.create_time)}` == `${(0, mohaengDateFormatter_1.getMonth)(new Date())}` && `${(0, mohaengDateFormatter_1.getDay)(feed.create_time)}` == `${(0, mohaengDateFormatter_1.getDay)(new Date())}`;
-                const yesterdayFeed = await Feed_1.Feed.findOne({
-                    attributes: ["id"],
-                    where: { user_id: feed.user_id,
-                        create_time: { [Op.between]: [`${(0, mohaengDateFormatter_1.getYear)(feed.create_time)}-${(0, mohaengDateFormatter_1.getMonth)(feed.create_time)}-${(0, mohaengDateFormatter_1.getYesterday)(feed.create_time)}`, `${(0, mohaengDateFormatter_1.getYear)(feed.create_time)}-${(0, mohaengDateFormatter_1.getMonth)(feed.create_time)}-${(0, mohaengDateFormatter_1.getYesterday)(feed.create_time)} 23:59:59`] } }
-                });
+                const today = new Date();
+                const time = parseInt(feed.create_time.toLocaleTimeString().split(/ |:/)[1]); //피드 작성 시간
+                const currentTime = today.getHours(); //현재 시간
+                let todayFeed;
+                let yesterdayFeed;
+                //어제 날짜
+                const yesterday = (0, mohaengDateFormatter_1.getYesterday)(today);
+                const year = (0, mohaengDateFormatter_1.getPastDate)(yesterday)[0];
+                const month = (0, mohaengDateFormatter_1.getPastDate)(yesterday)[1];
+                const day = (0, mohaengDateFormatter_1.getPastDate)(yesterday)[2];
+                //삭제 피드 전 날짜 (삭제한 피드의 전날 피드가 있는지 확인할 때 사용)
+                const preDay1 = (0, mohaengDateFormatter_1.getYesterday)(feed.create_time);
+                const year1 = (0, mohaengDateFormatter_1.getPastDate)(preDay1)[0];
+                const month1 = (0, mohaengDateFormatter_1.getPastDate)(preDay1)[1];
+                const day1 = (0, mohaengDateFormatter_1.getPastDate)(preDay1)[2];
+                //삭제 피드 이틀전 날짜
+                const preDay2 = (0, mohaengDateFormatter_1.getTwoDaysAgo)(feed.create_time);
+                const year2 = (0, mohaengDateFormatter_1.getPastDate)(preDay2)[0];
+                const month2 = (0, mohaengDateFormatter_1.getPastDate)(preDay2)[1];
+                const day2 = (0, mohaengDateFormatter_1.getPastDate)(preDay2)[2];
+                //삭제하려는 피드가 오늘 작성한 피드인지 확인, 전날 피드 존재 유무 확인
+                if (0 <= time && time < 5) {
+                    todayFeed = (0, mohaengDateFormatter_1.getYear)(feed.create_time) == (0, mohaengDateFormatter_1.getYear)(today) && (0, mohaengDateFormatter_1.getMonth)(feed.create_time) == (0, mohaengDateFormatter_1.getMonth)(today) && (0, mohaengDateFormatter_1.getDay)(feed.create_time) == (0, mohaengDateFormatter_1.getDay)(today);
+                    yesterdayFeed = await Feed_1.Feed.findOne({ attributes: ["id"], where: { user_id: userId,
+                            create_time: { [Op.between]: [`${year2}-${month2}-${day2} 05:00:00`, `${year1}-${month1}-${day1} 04:59:59`] } }
+                    });
+                }
+                if (time >= 5) {
+                    if (0 <= currentTime && currentTime < 5) {
+                        todayFeed = (0, mohaengDateFormatter_1.getYear)(feed.create_time) == year && (0, mohaengDateFormatter_1.getMonth)(feed.create_time) == month && (0, mohaengDateFormatter_1.getDay)(feed.create_time) == day;
+                    }
+                    if (currentTime >= 5) {
+                        todayFeed = (0, mohaengDateFormatter_1.getYear)(feed.create_time) == (0, mohaengDateFormatter_1.getYear)(today) && (0, mohaengDateFormatter_1.getMonth)(feed.create_time) == (0, mohaengDateFormatter_1.getMonth)(today) && (0, mohaengDateFormatter_1.getDay)(feed.create_time) == (0, mohaengDateFormatter_1.getDay)(today);
+                    }
+                    yesterdayFeed = await Feed_1.Feed.findOne({ attributes: ["id"], where: { user_id: userId,
+                            create_time: { [Op.between]: [`${year1}-${month1}-${day1} 05:00:00`, `${(0, mohaengDateFormatter_1.getYear)(feed.create_time)}-${(0, mohaengDateFormatter_1.getMonth)(feed.create_time)}-${(0, mohaengDateFormatter_1.getDay)(feed.create_time)} 04:59:59`] } }
+                    });
+                }
                 //전날 피드가 있는 오늘 피드가 삭제될 경우 -> 피드 재작성 가능, 연속 피드 작성 실패
                 if (todayFeed && yesterdayFeed) {
                     User_1.User.update({ is_feed_new: false, feed_count: reportedUser.feed_count - 1, feed_success_count: 1 }, { where: { id: feed.user_id } });
@@ -765,6 +859,15 @@ exports.default = {
                 else {
                     User_1.User.update({ feed_count: reportedUser.feed_count - 1 }, { where: { id: feed.user_id } });
                 }
+                const filename = feed.image.split("/")[5];
+                upload_1.s3.deleteObject({
+                    Bucket: config_1.default.awsBucket,
+                    Key: "images/origin/" + filename
+                }, (err) => {
+                    if (err) {
+                        throw err;
+                    }
+                });
             }
             else {
                 Report_1.Report.create({ user_id: +userId, post_id: +postId });
