@@ -27,9 +27,9 @@ export function getTwoDaysAgo(date: Date) {
 }
 
 export function getPastDate(date: String) {
-  const year = date.split(". ")[0];
-  const month = date.split(". ")[1];
-  let day = date.split(". ")[2].split(".")[0];
+  const year = (date||'').split(". ")[0];
+  const month = (date||'').split(". ")[1];
+  let day = (date||'').split(". ")[2].split(".")[0];
   day = parseInt(day) >= 10 ? day : '0' + day;
   return [year, month, day];
 }
