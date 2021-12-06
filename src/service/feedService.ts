@@ -596,11 +596,11 @@ export default {
       if (0 <= today.getHours() && today.getHours() < 5) {
         feed = await Feed.findOne({ attributes: ["id"], where: { user_id: userId, 
           create_time: {[Op.between]:
-          [`${getYear(new Date())}-${getMonth(new Date())}-${getYesterday(new Date())} 05:00:00`, new Date()]}}
+          [`${year}-${month}-${day} 05:00:00`, new Date()]}}
         });
         userCount = await Feed.count({ where: { 
           create_time: {[Op.between]:
-            [`${getYear(new Date())}-${getMonth(new Date())}-${getYesterday(new Date())} 05:00:00`, new Date()]
+            [`${year}-${month}-${day} 05:00:00`, new Date()]
         }}})
       }
       
@@ -752,15 +752,15 @@ export default {
       if (0 <= today.getHours() && today.getHours() < 5) {
         feed = await Feed.findOne({ attributes: ["id"], where: { user_id: userId, 
           create_time: {[Op.between]:
-          [`${getYear(new Date())}-${getMonth(new Date())}-${getYesterday(new Date())} 05:00:00`, new Date()]}}
+          [`${year}-${month}-${day} 05:00:00`, new Date()]}}
         });
         userCount = await Feed.count({ where: { 
           create_time: {[Op.between]:
-            [`${getYear(new Date())}-${getMonth(new Date())}-${getYesterday(new Date())} 05:00:00`, new Date()]
+            [`${year}-${month}-${day} 05:00:00`, new Date()]
         }}})
       }
-
-      //12시 이전일 때 - 오늘 새벽 5시부터 지금까지 피드 있는지 확인, 안부 개수 세기
+      
+      //12시 이전일 때 - 오늘 새벽 5시부터 지금까지 피드 있는지 확인, 안부 개수 세기 
       if (today.getHours() >= 5) {
         feed = await Feed.findOne({ attributes: ["id"], where: { user_id: userId, 
           create_time: {[Op.between]:
