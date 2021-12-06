@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getPastDate = exports.getTwoDaysAgo = exports.getYesterday = exports.getDay = exports.getMonth = exports.getYear = void 0;
+exports.getTwoDaysLater = exports.getTomorrow = exports.getTwodaysAgo = exports.getYesterday = exports.getDay = exports.getMonth = exports.getYear = void 0;
 function getYear(date) {
     return date.getFullYear().toString();
 }
@@ -18,21 +18,23 @@ function getDay(date) {
 }
 exports.getDay = getDay;
 function getYesterday(date) {
-    const yesterday = new Date(date.getFullYear(), date.getMonth(), date.getDate() - 1).toLocaleDateString();
+    const yesterday = new Date(date.setDate(date.getDate() - 1));
     return yesterday;
 }
 exports.getYesterday = getYesterday;
-function getTwoDaysAgo(date) {
-    const twoDaysAgo = new Date(date.getFullYear(), date.getMonth(), date.getDate() - 2).toLocaleDateString();
+function getTwodaysAgo(date) {
+    const twoDaysAgo = new Date(date.setDate(date.getDate() - 2));
     return twoDaysAgo;
 }
-exports.getTwoDaysAgo = getTwoDaysAgo;
-function getPastDate(date) {
-    const year = (date || '').split(". ")[0];
-    const month = (date || '').split(". ")[1];
-    let day = (date || '').split(". ")[2].split(".")[0];
-    day = parseInt(day) >= 10 ? day : '0' + day;
-    return [year, month, day];
+exports.getTwodaysAgo = getTwodaysAgo;
+function getTomorrow(date) {
+    const twoDaysAgo = new Date(date.setDate(date.getDate() + 1));
+    return twoDaysAgo;
 }
-exports.getPastDate = getPastDate;
+exports.getTomorrow = getTomorrow;
+function getTwoDaysLater(date) {
+    const twoDaysAgo = new Date(date.setDate(date.getDate() + 2));
+    return twoDaysAgo;
+}
+exports.getTwoDaysLater = getTwoDaysLater;
 //# sourceMappingURL=mohaengDateFormatter.js.map
