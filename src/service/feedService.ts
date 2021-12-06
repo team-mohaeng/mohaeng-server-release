@@ -72,9 +72,6 @@ export default {
       const month2 = getMonth(twoDaysAgo);
       const day2 = getDay(twoDaysAgo);
 
-      console.log(yesterday);
-      console.log(twoDaysAgo)
-
       let yesterdayFeed;
       //안부 연속 쓰기 확인
       //00시 - 05시 - 이틀전 피드 확인
@@ -98,7 +95,6 @@ export default {
       else {
         user.feed_success_count = 1;
       }
-      
       
       //user 패널티 여부
       let happy;
@@ -607,6 +603,7 @@ export default {
             [`${year}-${month}-${day} 05:00:00`, new Date()]
         }}})
       }
+      
       //12시 이전일 때 - 오늘 새벽 5시부터 지금까지 피드 있는지 확인, 안부 개수 세기 
       if (today.getHours() >= 5) {
         feed = await Feed.findOne({ attributes: ["id"], where: { user_id: userId, 
@@ -761,6 +758,7 @@ export default {
             [`${year}-${month}-${day} 05:00:00`, new Date()]
         }}})
       }
+
       //12시 이전일 때 - 오늘 새벽 5시부터 지금까지 피드 있는지 확인, 안부 개수 세기
       if (today.getHours() >= 5) {
         feed = await Feed.findOne({ attributes: ["id"], where: { user_id: userId, 
