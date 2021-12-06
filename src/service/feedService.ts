@@ -24,9 +24,8 @@ import { levels }  from "../dummy/Level";
 import { courses } from '../dummy/Course';
 import { iosSkins, aosSkins } from "../dummy/Skin";
 import { characterCards } from "../dummy/CharacterCard";
-import { getYear, getMonth, getYesterday, getDay} from "../formatter/mohaengDateFormatter";
+import { getYear, getMonth, getYesterday, getDay, getPastDate, getTwoDaysAgo} from "../formatter/mohaengDateFormatter";
 import { alreadyExsitEmoji, feedLengthCheck, notAuthorized, notExistFeedContent, notExistUser, notExistEmoji, notExistFeed, serverError, wrongEmojiId, alreadyReported, invalidReport } from "../errors";
-import { getSystemErrorMap } from 'util';
 
 const sequelize = require("sequelize");
 const Op = sequelize.Op;
@@ -61,11 +60,35 @@ export default {
       user.feed_count=user.feed_count+1;
 
       //안부 연속 쓰기 성공 여부
-      const yesterdayFeed = await Feed.findOne({
-        where: { user_id: id, 
-        create_time: {[Op.between]:
-        [`${getYear(new Date())}-${getMonth(new Date())}-${getYesterday(new Date())}`, `${getYear(new Date())}-${getMonth(new Date())}-${getYesterday(new Date())} 23:59:59`]}}
-      })
+      const today = new Date();
+      //어제 날짜
+      const yesterday = getYesterday(today);
+      const year = getPastDate(yesterday)[0];
+      const month = getPastDate(yesterday)[1];
+      const day = getPastDate(yesterday)[2];
+
+      //이틀전 날짜
+      const twoDaysAgo = getTwoDaysAgo(today);
+      const year2 = getPastDate(twoDaysAgo)[0];
+      const month2 = getPastDate(twoDaysAgo)[1];
+      const day2 = getPastDate(twoDaysAgo)[2];
+
+      
+      let yesterdayFeed;
+      //00시 - 05시 - 이틀전 피드 확인
+      if (0 <= today.getHours() && today.getHours() < 5) {
+        yesterdayFeed = await Feed.findOne({ attributes: ["id"], where: { user_id: id, 
+          create_time: {[Op.betweesn]:
+          [`${year2}-${month2}-${day2} 05:00:00`, `${year}-${month}-${day} 04:59:59`]}}
+        });
+      }
+      //05시 - 00시 - 어제 피드 확인
+      if (today.getHours() >= 5) {
+        yesterdayFeed = await Feed.findOne({ attributes: ["id"], where: { user_id: id, 
+          create_time: {[Op.between]:
+          [`${year}-${month}-${day} 05:00:00`, `${getYear(today)}-${getMonth(today)}-${getDay(today)} 04:59:59`]}}
+        });
+      }
 
       if (yesterdayFeed) {
         user.feed_success_count=user.feed_success_count + 1;
@@ -73,6 +96,7 @@ export default {
       else {
         user.feed_success_count = 1;
       }
+      
       
       //user 패널티 여부
       let happy;
@@ -234,14 +258,53 @@ export default {
       if(!feed) {
         return notExistFeed;
       }
+      
+      const today = new Date();
+      const time = parseInt(feed.create_time.toLocaleTimeString().split(/ |:/)[1]); //피드 작성 시간
+      const currentTime = today.getHours(); //현재 시간
 
-      const todayFeed = `${getYear(feed.create_time)}`==`${getYear(new Date())}` && `${getMonth(feed.create_time)}`==`${getMonth(new Date())}` && `${getDay(feed.create_time)}`==`${getDay(new Date())}`;
-      const yesterdayFeed = await Feed.findOne({
-        attributes: ["id"],
-        where: { user_id: userId, 
-        create_time: {[Op.between]:
-        [`${getYear(feed.create_time)}-${getMonth(feed.create_time)}-${getYesterday(feed.create_time)}`, `${getYear(feed.create_time)}-${getMonth(feed.create_time)}-${getYesterday(feed.create_time)} 23:59:59`]}}
-      })
+      let todayFeed;
+      let yesterdayFeed;
+
+      //어제 날짜
+      const yesterday = getYesterday(today);
+      const year = getPastDate(yesterday)[0];
+      const month = getPastDate(yesterday)[1];
+      const day = getPastDate(yesterday)[2];
+
+      //삭제 피드 전 날짜 (삭제한 피드의 전날 피드가 있는지 확인할 때 사용)
+      const preDay1 = getYesterday(feed.create_time);
+      const year1 = getPastDate(preDay1)[0];
+      const month1 = getPastDate(preDay1)[1];
+      const day1 = getPastDate(preDay1)[2];
+
+      //삭제 피드 이틀전 날짜
+      const preDay2 = getTwoDaysAgo(feed.create_time);
+      const year2 = getPastDate(preDay2)[0];
+      const month2 = getPastDate(preDay2)[1];
+      const day2 = getPastDate(preDay2)[2];
+
+      //삭제하려는 피드가 오늘 작성한 피드인지 확인, 전날 피드 존재 유무 확인
+      if (0 <= time && time<5) {
+        todayFeed = getYear(feed.create_time) == getYear(today) && getMonth(feed.create_time) == getMonth(today) && getDay(feed.create_time) == getDay(today);
+        yesterdayFeed = await Feed.findOne({ attributes: ["id"], where: { user_id: userId, 
+          create_time: {[Op.between]:
+          [`${year2}-${month2}-${day2} 05:00:00`, `${year1}-${month1}-${day1} 04:59:59`]}}
+        });
+      }
+
+      if (time>=5) {
+        if (0 <= currentTime && currentTime<5) {
+          todayFeed = getYear(feed.create_time) == year && getMonth(feed.create_time) == month && getDay(feed.create_time) == day;
+        }
+        if (currentTime >=5) {
+          todayFeed = getYear(feed.create_time) == getYear(today) && getMonth(feed.create_time) == getMonth(today) && getDay(feed.create_time) == getDay(today);
+        }
+        yesterdayFeed = await Feed.findOne({ attributes: ["id"], where: { user_id: userId, 
+          create_time: {[Op.between]:
+          [`${year1}-${month1}-${day1} 05:00:00`, `${getYear(feed.create_time)}-${getMonth(feed.create_time)}-${getDay(feed.create_time)} 04:59:59`]}}
+        });
+      }
 
       //전날 피드가 있고 오늘 작성한 피드를 삭제할 경우 -> 피드 패널티, 연속 피드 작성 실패
       if (userId == feed.user_id && todayFeed && yesterdayFeed) {
@@ -278,7 +341,6 @@ export default {
       }, (err) => {
         if (err) { throw err; }
       })
-      
       
       const responseDTO: DeleteFeedResponseDTO = {
         status: 200,
@@ -518,15 +580,21 @@ export default {
       let feed;
       let userCount;
       const today = new Date();
+      //어제 날짜
+      const yesterday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1).toLocaleDateString();
+      const year = yesterday.split(". ")[0];
+      const month = yesterday.split(". ")[1];
+      const day = yesterday.split(". ")[2].split(".")[0]; 
+
       //12시 지났을 때 - 어제 새벽 5시부터 지금까지 피드 있는지 확인, 안부 개수 세기
       if (0 <= today.getHours() && today.getHours() < 5) {
         feed = await Feed.findOne({ attributes: ["id"], where: { user_id: userId, 
           create_time: {[Op.between]:
-          [`${getYear(new Date())}-${getMonth(new Date())}-${getYesterday(new Date())} 05:00:00`, new Date()]}}
+          [`${year}-${month}-${day} 05:00:00`, new Date()]}}
         });
         userCount = await Feed.count({ where: { 
           create_time: {[Op.between]:
-            [`${getYear(new Date())}-${getMonth(new Date())}-${getYesterday(new Date())} 05:00:00`, new Date()]
+            [`${year}-${month}-${day} 05:00:00`, new Date()]
         }}})
       }
       //12시 이전일 때 - 오늘 새벽 5시부터 지금까지 피드 있는지 확인, 안부 개수 세기 
@@ -666,15 +734,21 @@ export default {
       let feed;
       let userCount;
       const today = new Date();
+      //어제 날짜
+      const yesterday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1).toLocaleDateString();
+      const year = yesterday.split(". ")[0];
+      const month = yesterday.split(". ")[1];
+      const day = yesterday.split(". ")[2].split(".")[0]; 
+
       //12시 지났을 때 - 어제 새벽 5시부터 지금까지 피드 있는지 확인, 안부 개수 세기
       if (0 <= today.getHours() && today.getHours() < 5) {
         feed = await Feed.findOne({ attributes: ["id"], where: { user_id: userId, 
           create_time: {[Op.between]:
-          [`${getYear(new Date())}-${getMonth(new Date())}-${getYesterday(new Date())} 05:00:00`, new Date()]}}
+          [`${year}-${month}-${day} 05:00:00`, new Date()]}}
         });
         userCount = await Feed.count({ where: { 
           create_time: {[Op.between]:
-            [`${getYear(new Date())}-${getMonth(new Date())}-${getYesterday(new Date())} 05:00:00`, new Date()]
+            [`${year}-${month}-${day} 05:00:00`, new Date()]
         }}})
       }
       //12시 이전일 때 - 오늘 새벽 5시부터 지금까지 피드 있는지 확인, 안부 개수 세기
@@ -718,10 +792,10 @@ export default {
         blocks.forEach(block => {
           blocklist.push(block.reported_id);
         })
-        feeds = await Feed.findAll({ order: [["id", "DESC"]], limit: 15, offset: +page*15, where: { user_id: {[Op.notIn]: [blocklist]}, isPrivate: false }});
+        feeds = await Feed.findAll({ order: [["id", "DESC"]], limit: 15, offset: parseInt(page)*15, where: { user_id: {[Op.notIn]: [blocklist]}, isPrivate: false }});
       }
       else {
-        feeds = await Feed.findAll({ order: [["id", "DESC"]], limit: 15, offset: +page*15, where: { isPrivate: false }});
+        feeds = await Feed.findAll({ order: [["id", "DESC"]], limit: 15, offset: parseInt(page)*15, where: { isPrivate: false }});
       }
 
       const feedId = new Array();
@@ -848,13 +922,53 @@ export default {
       if (reportCount == 2) {
         Feed.destroy({ where: { id: postId }});
 
-        const todayFeed = `${getYear(feed.create_time)}`==`${getYear(new Date())}` && `${getMonth(feed.create_time)}`==`${getMonth(new Date())}` && `${getDay(feed.create_time)}`==`${getDay(new Date())}`;
-        const yesterdayFeed = await Feed.findOne({
-          attributes: ["id"],
-          where: { user_id: feed.user_id, 
-          create_time: {[Op.between]:
-          [`${getYear(feed.create_time)}-${getMonth(feed.create_time)}-${getYesterday(feed.create_time)}`, `${getYear(feed.create_time)}-${getMonth(feed.create_time)}-${getYesterday(feed.create_time)} 23:59:59`]}}
-        })
+
+        const today = new Date();
+        const time = parseInt(feed.create_time.toLocaleTimeString().split(/ |:/)[1]); //피드 작성 시간
+        const currentTime = today.getHours(); //현재 시간
+
+        let todayFeed;
+        let yesterdayFeed;
+
+        //어제 날짜
+        const yesterday = getYesterday(today);
+        const year = getPastDate(yesterday)[0];
+        const month = getPastDate(yesterday)[1];
+        const day = getPastDate(yesterday)[2];
+
+        //삭제 피드 전 날짜 (삭제한 피드의 전날 피드가 있는지 확인할 때 사용)
+        const preDay1 = getYesterday(feed.create_time);
+        const year1 = getPastDate(preDay1)[0];
+        const month1 = getPastDate(preDay1)[1];
+        const day1 = getPastDate(preDay1)[2];
+
+        //삭제 피드 이틀전 날짜
+        const preDay2 = getTwoDaysAgo(feed.create_time);
+        const year2 = getPastDate(preDay2)[0];
+        const month2 = getPastDate(preDay2)[1];
+        const day2 = getPastDate(preDay2)[2];
+
+        //삭제하려는 피드가 오늘 작성한 피드인지 확인, 전날 피드 존재 유무 확인
+        if (0 <= time && time<5) {
+          todayFeed = getYear(feed.create_time) == getYear(today) && getMonth(feed.create_time) == getMonth(today) && getDay(feed.create_time) == getDay(today);
+          yesterdayFeed = await Feed.findOne({ attributes: ["id"], where: { user_id: userId, 
+            create_time: {[Op.between]:
+            [`${year2}-${month2}-${day2} 05:00:00`, `${year1}-${month1}-${day1} 04:59:59`]}}
+          });
+        }
+
+        if (time>=5) {
+          if (0 <= currentTime && currentTime<5) {
+            todayFeed = getYear(feed.create_time) == year && getMonth(feed.create_time) == month && getDay(feed.create_time) == day;
+          }
+          if (currentTime >=5) {
+            todayFeed = getYear(feed.create_time) == getYear(today) && getMonth(feed.create_time) == getMonth(today) && getDay(feed.create_time) == getDay(today);
+          }
+          yesterdayFeed = await Feed.findOne({ attributes: ["id"], where: { user_id: userId, 
+            create_time: {[Op.between]:
+            [`${year1}-${month1}-${day1} 05:00:00`, `${getYear(feed.create_time)}-${getMonth(feed.create_time)}-${getDay(feed.create_time)} 04:59:59`]}}
+          });
+        }
 
         //전날 피드가 있는 오늘 피드가 삭제될 경우 -> 피드 재작성 가능, 연속 피드 작성 실패
         if (todayFeed && yesterdayFeed) {
@@ -870,6 +984,14 @@ export default {
         else {
           User.update({ feed_count: reportedUser.feed_count-1 }, { where: { id: feed.user_id }});
         }
+
+        const filename = feed.image.split("/")[5];
+        s3.deleteObject({
+          Bucket: config.awsBucket,
+          Key: "images/origin/"+filename
+        }, (err) => {
+          if (err) { throw err; }
+        })
       }
 
       else {
