@@ -17,19 +17,21 @@ export function getDay(date: Date) {
 }
 
 export function getYesterday(date: Date) {
-  const yesterday = new Date(date.getFullYear(), date.getMonth(), date.getDate() - 1).toLocaleDateString();
+  const yesterday = new Date(date.setDate(date.getDate() - 1));
   return yesterday;
 }
 
-export function getTwoDaysAgo(date: Date) {
-  const twoDaysAgo = new Date(date.getFullYear(), date.getMonth(), date.getDate() - 2).toLocaleDateString();
+export function getTwodaysAgo(date: Date) {
+  const twoDaysAgo = new Date(date.setDate(date.getDate() - 2));
   return twoDaysAgo;
 }
 
-export function getPastDate(date: String) {
-  const year = (date||'').split(". ")[0];
-  const month = (date||'').split(". ")[1];
-  let day = (date||'').split(". ")[2].split(".")[0];
-  day = parseInt(day) >= 10 ? day : '0' + day;
-  return [year, month, day];
+export function getTomorrow(date: Date) {
+  const twoDaysAgo = new Date(date.setDate(date.getDate() + 1));
+  return twoDaysAgo;
+}
+
+export function getTwoDaysLater(date: Date) {
+  const twoDaysAgo = new Date(date.setDate(date.getDate() + 2));
+  return twoDaysAgo;
 }
