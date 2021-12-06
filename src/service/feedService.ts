@@ -581,10 +581,10 @@ export default {
       let userCount;
       const today = new Date();
       //어제 날짜
-      const yesterday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1).toLocaleDateString();
-      const year = yesterday.split(". ")[0];
-      const month = yesterday.split(". ")[1];
-      const day = yesterday.split(". ")[2].split(".")[0]; 
+      const yesterday = getYesterday(today);
+      const year = getPastDate(yesterday)[0];
+      const month = getPastDate(yesterday)[1];
+      const day = getPastDate(yesterday)[2]; 
 
       //12시 지났을 때 - 어제 새벽 5시부터 지금까지 피드 있는지 확인, 안부 개수 세기
       if (0 <= today.getHours() && today.getHours() < 5) {
@@ -735,10 +735,10 @@ export default {
       let userCount;
       const today = new Date();
       //어제 날짜
-      const yesterday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1).toLocaleDateString();
-      const year = yesterday.split(". ")[0];
-      const month = yesterday.split(". ")[1];
-      const day = yesterday.split(". ")[2].split(".")[0]; 
+      const yesterday = getYesterday(today);
+      const year = getPastDate(yesterday)[0];
+      const month = getPastDate(yesterday)[1];
+      const day = getPastDate(yesterday)[2]; 
 
       //12시 지났을 때 - 어제 새벽 5시부터 지금까지 피드 있는지 확인, 안부 개수 세기
       if (0 <= today.getHours() && today.getHours() < 5) {
@@ -895,7 +895,7 @@ export default {
         return alreadyReported;
       }
 
-      const feed = await Feed.findOne({ attributes: ["content", "user_id", "create_time"], where: { id: postId }});
+      const feed = await Feed.findOne({ attributes: ["content", "user_id", "create_time", "image"], where: { id: postId }});
       if (!feed) {
         return notExistFeed;
       }
