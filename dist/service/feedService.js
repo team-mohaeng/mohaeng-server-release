@@ -34,9 +34,6 @@ exports.default = {
             if (!image && !content) {
                 return errors_1.notExistFeedContent;
             }
-            if (content.length > 40) {
-                return errors_1.feedLengthCheck;
-            }
             Feed_1.Feed.create({
                 user_id: id,
                 nickname: user.nickname,
