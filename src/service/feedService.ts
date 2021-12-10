@@ -790,17 +790,18 @@ export default {
       const feedResponse: Array<FeedDTO> = new Array<FeedDTO>();
       const week = new Array("일", "월", "화", "수", "목", "금", "토");
 
+      let feeds;
       const blocks = await Block.findAll({ attributes: ["reported_id"], where: { user_id: userId }});
       const blocklist = new Array();
-      let feeds;
+
       if (blocks.length>0) {
         blocks.forEach(block => {
           blocklist.push(block.reported_id);
         })
-        feeds = await Feed.findAll({ order: [["id", "DESC"]], limit: 15, offset: +page*15, where: { user_id: {[Op.notIn]: [blocklist]}, isPrivate: false }});
+        feeds = await Feed.findAll({ order: [["create_time", "DESC"]], limit: 15, offset: parseInt(page)*15, where: { user_id: {[Op.notIn]: [blocklist]}, isPrivate: false }});
       }
       else {
-        feeds = await Feed.findAll({ order: [["id", "DESC"]], limit: 15, offset: +page*15, where: { isPrivate: false }});
+        feeds = await Feed.findAll({ order: [["create_time", "DESC"]], limit: 15, offset: parseInt(page)*15, where: { isPrivate: false }});
       }
 
       const feedId = new Array();
