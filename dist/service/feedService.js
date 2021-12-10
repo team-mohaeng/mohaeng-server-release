@@ -230,7 +230,6 @@ exports.default = {
             const today = new Date();
             const time = parseInt(feed.create_time.toLocaleTimeString('en-GB').split(":")[0]); //피드 작성 시간
             const currentTime = today.getHours(); //현재 시간
-            console.log(time);
             let todayFeed;
             let yesterdayFeed;
             //어제 날짜
@@ -268,8 +267,6 @@ exports.default = {
                         create_time: { [Op.between]: [`${year1}-${month1}-${day1} 05:00:00`, `${(0, mohaengDateFormatter_1.getYear)(feedDate)}-${(0, mohaengDateFormatter_1.getMonth)(feedDate)}-${(0, mohaengDateFormatter_1.getDay)(feedDate)} 04:59:59`] } }
                 });
             }
-            console.log(todayFeed);
-            console.log(yesterdayFeed);
             //전날 피드가 있고 오늘 작성한 피드를 삭제할 경우 -> 피드 패널티, 연속 피드 작성 실패
             if (userId == feed.user_id && todayFeed && yesterdayFeed) {
                 User_1.User.update({ is_feed_new: false, feed_count: user.feed_count - 1, feed_penalty: true, feed_success_count: 1 }, { where: { id: userId } });
@@ -695,17 +692,17 @@ exports.default = {
             }
             const feedResponse = new Array();
             const week = new Array("일", "월", "화", "수", "목", "금", "토");
+            let feeds;
             const blocks = await Block_1.Block.findAll({ attributes: ["reported_id"], where: { user_id: userId } });
             const blocklist = new Array();
-            let feeds;
             if (blocks.length > 0) {
                 blocks.forEach(block => {
                     blocklist.push(block.reported_id);
                 });
-                feeds = await Feed_1.Feed.findAll({ order: [["id", "DESC"]], limit: 15, offset: +page * 15, where: { user_id: { [Op.notIn]: [blocklist] }, isPrivate: false } });
+                feeds = await Feed_1.Feed.findAll({ order: [["create_time", "DESC"]], limit: 15, offset: parseInt(page) * 15, where: { user_id: { [Op.notIn]: [blocklist] }, isPrivate: false } });
             }
             else {
-                feeds = await Feed_1.Feed.findAll({ order: [["id", "DESC"]], limit: 15, offset: +page * 15, where: { isPrivate: false } });
+                feeds = await Feed_1.Feed.findAll({ order: [["create_time", "DESC"]], limit: 15, offset: parseInt(page) * 15, where: { isPrivate: false } });
             }
             const feedId = new Array();
             feeds.forEach(feed => {
