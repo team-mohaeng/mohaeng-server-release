@@ -43,10 +43,6 @@ export default {
         return notExistFeedContent;
       }
 
-      if (content.length > 40) {
-        return feedLengthCheck;
-      }
-
       Feed.create({
         user_id: id,
         nickname: user.nickname,
