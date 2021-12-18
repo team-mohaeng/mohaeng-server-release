@@ -1,4 +1,4 @@
-# ![image](https://user-images.githubusercontent.com/71828832/146636698-76d9c6ee-99db-485b-a3c0-fb273ea7599c.png) 쟈니
+# ![image](https://user-images.githubusercontent.com/71828832/146636698-76d9c6ee-99db-485b-a3c0-fb273ea7599c.png) 모행
 
 ![image](https://user-images.githubusercontent.com/71828832/146636702-bc0f615f-1b7c-4369-96ea-b7e806b05285.png)
 
