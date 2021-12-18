@@ -1,6 +1,6 @@
-# ![모행 앱아이콘]![image](https://user-images.githubusercontent.com/71828832/146636698-76d9c6ee-99db-485b-a3c0-fb273ea7599c.png) 쟈니
+# ![image](https://user-images.githubusercontent.com/71828832/146636698-76d9c6ee-99db-485b-a3c0-fb273ea7599c.png) 쟈니
 
-![모행보드]![image](https://user-images.githubusercontent.com/71828832/146636702-bc0f615f-1b7c-4369-96ea-b7e806b05285.png)
+![image](https://user-images.githubusercontent.com/71828832/146636702-bc0f615f-1b7c-4369-96ea-b7e806b05285.png)
 
 <center style="bold">
 	<b>행복을 찾아주는 데일리 챌린지 앱, 모행(MOHAENG)</b><br/>
