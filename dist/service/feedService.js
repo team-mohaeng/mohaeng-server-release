@@ -801,7 +801,7 @@ exports.default = {
             }
             sendReport_1.default.email(reportedUser.nickname, feed.content);
             if (reportedUser.report == 9) {
-                User_1.User.destroy({ where: { id: feed.user_id } });
+                Feed_1.Feed.update({ isPrivate: true }, { where: { user_id: feed.user_id } });
             }
             else {
                 User_1.User.update({ report: reportedUser.report + 1 }, { where: { id: feed.user_id } });
