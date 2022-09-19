@@ -1,19 +1,20 @@
 import { Skin } from "../class/Skin";
 
 export const iosSkins = [
-  new Skin(64, "https://sopt28-test.s3.ap-northeast-2.amazonaws.com/ios1.png"),
-  new Skin(65, "https://sopt28-test.s3.ap-northeast-2.amazonaws.com/ios2.png"),
-  new Skin(66, "https://sopt28-test.s3.ap-northeast-2.amazonaws.com/ios3.png"),
-  new Skin(67, "https://sopt28-test.s3.ap-northeast-2.amazonaws.com/ios4.png"),
-  new Skin(68, "https://sopt28-test.s3.ap-northeast-2.amazonaws.com/new_ios5.png"),
-  new Skin(69, "https://sopt28-test.s3.ap-northeast-2.amazonaws.com/ios6.png"),
+  new Skin(64, "https://mohaengimage.s3.ap-northeast-2.amazonaws.com/styles/skins/iOS/1.png"),
+  new Skin(65, "https://mohaengimage.s3.ap-northeast-2.amazonaws.com/styles/skins/iOS/2.png"),
+  new Skin(66, "https://mohaengimage.s3.ap-northeast-2.amazonaws.com/styles/skins/iOS/3.png"),
+  new Skin(67, "https://mohaengimage.s3.ap-northeast-2.amazonaws.com/styles/skins/iOS/4.png"),
+  new Skin(68, "https://mohaengimage.s3.ap-northeast-2.amazonaws.com/styles/skins/iOS/5.png"),
+  new Skin(69, "https://mohaengimage.s3.ap-northeast-2.amazonaws.com/styles/skins/iOS/6.png"),
 ]
 
 export const aosSkins = [
-  new Skin(64, "https://sopt28-test.s3.ap-northeast-2.amazonaws.com/aos1.png"),
-  new Skin(65, "https://sopt28-test.s3.ap-northeast-2.amazonaws.com/aos2.png"),
-  new Skin(66, "https://sopt28-test.s3.ap-northeast-2.amazonaws.com/aos3.png"),
-  new Skin(67, "https://sopt28-test.s3.ap-northeast-2.amazonaws.com/aos4.png"),
-  new Skin(68, "https://sopt28-test.s3.ap-northeast-2.amazonaws.com/new_aos5.png"),
-  new Skin(69, "https://sopt28-test.s3.ap-northeast-2.amazonaws.com/aos6.png"),
+  new Skin(64, "https://mohaengimage.s3.ap-northeast-2.amazonaws.com/styles/skins/AOS/1.png"),
+  new Skin(65, "https://mohaengimage.s3.ap-northeast-2.amazonaws.com/styles/skins/AOS/2.png"),
+  new Skin(66, "https://mohaengimage.s3.ap-northeast-2.amazonaws.com/styles/skins/AOS/3.png"),
+  new Skin(67, "https://mohaengimage.s3.ap-northeast-2.amazonaws.com/styles/skins/AOS/4.png"),
+  new Skin(68, "https://mohaengimage.s3.ap-northeast-2.amazonaws.com/styles/skins/AOS/5.png"),
+  new Skin(69, "https://mohaengimage.s3.ap-northeast-2.amazonaws.com/styles/skins/AOS/6.png"),
 ]
+
