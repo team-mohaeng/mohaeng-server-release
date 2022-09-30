@@ -28,8 +28,8 @@ exports.feedBadges = [
 ];
 exports.stickerBadges = [
     new Badge_1.Badge(17, "관심의 시작", "다섯 개의 안부에 스티커를 붙여봐! 사랑은 관심으로부터 피어나는 법!", "https://mohaengimage.s3.ap-northeast-2.amazonaws.com/badges/badge7.png"),
-    new Badge_1.Badge(18, "관심 전달자", "행복에 대한 관심은 스티커를 타고~ 계속해서 스티커를 남기고 관심의 큐피드가 되어보자!", "https://mohaengimage.s3.ap-northeast-2.amazonaws.com/badges/adge8.png"),
-    new Badge_1.Badge(19, "모행의 마당발", "모행에게 이렇게 많은 사랑과 관심을 갖고 있다니... 여기요! 모행의 마당발이 여기 있어요!", ""),
+    new Badge_1.Badge(18, "관심 전달자", "행복에 대한 관심은 스티커를 타고~ 계속해서 스티커를 남기고 관심의 큐피드가 되어보자!", "https://mohaengimage.s3.ap-northeast-2.amazonaws.com/badges/badge8.png"),
+    new Badge_1.Badge(19, "모행의 마당발", "모행에게 이렇게 많은 사랑과 관심을 갖고 있다니... 여기요! 모행의 마당발이 여기 있어요!", "https://mohaengimage.s3.ap-northeast-2.amazonaws.com/badges/badge9.png"),
 ];
 exports.specificChallengeBadges = [
     new Badge_1.Badge(20, "일몰 사진가", "벌써 하루가 갔다고? 실망하지 말고 우리 같이 일몰보러 나가자. 사진도 찍어야지!", "https://mohaengimage.s3.ap-northeast-2.amazonaws.com/badges/badge20.png"),
