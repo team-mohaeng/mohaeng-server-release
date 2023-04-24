@@ -1,5 +1,8 @@
 import express from "express";
 import path from "path";
+import schedule from "node-schedule";
+import dayjs from "dayjs";
+import course from './controller/course';
 import sequelize from './models';
 import * as admin from 'firebase-admin';
 import config from "./config"
@@ -63,3 +66,22 @@ app
     console.error(err);
     process.exit(1);
   });
+
+console.log(new Date())
+
+const init = schedule.scheduleJob('23 13 * * *', async function () {
+  let date = new Date();
+  console.log(
+    `시작 시각 ${dayjs(date.toLocaleString('en', { timeZone: 'Asia/Seoul' })).format(
+      'YYYY-MM-DD hh:mm:ss'
+    )} 입니다.`
+  );
+
+  await course.init();
+
+  console.log(
+    `종료 시각 ${dayjs(date.toLocaleString('en', { timeZone: 'Asia/Seoul' })).format(
+      'YYYY-MM-DD hh:mm:ss'
+    )} 입니다.`
+  );
+})

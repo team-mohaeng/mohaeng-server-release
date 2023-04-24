@@ -24,6 +24,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const path_1 = __importDefault(require("path"));
+const node_schedule_1 = __importDefault(require("node-schedule"));
+const dayjs_1 = __importDefault(require("dayjs"));
+const course_1 = __importDefault(require("./controller/course"));
 const models_1 = __importDefault(require("./models"));
 const admin = __importStar(require("firebase-admin"));
 const config_1 = __importDefault(require("./config"));
@@ -78,5 +81,12 @@ app
     .on("error", (err) => {
     console.error(err);
     process.exit(1);
+});
+console.log(new Date());
+const init = node_schedule_1.default.scheduleJob('23 13 * * *', async function () {
+    let date = new Date();
+    console.log(`시작 시각 ${(0, dayjs_1.default)(date.toLocaleString('en', { timeZone: 'Asia/Seoul' })).format('YYYY-MM-DD hh:mm:ss')} 입니다.`);
+    await course_1.default.init();
+    console.log(`종료 시각 ${(0, dayjs_1.default)(date.toLocaleString('en', { timeZone: 'Asia/Seoul' })).format('YYYY-MM-DD hh:mm:ss')} 입니다.`);
 });
 //# sourceMappingURL=index.js.map
